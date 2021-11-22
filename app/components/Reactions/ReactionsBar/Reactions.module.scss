@@ -1,0 +1,19 @@
+.reactionsBar {
+  display: flex;
+  justify-content: space-around;
+  margin: 1.5rem 0;
+}
+
+.eye {
+  fill: #f3f3f3;
+}
+
+.heart {
+  fill: red;
+  cursor: pointer;
+}
+
+.thumbsUp {
+  fill: #86bbd8;
+  cursor: pointer;
+}

@@ -1,0 +1,13 @@
+.canvas {
+  display: grid;
+  grid-template: repeat(4, 1fr);
+  grid-column: repeat(15, 1fr);
+
+  background-color: $davys-grey;
+  width: 100%;
+  padding-top: 4rem;
+  overflow: scroll;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}

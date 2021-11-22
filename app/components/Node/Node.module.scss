@@ -1,0 +1,31 @@
+.node {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  background-color: #55888b;
+  border: 1px solid #2f4a4c;
+  width: 6rem;
+  height: 6rem;
+}
+
+.content {
+  font-size: 2.7rem;
+  color: $light-gray;
+}
+
+.edge {
+  height: 6rem;
+  width: 0.3rem;
+  background-color: black;
+}
+
+.leftChild {
+  margin-left: 4.6rem;
+  transform: skew(-25deg);
+}
+
+.rightChild {
+  margin-left: 1.3rem;
+  transform: skew(25deg);
+}

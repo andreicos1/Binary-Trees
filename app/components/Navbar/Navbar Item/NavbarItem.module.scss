@@ -1,0 +1,11 @@
+.navbarItem {
+  font-weight: 600;
+  font-size: 2.2rem;
+  color: $light-gray;
+  cursor: pointer;
+  text-transform: capitalize;
+  text-align: center;
+  &:not(:last-child) {
+    margin-right: 5rem;
+  }
+}

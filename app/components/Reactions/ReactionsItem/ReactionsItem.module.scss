@@ -1,0 +1,17 @@
+.iconGroup {
+  display: flex;
+  align-items: center;
+}
+
+.iconBox {
+  margin-right: 1rem;
+  svg {
+    width: 3rem;
+    height: 3rem;
+  }
+}
+
+.iconCount {
+  font-size: 1.8rem;
+  color: white;
+}

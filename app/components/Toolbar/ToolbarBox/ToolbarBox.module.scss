@@ -1,0 +1,14 @@
+.toolbarBox {
+  background-color: #26292c;
+  align-self: flex-start;
+  padding: 2rem 4.5rem;
+  height: 100%;
+}
+
+.toolbarTitle {
+  font-size: 3rem;
+  font-weight: 600;
+  color: $light-gray;
+  margin-bottom: 4rem;
+  border-bottom: 1px solid $light-gray;
+}
