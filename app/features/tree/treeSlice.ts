@@ -1,60 +1,58 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { immerable } from "immer";
-
-export class Tree {
-  [immerable] = true;
-  constructor(public value: string, public left?: Tree, public right?: Tree) {}
-  dfsAddToLevel(
-    node: Tree | undefined,
-    currentLevel: number,
-    levels: string[][],
-    directionLeft: boolean,
-    maxLevel: number,
-    parentCol: number
-  ) {
-    if (currentLevel >= maxLevel || !node) return;
-    // Add value to corresponding column
-    const currentValue = node.value;
-    let column = parentCol * 2;
-    if (!directionLeft) {
-      column++;
-    }
-    levels[currentLevel][column] = currentValue;
-    this.dfsAddToLevel(node.left, currentLevel + 1, levels, true, maxLevel, column);
-    this.dfsAddToLevel(node.right, currentLevel + 1, levels, false, maxLevel, column);
-  }
-  getNodesByLevel() {
-    // Add the nodes to an array for easy rendering
-    const maxLength = parseInt(process.env.NEXT_PUBLIC_MAX_TREE_LEVELS as string);
-    // Initialize as empty strings for all rows & cols
-    const levels = new Array<Array<string>>();
-    for (let i = 0; i < maxLength; i++) {
-      const thisLevel = new Array(Math.pow(2, i));
-      thisLevel.fill("");
-      levels.push(thisLevel);
-    }
-    // Traverse
-    this.dfsAddToLevel(this, 0, levels, true, levels.length, 0);
-    return levels;
-  }
-}
 
 export interface TreeState {
   value: string;
-  right: Tree;
-  left: Tree;
+  right?: TreeState;
+  left?: TreeState;
 }
 
-const initialState = new Tree("0");
-initialState.right = new Tree("29");
-initialState.left = new Tree("69");
-initialState.left.right = new Tree("81");
-initialState.left.right.left = new Tree("420");
+const initialState = {
+  value: "0",
+} as TreeState;
+
+interface addData {
+  rowIndex: number;
+  colIndex: number;
+  newNodeValue: string;
+}
 
 export const treeSlice = createSlice({
   name: "tree",
   initialState,
-  reducers: {},
+  reducers: {
+    addNode: (state, action: PayloadAction<addData>) => {
+      // Get row and col where child should be added
+      let childRowIndex = action.payload.rowIndex;
+      let childColIndex = action.payload.colIndex;
+      const nodeVal = action.payload.newNodeValue;
+      // Init a node of directions from root to child
+      const directions = new Array<number>();
+      // 1 = isLeft, 0 = isRight
+      for (let currentRowIndex = 0; currentRowIndex < childRowIndex; currentRowIndex++) {
+        // Check if left (even col index) or right (odd col index) child
+        directions.push(childColIndex % 2 === 0 ? 1 : 0);
+        childColIndex >>= 1;
+      }
+      // Use the directions to modify a copy to reference of state's proxy
+      let stateReference = state;
+      for (const direction of directions.slice(0, -1)) {
+        if (direction === 1) {
+          stateReference = stateReference.left!;
+        } else {
+          stateReference = stateReference.right!;
+        }
+      }
+      // Add a new tree state to the corresponding position
+      const newNode = { value: nodeVal };
+      if (directions[directions.length - 1] === 1) {
+        stateReference.left = newNode;
+      } else {
+        stateReference.right = newNode;
+      }
+    },
+  },
 });
+
+export const { addNode } = treeSlice.actions;
 
 export default treeSlice.reducer;

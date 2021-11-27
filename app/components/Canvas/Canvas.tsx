@@ -4,13 +4,18 @@ import Node from "../Node/Node";
 import styles from "./Canvas.module.scss";
 import { RootState } from "../../store";
 import React from "react";
-import Xarrow from "react-xarrows";
+import { addNode } from "../../features/tree/treeSlice";
+import dynamic from "next/dynamic";
+import { getNodesByLevel } from "../../features/tree/treeFunctions";
+
+const Xarrow = dynamic(() => import("react-xarrows"), {
+  ssr: false,
+});
 
 const Canvas = () => {
   const tree = useSelector((state: RootState) => state.tree);
   const dispatch = useDispatch();
-  const treeByLevels = tree.getNodesByLevel();
-  console.log(treeByLevels);
+  const treeByLevels = getNodesByLevel(tree);
 
   return (
     <Box className={styles.canvas}>
