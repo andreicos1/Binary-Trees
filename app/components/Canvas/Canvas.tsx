@@ -1,31 +1,34 @@
-import { Box, Text } from "@chakra-ui/layout";
+import { Box, Flex } from "@chakra-ui/layout";
 import { useDispatch, useSelector } from "react-redux";
 import Node from "../Node/Node";
 import styles from "./Canvas.module.scss";
 import { RootState } from "../../store";
 import React from "react";
-import { Tree } from "../../features/tree/treeSlice";
 
 const Canvas = () => {
   const tree = useSelector((state: RootState) => state.tree);
   const dispatch = useDispatch();
+  const treeByLevels = tree.getNodesByLevel();
+  console.log(treeByLevels);
 
-  const renderTree = (tree: Tree) => {
-    let canvasContens: JSX.Element[] = [];
-    let id = 0;
-    let dfs = (node: Tree | undefined, parentDirection: 0 | 1 | 2) => {
-      // Base Case return or add node
-      if (!node) return;
-      canvasContens.push(<Node value={node.value} />);
-      // Recursive case go to children
-      dfs(node.left, 1);
-      dfs(node.right, 2);
-    };
-    dfs(tree, 0);
-    console.log(canvasContens);
-    return canvasContens[0];
-  };
-  return <Box className={styles.canvas}>{renderTree(tree)}</Box>;
+  return (
+    <Box className={styles.canvas}>
+      {treeByLevels.map((level, levelIdx) => {
+        return (
+          <Flex width="100%" key={levelIdx} justifyContent="space-around">
+            {level.map((node, columnIdx) => {
+              const nodeElement = node ? <Node value={node} /> : null;
+              return (
+                <Box key={columnIdx} className={styles.nodeBox}>
+                  {nodeElement}
+                </Box>
+              );
+            })}
+          </Flex>
+        );
+      })}
+    </Box>
+  );
 };
 
 export default Canvas;
