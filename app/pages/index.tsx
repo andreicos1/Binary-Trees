@@ -5,7 +5,8 @@ import React from "react";
 import Canvas from "../components/Canvas/Canvas";
 import Navbar from "../components/Navbar/Navbar List/Navbar";
 import Reactions from "../components/Reactions/ReactionsBar/Reactions";
-import Toolbar from "../components/Toolbar/ToolbarBox/ToolbarBox";
+import Toolbar from "../components/Toolbar/ToolbarBox/Toolbar";
+import ToolkitCanvasBox from "../components/ToolkitCanvasBox/ToolkitCanvasBox";
 import styles from "../styles/Home.module.scss";
 
 const Home: NextPage = () => {
@@ -22,10 +23,7 @@ const Home: NextPage = () => {
       <Box className={styles.body}>
         <Navbar />
         <Box className={styles.content}>
-          <Box className={styles.toolkitCanvasBox}>
-            <Toolbar />
-            <Canvas />
-          </Box>
+          <ToolkitCanvasBox />
           <Reactions />
         </Box>
       </Box>

@@ -24,7 +24,7 @@ export class Tree {
     this.dfsAddToLevel(node.right, currentLevel + 1, levels, false, maxLevel, column);
   }
   getNodesByLevel() {
-    // Add the nodes to array for easy rendering
+    // Add the nodes to an array for easy rendering
     const maxLength = parseInt(process.env.NEXT_PUBLIC_MAX_TREE_LEVELS as string);
     // Initialize as empty strings for all rows & cols
     const levels = new Array<Array<string>>();
