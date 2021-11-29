@@ -1,8 +1,8 @@
 import { Box, Flex } from "@chakra-ui/layout";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import Node from "../Node/Node";
 import styles from "./Canvas.module.scss";
-import { RootState } from "../../store";
+import { RootState, useAppDispatch } from "../../store";
 import React from "react";
 import { addNode } from "../../features/tree/treeSlice";
 import dynamic from "next/dynamic";
@@ -14,7 +14,7 @@ const Xarrow = dynamic(() => import("react-xarrows"), {
 
 const Canvas = () => {
   const tree = useSelector((state: RootState) => state.tree);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const treeByLevels = getNodesByLevel(tree);
 
   return (

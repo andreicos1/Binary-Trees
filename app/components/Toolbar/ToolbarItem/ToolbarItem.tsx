@@ -5,11 +5,12 @@ import styles from "./ToolbarItem.module.scss";
 interface ToolbarItemInterface {
   text: string;
   icon: JSX.Element;
+  id: string;
 }
 
-const ToolbarItem = ({ text, icon }: ToolbarItemInterface) => {
+const ToolbarItem = ({ text, icon, id }: ToolbarItemInterface) => {
   return (
-    <Box className={styles.toolbarItemBox}>
+    <Box className={styles.toolbarItemBox} id={id}>
       <Box className={styles.icon}>{icon}</Box>
       <Text className={styles.toolbarItem}>{text}</Text>
     </Box>
