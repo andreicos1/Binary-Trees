@@ -1,5 +1,6 @@
 import { Box, Text } from "@chakra-ui/layout";
 import ToolbarItem from "../ToolbarItem/ToolbarItem";
+import ToolbarItemAdd from "../ToolbarItem/ToolbarItemAdd";
 import styles from "./Toolbar.module.scss";
 import { CloseIcon, AddIcon, EditIcon } from "@chakra-ui/icons";
 import { RootState, useAppDispatch } from "../../../store";
@@ -11,7 +12,11 @@ import {
   turnAllOff,
 } from "../../../features/tree/treeUpdateSlice";
 
-const Toolbar = () => {
+interface ToolbarProps {
+  addNodeDragConstraints: React.MutableRefObject<JSX.Element | null>;
+}
+
+const Toolbar = ({ addNodeDragConstraints }: ToolbarProps) => {
   const iconSize = "1.5rem";
   const treeUpdateState = useSelector((state: RootState) => state.treeUpdate);
   const dispatch = useAppDispatch();
@@ -22,7 +27,6 @@ const Toolbar = () => {
     "option-edit": toggleEdit(),
   };
   const optionsById = "option-add" || "opion-delete" || "option-edit";
-  console.log(treeUpdateState);
 
   return (
     <Box
@@ -51,10 +55,11 @@ const Toolbar = () => {
         icon={<CloseIcon height={iconSize} width={iconSize} color="#e32636" />}
         id="option-delete"
       />
-      <ToolbarItem
+      <ToolbarItemAdd
         text="Add"
         icon={<AddIcon height={iconSize} width={iconSize} color="#97DB4F" />}
         id="option-add"
+        addNodeDragConstraints={addNodeDragConstraints}
       />
       <ToolbarItem
         text="Edit"

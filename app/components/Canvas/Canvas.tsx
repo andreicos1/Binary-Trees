@@ -2,9 +2,8 @@ import { Box, Flex } from "@chakra-ui/layout";
 import { useSelector } from "react-redux";
 import Node from "../Node/Node";
 import styles from "./Canvas.module.scss";
-import { RootState, useAppDispatch } from "../../store";
+import { RootState } from "../../store";
 import React from "react";
-import { addNode } from "../../features/tree/treeSlice";
 import dynamic from "next/dynamic";
 import { getNodesByLevel } from "../../features/tree/treeFunctions";
 
@@ -14,14 +13,13 @@ const Xarrow = dynamic(() => import("react-xarrows"), {
 
 const Canvas = () => {
   const tree = useSelector((state: RootState) => state.tree);
-  const dispatch = useAppDispatch();
   const treeByLevels = getNodesByLevel(tree);
 
   return (
     <Box className={styles.canvas}>
       {treeByLevels.map((level, levelIdx) => {
         return (
-          <Flex width="100%" key={levelIdx} justifyContent="space-around">
+          <Flex width="100%" justifyContent="space-around" key={levelIdx}>
             {level.map((node, columnIdx) => {
               const currNodeId = `${levelIdx},${columnIdx}`;
               const parentNodeColumn = columnIdx >> 1;
