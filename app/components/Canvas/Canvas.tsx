@@ -3,7 +3,6 @@ import { useSelector } from "react-redux";
 import Node from "../Node/Node";
 import styles from "./Canvas.module.scss";
 import { RootState } from "../../store";
-import React from "react";
 import dynamic from "next/dynamic";
 import { getNodesByLevel } from "../../features/tree/treeFunctions";
 
@@ -11,7 +10,11 @@ const Xarrow = dynamic(() => import("react-xarrows"), {
   ssr: false,
 });
 
-const Canvas = () => {
+interface Props {
+  nodeBoxesRef: React.MutableRefObject<HTMLDivElement[]>;
+}
+
+const Canvas = ({ nodeBoxesRef }: Props) => {
   const tree = useSelector((state: RootState) => state.tree);
   const treeByLevels = getNodesByLevel(tree);
 
@@ -42,8 +45,17 @@ const Canvas = () => {
                   {connection}
                 </>
               ) : null;
+              const nodeIndex = Math.pow(2, levelIdx) - 1 + columnIdx;
               return (
-                <Box id={currNodeId} key={columnIdx} className={styles.nodeBox}>
+                <Box
+                  id={currNodeId}
+                  key={columnIdx}
+                  className={styles.nodeBox}
+                  ref={(el: HTMLDivElement) => {
+                    const clientRect = el ? el.getBoundingClientRect() : null;
+                    nodeBoxesRef.current[nodeIndex] = el;
+                  }}
+                >
                   {nodeElement}
                 </Box>
               );

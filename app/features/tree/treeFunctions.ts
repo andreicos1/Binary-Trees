@@ -47,7 +47,7 @@ export const getEmptyValidChildren = (root: TreeState): coordinates[] => {
     parentColumn: number,
     directionLeft: boolean
   ): void {
-    if (level === NUMBER_OF_LEVELS - 1) {
+    if (level === NUMBER_OF_LEVELS) {
       return;
     }
     let column = parentColumn * 2;
@@ -74,4 +74,18 @@ export const getHighestValidParent = (possibleNewChildrenPositions: coordinates[
     highestValidParent = Math.min(highestValidParent, position.rowIndex - 1);
   });
   return highestValidParent;
+};
+
+export const getIndexFromLevelAndCol = (level: number, column: number): number => {
+  // index in array with all nodes from its row/level & column
+  return Math.pow(2, level) - 1 + column;
+};
+
+export const euclideanDistance = (
+  node1x: number,
+  node1y: number,
+  node2x: number,
+  node2y: number
+): number => {
+  return Math.sqrt(Math.pow(node1x - node2x, 2) + Math.pow(node1y - node2y, 2));
 };

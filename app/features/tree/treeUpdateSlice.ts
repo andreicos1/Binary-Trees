@@ -12,12 +12,18 @@ export const treeUpdateSlice = createSlice({
   reducers: {
     toggleDelete: (state) => {
       state.deleting = !state.deleting;
+      state.adding = false;
+      state.editing = false;
     },
     toggleAdd: (state) => {
       state.adding = !state.adding;
+      state.deleting = false;
+      state.editing = false;
     },
     toggleEdit: (state) => {
       state.editing = !state.editing;
+      state.adding = false;
+      state.deleting = false;
     },
     turnAllOff: (state) => {
       state.deleting = false;

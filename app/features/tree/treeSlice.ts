@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { store } from "../../store";
 
 export interface TreeState {
   value: string;
@@ -31,7 +30,7 @@ export const treeSlice = createSlice({
       // 1 = isLeft, 0 = isRight
       for (let currentRowIndex = 0; currentRowIndex < childRowIndex; currentRowIndex++) {
         // Check if left (even col index) or right (odd col index) child
-        directions.push(childColIndex % 2 === 0 ? 1 : 0);
+        directions.unshift(childColIndex % 2 === 0 ? 1 : 0);
         childColIndex >>= 1;
       }
       // Use the directions to modify a copy to reference of state's proxy

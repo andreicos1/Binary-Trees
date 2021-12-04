@@ -14,9 +14,10 @@ import {
 
 interface ToolbarProps {
   addNodeDragConstraints: React.MutableRefObject<JSX.Element | null>;
+  nodeBoxesRef: React.MutableRefObject<HTMLDivElement[]>;
 }
 
-const Toolbar = ({ addNodeDragConstraints }: ToolbarProps) => {
+const Toolbar = ({ addNodeDragConstraints, nodeBoxesRef }: ToolbarProps) => {
   const iconSize = "1.5rem";
   const treeUpdateState = useSelector((state: RootState) => state.treeUpdate);
   const dispatch = useAppDispatch();
@@ -60,6 +61,7 @@ const Toolbar = ({ addNodeDragConstraints }: ToolbarProps) => {
         icon={<AddIcon height={iconSize} width={iconSize} color="#97DB4F" />}
         id="option-add"
         addNodeDragConstraints={addNodeDragConstraints}
+        nodeBoxesRef = {nodeBoxesRef}
       />
       <ToolbarItem
         text="Edit"
