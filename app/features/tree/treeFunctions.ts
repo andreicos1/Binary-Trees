@@ -77,8 +77,13 @@ export const getHighestValidParent = (possibleNewChildrenPositions: coordinates[
 };
 
 export const getIndexFromLevelAndCol = (level: number, column: number): number => {
-  // index in array with all nodes from its row/level & column
   return Math.pow(2, level) - 1 + column;
+};
+
+export const getRowAndColFromIndex = (index: number): [number, number] => {
+  const rowIndex = Math.floor(Math.log2(index + 1));
+  const colIndex = index - Math.pow(2, rowIndex) + 1;
+  return [rowIndex, colIndex];
 };
 
 export const euclideanDistance = (
