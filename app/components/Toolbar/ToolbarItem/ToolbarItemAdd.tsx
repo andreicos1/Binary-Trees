@@ -41,15 +41,17 @@ const ToolbarItemAdd = ({
   const [calculating, setCalculating] = useState(true);
   const [minDistanceIndex, setMinDistanceIndex] = useState(0);
   const [currentParent, setCurrentParent] = useState("");
+  const [value, setValue] = useState("1");
   const nodeBeingAdded = useRef<HTMLDivElement>(null);
   const NODE_SIZE = 60; // px
   const dispatch = useAppDispatch();
   const controls = useAnimation();
 
   // TODO
-  // 1. XARROW SNAP SHOULD BE SMOOTH
-  // FUNCTIONALITY BREAKS ON WINDOW RESIZE
+  // OPTION TO EDIT VALUE BEFORE ADDING
   // XARROW SHOULDN'T DISPLAY ONDRAG IN INVALID POSITIONS
+  // XARROW SNAP SHOULD BE SMOOTH
+  // FUNCTIONALITY BREAKS ON WINDOW RESIZE
 
   const getClosestParent = (event: PointerEvent, info: PanInfo): void => {
     // Behavior to add the node to the tree on drag end, if valid position
@@ -111,15 +113,16 @@ const ToolbarItemAdd = ({
         // Animate the node
         const newNodePosition = nodeBoxesRef.current[minDistanceIndex].getBoundingClientRect();
         const nodeBeingAddedPosition = nodeBeingAdded.current!.getBoundingClientRect();
+        setCurrentParent("");
         await controls.start({
           translateX: newNodePosition.x - nodeBeingAddedPosition.x,
           translateY: newNodePosition.y - nodeBeingAddedPosition.y,
           transition: { type: "spring", duration: 1 },
         });
-        dispatch(addNode({ rowIndex, colIndex, newNodeValue: "0" }));
+        dispatch(addNode({ rowIndex, colIndex, newNodeValue: value }));
+        setValue((parseInt(value) + 1).toString());
       }
     }
-    setCurrentParent("");
     setMinDistanceIndex(0);
     dispatch(toggleAdd());
   };
@@ -145,10 +148,11 @@ const ToolbarItemAdd = ({
         drag
         dragConstraints={addNodeDragConstraints as RefObject<Element>}
         dragElastic={0.05}
+        dragMomentum={false}
         onDrag={throttledGetClosestParent}
         onDragEnd={addDraggedNodeToTree}
       >
-        <Node value="O" />
+        <Node value={value} />
       </motion.div>
       {arrow}
     </>
