@@ -1,5 +1,6 @@
 import { TreeState } from "./treeSlice";
-const NUMBER_OF_LEVELS = parseInt(process.env.NEXT_PUBLIC_MAX_TREE_LEVELS as string);
+export const NUMBER_OF_LEVELS = parseInt(process.env.NEXT_PUBLIC_MAX_TREE_LEVELS as string);
+const MAX_VALUE = 99;
 
 export const getNodesByLevel = (node: TreeState): string[][] => {
   const dfsAddToLevel = (
@@ -93,4 +94,14 @@ export const euclideanDistance = (
   node2y: number
 ): number => {
   return Math.sqrt(Math.pow(node1x - node2x, 2) + Math.pow(node1y - node2y, 2));
+};
+
+export const generateRandomValue = () => {
+  return Math.floor(Math.random() * (99 + 1));
+};
+
+export const generateRandomNode = () => {
+  return {
+    value: generateRandomValue().toString(),
+  } as TreeState;
 };

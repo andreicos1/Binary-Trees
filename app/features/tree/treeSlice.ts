@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { generateRandomNode, NUMBER_OF_LEVELS } from "./treeFunctions";
 
 export interface TreeState {
   value: string;
@@ -50,9 +51,70 @@ export const treeSlice = createSlice({
         stateReference.right = newNode;
       }
     },
+    generateRandom: (state) => {
+      const bothNodesLevel1Odds = 0.7;
+      const nodeExistsOdds = 0.33; // odds for levels 2 +
+      const tree = generateRandomNode();
+      const queue: [TreeState, number][] = []; // number is level
+      // Populate first level
+      if (Math.random() < bothNodesLevel1Odds) {
+        // Generate left & right
+        tree.left = generateRandomNode();
+        tree.right = generateRandomNode();
+        queue.push([tree.left, 1]);
+        queue.push([tree.right, 1]);
+      } else if (Math.random() > bothNodesLevel1Odds + (1 - bothNodesLevel1Odds) / 2) {
+        tree.right = generateRandomNode();
+        queue.push([tree.right, 1]);
+      } else {
+        tree.left = generateRandomNode();
+        queue.push([tree.left, 1]);
+      }
+      // Populate rest of leveles
+      let level = 1;
+      let parent = tree;
+      while (level < NUMBER_OF_LEVELS - 1) {
+        if (!queue.length) {
+          // if no nodes before last level
+          if (Math.random() < 0.5) {
+            parent.left = generateRandomNode();
+            queue.push([parent.left, level + 1]);
+            parent = parent.left;
+          } else {
+            parent.right = generateRandomNode();
+            queue.push([parent.right, level + 1]);
+            parent = parent.right;
+          }
+        } else {
+          [parent, level] = queue.shift() as [TreeState, number];
+          if (level >= NUMBER_OF_LEVELS - 1) {
+            break;
+          }
+          let randomNumber = Math.random();
+          if (randomNumber < nodeExistsOdds) {
+            parent.left = generateRandomNode();
+            parent.right = generateRandomNode();
+            queue.push([parent.left, level + 1]);
+            queue.push([parent.right, level + 1]);
+            parent = parent.left;
+          } else if (randomNumber < nodeExistsOdds * 2) {
+            parent.left = generateRandomNode();
+            queue.push([parent.left, level + 1]);
+            parent = parent.left;
+          } else {
+            parent.right = generateRandomNode();
+            queue.push([parent.right, level + 1]);
+            parent = parent.right;
+          }
+        }
+      }
+      state.value = tree.value;
+      state.left = tree.left;
+      state.right = tree.right;
+    },
   },
 });
 
-export const { addNode } = treeSlice.actions;
+export const { addNode, generateRandom } = treeSlice.actions;
 
 export default treeSlice.reducer;

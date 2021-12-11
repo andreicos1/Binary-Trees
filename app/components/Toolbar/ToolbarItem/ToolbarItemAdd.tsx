@@ -51,6 +51,7 @@ const ToolbarItemAdd = ({
   // OPTION TO EDIT VALUE BEFORE ADDING
   // XARROW SHOULDN'T DISPLAY ONDRAG IN INVALID POSITIONS
   // XARROW SNAP SHOULD BE SMOOTH
+  // WEIRD SNAPPING NODE DISAPPEARS ONCLICK ADD
   // FUNCTIONALITY BREAKS ON WINDOW RESIZE
 
   const getClosestParent = (event: PointerEvent, info: PanInfo): void => {
@@ -123,6 +124,7 @@ const ToolbarItemAdd = ({
         setValue((parseInt(value) + 1).toString());
       }
     }
+    setCurrentParent("");
     setMinDistanceIndex(0);
     dispatch(toggleAdd());
   };
