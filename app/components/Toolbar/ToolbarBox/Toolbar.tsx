@@ -31,6 +31,7 @@ const Toolbar = ({ addNodeDragConstraints, nodeBoxesRef }: ToolbarProps) => {
 
   return (
     <Box
+      id="toolkit"
       className={styles.toolbarBox}
       onClick={(event) => {
         // Change selected toolkit item
@@ -45,7 +46,7 @@ const Toolbar = ({ addNodeDragConstraints, nodeBoxesRef }: ToolbarProps) => {
           dispatch(
             dispatchToolkitOptionById[(target.parentNode as HTMLElement).id as typeof optionsById]
           );
-        } else {
+        } else if (target.id === "toolkit") {
           dispatch(turnAllOff());
         }
       }}
@@ -61,7 +62,7 @@ const Toolbar = ({ addNodeDragConstraints, nodeBoxesRef }: ToolbarProps) => {
         icon={<AddIcon height={iconSize} width={iconSize} color="#97DB4F" />}
         id="option-add"
         addNodeDragConstraints={addNodeDragConstraints}
-        nodeBoxesRef = {nodeBoxesRef}
+        nodeBoxesRef={nodeBoxesRef}
       />
       <ToolbarItem
         text="Edit"

@@ -15,7 +15,7 @@ import { toggleAdd } from "../../../features/tree/treeUpdateSlice";
 import { RootState, useAppDispatch } from "../../../store";
 import Node from "../../Node/Node";
 import styles from "./ToolbarItem.module.scss";
-import { RefObject, useState } from "react";
+import { RefObject, useRef, useState } from "react";
 
 const Xarrow = dynamic(() => import("react-xarrows"), {
   ssr: false,
@@ -38,17 +38,18 @@ const ToolbarItemAdd = ({
 }: ToolbarItemInterface) => {
   const treeUpdateState = useSelector((state: RootState) => state.treeUpdate);
   const treeState = useSelector((state: RootState) => state.tree);
-  const dispatch = useAppDispatch();
-  const controls = useAnimation();
   const [calculating, setCalculating] = useState(true);
   const [minDistanceIndex, setMinDistanceIndex] = useState(0);
   const [currentParent, setCurrentParent] = useState("");
+  const nodeBeingAdded = useRef<HTMLDivElement>(null);
   const NODE_SIZE = 60; // px
+  const dispatch = useAppDispatch();
+  const controls = useAnimation();
 
   // TODO
-  // 1. NODE SNAP SHOULD BE SMOOTH
-  // 2. XARROW SNAP SHOULD BE SMOOTH
-  // 3. XARROW SHOULDN'T DISPLAY ONDRAG IN INVALID POSITIONS
+  // 1. XARROW SNAP SHOULD BE SMOOTH
+  // FUNCTIONALITY BREAKS ON WINDOW RESIZE
+  // XARROW SHOULDN'T DISPLAY ONDRAG IN INVALID POSITIONS
 
   const getClosestParent = (event: PointerEvent, info: PanInfo): void => {
     // Behavior to add the node to the tree on drag end, if valid position
@@ -98,7 +99,7 @@ const ToolbarItemAdd = ({
     }
   };
 
-  const addDraggedNodeToTree = (event: PointerEvent, info: PanInfo) => {
+  const addDraggedNodeToTree = async (event: PointerEvent, info: PanInfo) => {
     if (minDistanceIndex) {
       const validChildren = getEmptyValidChildren(treeState);
       const highestValidParentLevel = getHighestValidParent(validChildren);
@@ -107,15 +108,21 @@ const ToolbarItemAdd = ({
       const highestValidPosition = highestValidParentNode.getBoundingClientRect().y + NODE_SIZE / 2;
       if (event.y > highestValidPosition) {
         const [rowIndex, colIndex] = getRowAndColFromIndex(minDistanceIndex);
+        // Animate the node
+        const newNodePosition = nodeBoxesRef.current[minDistanceIndex].getBoundingClientRect();
+        const nodeBeingAddedPosition = nodeBeingAdded.current!.getBoundingClientRect();
+        await controls.start({
+          translateX: newNodePosition.x - nodeBeingAddedPosition.x,
+          translateY: newNodePosition.y - nodeBeingAddedPosition.y,
+          transition: { type: "spring", duration: 1 },
+        });
         dispatch(addNode({ rowIndex, colIndex, newNodeValue: "0" }));
       }
     }
     setCurrentParent("");
-    controls.start("hidden");
     setMinDistanceIndex(0);
     dispatch(toggleAdd());
   };
-
   const arrow = currentParent ? (
     <Xarrow
       showHead={false}
@@ -127,19 +134,12 @@ const ToolbarItemAdd = ({
       end="draggableNode"
     />
   ) : null;
-
-  const addingNodeDisplay = (
+  const addingNodeDisplay = treeUpdateState.adding ? (
     <>
       <motion.div
+        ref={nodeBeingAdded}
         style={{ display: treeUpdateState.adding ? "unset" : "none" }}
-        initial="hidden"
         animate={controls}
-        variants={{
-          hidden: {
-            y: 0,
-            x: 0,
-          },
-        }}
         className={styles.addingNode}
         id="draggableNode"
         drag
@@ -152,7 +152,7 @@ const ToolbarItemAdd = ({
       </motion.div>
       {arrow}
     </>
-  );
+  ) : null;
 
   return (
     <Box className={styles.toolbarItemBox} id={id}>
