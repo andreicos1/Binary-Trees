@@ -6,3 +6,15 @@
   padding: 2.7rem 0;
   border-bottom: 1px solid $davys-grey;
 }
+
+.login {
+  color: #9da1aa;
+  margin-left: 12rem;
+  margin-right: 2rem;
+}
+
+.generateRandom {
+  background: linear-gradient(118deg, rgba(205, 205, 205, 1) 0%, rgba(241, 234, 219, 1) 100%);
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}

@@ -10,12 +10,16 @@ const Navbar = () => {
   const dispatch = useAppDispatch();
   return (
     <Box className={styles.navbar}>
-      <NavbarItem text="Algorithms" />
-      <NavbarItem text="Generate Random Tree" onClick={() => dispatch(generateRandom())} />
-      <NavbarItem text="Binary Search Tree" />
-      <NavbarItem text="Heap" />
-      <NavbarItem text="Regular Binary Tree" />
-      <NavbarItem text="Log in" />
+      <NavbarItem
+        className={styles.generateRandom}
+        text="Generate Random Tree"
+        onClick={() => dispatch(generateRandom())}
+      />
+      <NavbarItem text="Invert Tree" />
+      <NavbarItem text="Subtree of Another Tree" />
+      <NavbarItem text="Lowest Common Ancestor" />
+      <NavbarItem text="Kth Smallest Element" />
+      <NavbarItem className={styles.login} text="Log in" />
     </Box>
   );
 };
