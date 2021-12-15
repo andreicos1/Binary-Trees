@@ -1,4 +1,4 @@
-import { Box, Circle, Container, Text } from "@chakra-ui/layout";
+import { Box, Circle, Text } from "@chakra-ui/layout";
 import { Input } from "@chakra-ui/react";
 import React, { useState } from "react";
 import styles from "./Node.module.scss";

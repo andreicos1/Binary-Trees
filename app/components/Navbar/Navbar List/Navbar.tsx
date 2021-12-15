@@ -5,6 +5,8 @@ import NavbarItem from "../Navbar Item/NavbarItem";
 import styles from "./Navbar.module.scss";
 
 const Navbar = () => {
+  // TODO
+  // Add fade in/out to generating random tree
   const dispatch = useAppDispatch();
   return (
     <Box className={styles.navbar}>

@@ -2,26 +2,27 @@ import { TreeState } from "./treeSlice";
 export const NUMBER_OF_LEVELS = parseInt(process.env.NEXT_PUBLIC_MAX_TREE_LEVELS as string);
 const MAX_VALUE = 99;
 
+const dfsAddToLevel = (
+  node: TreeState | undefined,
+  currentLevel: number,
+  levels: string[][],
+  directionLeft: boolean,
+  maxLevel: number,
+  parentCol: number
+) => {
+  if (currentLevel >= maxLevel || !node) return;
+  // Add value to corresponding column
+  const currentValue = node.value;
+  let column = parentCol * 2;
+  if (!directionLeft) {
+    column++;
+  }
+  levels[currentLevel][column] = currentValue;
+  dfsAddToLevel(node.left, currentLevel + 1, levels, true, maxLevel, column);
+  dfsAddToLevel(node.right, currentLevel + 1, levels, false, maxLevel, column);
+};
+
 export const getNodesByLevel = (node: TreeState): string[][] => {
-  const dfsAddToLevel = (
-    node: TreeState | undefined,
-    currentLevel: number,
-    levels: string[][],
-    directionLeft: boolean,
-    maxLevel: number,
-    parentCol: number
-  ) => {
-    if (currentLevel >= maxLevel || !node) return;
-    // Add value to corresponding column
-    const currentValue = node.value;
-    let column = parentCol * 2;
-    if (!directionLeft) {
-      column++;
-    }
-    levels[currentLevel][column] = currentValue;
-    dfsAddToLevel(node.left, currentLevel + 1, levels, true, maxLevel, column);
-    dfsAddToLevel(node.right, currentLevel + 1, levels, false, maxLevel, column);
-  };
   // Add the nodes to an array for easy rendering
   // Initialize as empty strings for all rows & cols
   const levels = new Array<Array<string>>();
@@ -96,7 +97,7 @@ export const euclideanDistance = (
   return Math.sqrt(Math.pow(node1x - node2x, 2) + Math.pow(node1y - node2y, 2));
 };
 
-export const generateRandomValue = () => {
+const generateRandomValue = () => {
   return Math.floor(Math.random() * (99 + 1));
 };
 
