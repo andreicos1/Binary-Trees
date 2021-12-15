@@ -98,7 +98,7 @@ export const euclideanDistance = (
 };
 
 const generateRandomValue = () => {
-  return Math.floor(Math.random() * (99 + 1));
+  return Math.floor(Math.random() * (MAX_VALUE + 1));
 };
 
 export const generateRandomNode = () => {
