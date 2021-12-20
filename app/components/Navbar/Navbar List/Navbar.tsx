@@ -1,13 +1,20 @@
 import { Box } from "@chakra-ui/layout";
 import { generateRandom } from "../../../features/tree/treeSlice";
-import { useAppDispatch } from "../../../store";
+import { RootState, useAppDispatch } from "../../../store";
 import NavbarItem from "../Navbar Item/NavbarItem";
 import styles from "./Navbar.module.scss";
+import invertTree from "../../../algorithms/invertTree";
+import { useSelector } from "react-redux";
+import { useContext } from "react";
+import { BoxesRefContext } from "../../../pages/_app";
 
 const Navbar = () => {
   // TODO
   // Add fade in/out to generating random tree
   const dispatch = useAppDispatch();
+  const treeState = useSelector((state: RootState) => state.tree);
+  const nodeBoxesRef = useContext(BoxesRefContext);
+
   return (
     <Box className={styles.navbar}>
       <NavbarItem
@@ -15,7 +22,7 @@ const Navbar = () => {
         text="Generate Random Tree"
         onClick={() => dispatch(generateRandom())}
       />
-      <NavbarItem text="Invert Tree" />
+      <NavbarItem text="Invert Tree" onClick={() => invertTree(dispatch, nodeBoxesRef, treeState)} />
       <NavbarItem text="Subtree of Another Tree" />
       <NavbarItem text="Lowest Common Ancestor" />
       <NavbarItem text="Kth Smallest Element" />

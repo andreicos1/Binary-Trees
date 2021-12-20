@@ -5,16 +5,13 @@ import styles from "./Canvas.module.scss";
 import { RootState } from "../../store";
 import dynamic from "next/dynamic";
 import { getNodesByLevel } from "../../features/tree/treeFunctions";
+import React from "react";
 
 const Xarrow = dynamic(() => import("react-xarrows"), {
   ssr: false,
 });
 
-interface Props {
-  nodeBoxesRef: React.MutableRefObject<HTMLDivElement[]>;
-}
-
-const Canvas = ({ nodeBoxesRef }: Props) => {
+const Canvas = React.forwardRef((props: any, nodeBoxesRef: any) => {
   const tree = useSelector((state: RootState) => state.tree);
   const treeByLevels = getNodesByLevel(tree);
 
@@ -52,7 +49,6 @@ const Canvas = ({ nodeBoxesRef }: Props) => {
                   key={columnIdx}
                   className={styles.nodeBox}
                   ref={(el: HTMLDivElement) => {
-                    const clientRect = el ? el.getBoundingClientRect() : null;
                     nodeBoxesRef.current[nodeIndex] = el;
                   }}
                 >
@@ -65,6 +61,6 @@ const Canvas = ({ nodeBoxesRef }: Props) => {
       })}
     </Box>
   );
-};
+});
 
 export default Canvas;

@@ -11,7 +11,7 @@ const ToolkitCanvasBox = () => {
   return (
     <Box className={styles.toolkitCanvasBox} ref={constraintRef}>
       <Toolbar addNodeDragConstraints={constraintRef} nodeBoxesRef={nodeBoxesRef} />
-      <Canvas nodeBoxesRef={nodeBoxesRef} />
+      <Canvas ref={nodeBoxesRef} />
     </Box>
   );
 };

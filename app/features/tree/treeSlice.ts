@@ -112,9 +112,14 @@ export const treeSlice = createSlice({
       state.left = tree.left;
       state.right = tree.right;
     },
+    swap: (state, action: PayloadAction<TreeState>) => {
+      const left = action.payload.right;
+      const right = action.payload.left;
+      // [state.left, state.right] = [state.right, state.left];
+    },
   },
 });
 
-export const { addNode, generateRandom } = treeSlice.actions;
+export const { addNode, generateRandom, swap } = treeSlice.actions;
 
 export default treeSlice.reducer;
