@@ -1,5 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { generateRandomNode, NUMBER_OF_LEVELS } from "./treeFunctions";
+import {
+  generateRandomNode,
+  getDirectionsFromRowAndCol,
+  getParentTreeFromRowAndCol,
+  getTreeFromRowAndCol,
+  NUMBER_OF_LEVELS,
+} from "./treeFunctions";
 
 export interface TreeState {
   value: string;
@@ -11,9 +17,12 @@ const initialState = {
   value: "0",
 } as TreeState;
 
-interface addData {
+interface uiRepresentation {
   rowIndex: number;
   colIndex: number;
+}
+
+interface addData extends uiRepresentation {
   newNodeValue: string;
 }
 
@@ -23,26 +32,11 @@ export const treeSlice = createSlice({
   reducers: {
     addNode: (state, action: PayloadAction<addData>) => {
       // Get row and col where child should be added
+      const nodeVal = action.payload.newNodeValue;
       let childRowIndex = action.payload.rowIndex;
       let childColIndex = action.payload.colIndex;
-      const nodeVal = action.payload.newNodeValue;
-      // Init a node of directions from root to child
-      const directions = new Array<number>();
-      // 1 = isLeft, 0 = isRight
-      for (let currentRowIndex = 0; currentRowIndex < childRowIndex; currentRowIndex++) {
-        // Check if left (even col index) or right (odd col index) child
-        directions.unshift(childColIndex % 2 === 0 ? 1 : 0);
-        childColIndex >>= 1;
-      }
-      // Use the directions to modify a copy to reference of state's proxy
-      let stateReference = state;
-      for (const direction of directions.slice(0, -1)) {
-        if (direction === 1) {
-          stateReference = stateReference.left!;
-        } else {
-          stateReference = stateReference.right!;
-        }
-      }
+      let directions = getDirectionsFromRowAndCol(childRowIndex, childColIndex);
+      let stateReference = getParentTreeFromRowAndCol(state, childRowIndex, childColIndex);
       // Add a new tree state to the corresponding position
       const newNode = { value: nodeVal };
       if (directions[directions.length - 1] === 1) {
@@ -112,9 +106,10 @@ export const treeSlice = createSlice({
       state.left = tree.left;
       state.right = tree.right;
     },
-    swap: (state, action: PayloadAction<TreeState>) => {
-      const left = action.payload.right;
-      const right = action.payload.left;
+    swap: (state, action: PayloadAction<uiRepresentation>) => {
+      const node = getTreeFromRowAndCol(state, action.payload.rowIndex, action.payload.colIndex);
+      console.log(node.value);
+      // [node.left, node.right] = [node.right, node.left];
       // [state.left, state.right] = [state.right, state.left];
     },
   },

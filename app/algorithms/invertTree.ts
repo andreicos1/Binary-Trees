@@ -7,9 +7,7 @@ const invertTree = (
   nodeBoxesRef: MutableRefObject<HTMLDivElement[]>,
   treeState: TreeState
 ) => {
-  console.log(treeState);
-  dispatch(swap(treeState));
-  console.log(treeState);
+  dispatch(swap({ rowIndex: 3, colIndex: 7 }));
 };
 
 export default invertTree;

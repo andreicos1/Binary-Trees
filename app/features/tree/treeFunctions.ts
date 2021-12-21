@@ -1,3 +1,4 @@
+import { WritableDraft } from "immer/dist/internal";
 import { TreeState } from "./treeSlice";
 export const NUMBER_OF_LEVELS = parseInt(process.env.NEXT_PUBLIC_MAX_TREE_LEVELS as string);
 const MAX_VALUE = 99;
@@ -35,12 +36,10 @@ export const getNodesByLevel = (node: TreeState): string[][] => {
   dfsAddToLevel(node, 0, levels, true, levels.length, 0);
   return levels;
 };
-
-interface coordinates {
+export interface coordinates {
   rowIndex: number;
   columnIndex: number;
 }
-
 export const getEmptyValidChildren = (root: TreeState): coordinates[] => {
   const positions = new Array<coordinates>();
   function dfsFindValidPositions(
@@ -86,6 +85,54 @@ export const getRowAndColFromIndex = (index: number): [number, number] => {
   const rowIndex = Math.floor(Math.log2(index + 1));
   const colIndex = index - Math.pow(2, rowIndex) + 1;
   return [rowIndex, colIndex];
+};
+
+export const getDirectionsFromRowAndCol = (row: number, col: number): Array<number> => {
+  // Init a node of directions from root to child
+  const directions = new Array<number>();
+  // 1 = isLeft, 0 = isRight
+  for (let currentRowIndex = 0; currentRowIndex < row; currentRowIndex++) {
+    // Check if left (even col index) or right (odd col index) child
+    directions.unshift(col % 2 === 0 ? 1 : 0);
+    col >>= 1;
+  }
+  return directions;
+};
+
+const getTreeChildFromDirection = (
+  directions: number[],
+  stateReference: WritableDraft<TreeState>
+): WritableDraft<TreeState> => {
+  for (const direction of directions) {
+    if (direction === 1) {
+      stateReference = stateReference.left!;
+    } else {
+      stateReference = stateReference.right!;
+    }
+  }
+  return stateReference;
+};
+
+export const getParentTreeFromRowAndCol = (
+  state: WritableDraft<TreeState>,
+  row: number,
+  col: number
+): WritableDraft<TreeState> => {
+  const directions = getDirectionsFromRowAndCol(row, col);
+  // Use the directions to modify a copy to reference of state's proxy
+  let stateReference = state;
+  return getTreeChildFromDirection(directions.slice(0, -1), stateReference);
+};
+
+export const getTreeFromRowAndCol = (
+  state: WritableDraft<TreeState>,
+  row: number,
+  col: number
+): WritableDraft<TreeState> => {
+  const directions = getDirectionsFromRowAndCol(row, col);
+  // Use the directions to modify a copy to reference of state's proxy
+  let stateReference = state;
+  return getTreeChildFromDirection(directions, stateReference);
 };
 
 export const euclideanDistance = (
