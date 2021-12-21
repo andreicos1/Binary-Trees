@@ -104,6 +104,9 @@ const getTreeChildFromDirection = (
   stateReference: WritableDraft<TreeState>
 ): WritableDraft<TreeState> => {
   for (const direction of directions) {
+    if (!stateReference) {
+      return stateReference;
+    }
     if (direction === 1) {
       stateReference = stateReference.left!;
     } else {

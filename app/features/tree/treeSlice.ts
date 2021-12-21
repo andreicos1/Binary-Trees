@@ -17,7 +17,7 @@ const initialState = {
   value: "0",
 } as TreeState;
 
-interface uiRepresentation {
+export interface uiRepresentation {
   rowIndex: number;
   colIndex: number;
 }
@@ -108,9 +108,9 @@ export const treeSlice = createSlice({
     },
     swap: (state, action: PayloadAction<uiRepresentation>) => {
       const node = getTreeFromRowAndCol(state, action.payload.rowIndex, action.payload.colIndex);
-      console.log(node.value);
-      // [node.left, node.right] = [node.right, node.left];
-      // [state.left, state.right] = [state.right, state.left];
+      if (node) {
+        [node.left, node.right] = [node.right, node.left];
+      }
     },
   },
 });
