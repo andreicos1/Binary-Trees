@@ -12,7 +12,6 @@ const Navbar = () => {
   // TODO
   // Add fade in/out to generating random tree
   const dispatch = useAppDispatch();
-  const treeState = useSelector((state: RootState) => state.tree);
   const nodeBoxesRef = useContext(BoxesRefContext);
 
   return (
@@ -22,10 +21,7 @@ const Navbar = () => {
         text="Generate Random Tree"
         onClick={() => dispatch(generateRandom())}
       />
-      <NavbarItem
-        text="Invert Tree"
-        onClick={() => invertTree(dispatch, nodeBoxesRef, treeState)}
-      />
+      <NavbarItem text="Invert Tree" onClick={() => invertTree(dispatch, nodeBoxesRef)} />
       <NavbarItem text="Subtree of Another Tree" />
       <NavbarItem text="Lowest Common Ancestor" />
       <NavbarItem text="Kth Smallest Element" />
