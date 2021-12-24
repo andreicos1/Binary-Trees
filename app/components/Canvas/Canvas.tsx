@@ -1,10 +1,10 @@
-import { Box, Flex } from "@chakra-ui/layout";
+import { Box, Circle, Flex } from "@chakra-ui/layout";
 import { useSelector } from "react-redux";
 import Node from "../Node/Node";
 import styles from "./Canvas.module.scss";
 import { RootState } from "../../store";
 import dynamic from "next/dynamic";
-import { getNodesByLevel } from "../../features/tree/treeFunctions";
+import { getIndexFromLevelAndCol, getNodesByLevel } from "../../features/tree/treeFunctions";
 import React from "react";
 
 const Xarrow = dynamic(() => import("react-xarrows"), {
@@ -42,7 +42,7 @@ const Canvas = React.forwardRef((props: any, nodeBoxesRef: any) => {
                   {connection}
                 </>
               ) : null;
-              const nodeIndex = Math.pow(2, levelIdx) - 1 + columnIdx;
+              const nodeIndex = getIndexFromLevelAndCol(levelIdx, columnIdx);
               return (
                 <Box
                   id={currNodeId}

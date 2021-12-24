@@ -1,4 +1,4 @@
-import { Box, Circle, Text } from "@chakra-ui/layout";
+import { Circle, Text } from "@chakra-ui/layout";
 import { Input } from "@chakra-ui/react";
 import React, { useState } from "react";
 import styles from "./Node.module.scss";
@@ -15,7 +15,7 @@ const Node = ({ value, isEditing, onBlur }: NodeInterface) => {
     setNodeValue(event.currentTarget.value);
   };
   return (
-    <Box>
+    <Circle>
       <Circle className={styles.node}>
         {isEditing ? (
           <Input
@@ -28,7 +28,7 @@ const Node = ({ value, isEditing, onBlur }: NodeInterface) => {
           <Text className={styles.content}>{value}</Text>
         )}
       </Circle>
-    </Box>
+    </Circle>
   );
 };
 

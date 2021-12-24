@@ -1,12 +1,20 @@
 import { MutableRefObject } from "react";
-import { getIndexFromLevelAndCol, getTreeFromRowAndCol } from "../features/tree/treeFunctions";
-import { swap, TreeState } from "../features/tree/treeSlice";
+import { getIndexFromLevelAndCol } from "../features/tree/treeFunctions";
+import { swap } from "../features/tree/treeSlice";
 import { AppDispatch } from "../store";
-import styles from "../styles/Home.module.scss";
 
-function timeout(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
+const waitAnimationEnd = (elem: Element) => {
+  return Promise.all(
+    elem.getAnimations().map(function (animation) {
+      return animation.finished;
+    })
+  );
+};
+
+const getDistance = (leftNode: Element, rightNode: Element) => {
+  const distanceX = rightNode.getBoundingClientRect().x - leftNode.getBoundingClientRect().x;
+  return distanceX;
+};
 
 const getChildrenBoxes = (
   rowIndex: number,
@@ -25,8 +33,10 @@ const invertTree = async (
   nodeBoxesRef: MutableRefObject<HTMLDivElement[]>
 ) => {
   // TODO
-  // 1. Set arrows display to none when moving
-  // 2. Move all children nodes to correct new position, not just the direct ones
+  // 1. Calculate distances between left and right children positions
+  // 2. Animate them
+  // 3. BUG: clicking on invert tree multiple times has weird effects
+  const duration = 1000; //ms
   let rowIndex = 0;
   let colIndex = 0;
   var stack = [[rowIndex, colIndex]];
@@ -38,18 +48,34 @@ const invertTree = async (
       continue;
     }
     // Animate
-    let nodeElement, nodeBoxLeft, nodeBoxRight;
-    nodeElement = nodeBox.children[0].children[0];
-    [nodeBoxLeft, nodeBoxRight] = getChildrenBoxes(rowIndex, colIndex, nodeBoxesRef);
-    nodeElement.classList.add(styles.highlightedNode);
-    nodeBoxLeft && nodeBoxLeft.classList.add(styles.animationLeftNode);
-    nodeBoxRight && nodeBoxRight.classList.add(styles.animationRightNode);
-    console.log(nodeElement);
-    await timeout(1000); // wait for animation to complete
+    const nodeElement = nodeBox.children[0].children[0];
+    const [nodeBoxLeft, nodeBoxRight] = getChildrenBoxes(rowIndex, colIndex, nodeBoxesRef);
+
+    const distanceX = nodeBoxLeft ? getDistance(nodeBoxLeft, nodeBoxRight) : null;
+
+    const arrowLeft = nodeBoxLeft ? (nodeBoxLeft.children[1] as HTMLDivElement | undefined) : null;
+    const arrowRight = nodeBoxRight
+      ? (nodeBoxRight.children[1] as HTMLDivElement | undefined)
+      : null;
+
+    nodeElement.animate([{ backgroundColor: "burlywood" }], { duration });
+    if (arrowLeft) arrowLeft.style.display = "none";
+    if (arrowRight) arrowRight.style.display = "none";
+    nodeBoxLeft &&
+      nodeBoxLeft.animate([{ transform: `translateX(${distanceX}px)` }], {
+        duration,
+      });
+    nodeBoxRight &&
+      nodeBoxRight.animate([{ transform: `translateX(-${distanceX}px)` }], {
+        duration,
+      });
+    // Wait for animation to complete
+    await waitAnimationEnd(nodeElement);
+    // Set new position
     dispatch(swap({ rowIndex, colIndex }));
-    nodeElement && nodeElement.classList.remove(styles.highlightedNode);
-    nodeBoxLeft && nodeBoxLeft.classList.remove(styles.animationLeftNode);
-    nodeBoxRight && nodeBoxRight.classList.remove(styles.animationRightNode);
+    if (arrowLeft) arrowLeft.style.display = "";
+    if (arrowRight) arrowRight.style.display = "";
+    // Push children to stack
     stack.push([rowIndex + 1, colIndex * 2]);
     stack.push([rowIndex + 1, colIndex * 2 + 1]);
   }

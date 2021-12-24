@@ -1,9 +1,8 @@
 import { Box } from "@chakra-ui/layout";
 import { generateRandom } from "../../../features/tree/treeSlice";
-import { RootState, useAppDispatch } from "../../../store";
+import { useAppDispatch } from "../../../store";
 import NavbarItem from "../Navbar Item/NavbarItem";
 import styles from "./Navbar.module.scss";
-import { useSelector } from "react-redux";
 import { useContext } from "react";
 import { BoxesRefContext } from "../../../pages/_app";
 import invertTree from "../../../algorithms/invertTree";
