@@ -30,12 +30,14 @@ const getChildrenBoxes = (
 
 const invertTree = async (
   dispatch: AppDispatch,
-  nodeBoxesRef: MutableRefObject<HTMLDivElement[]>
+  nodeBoxesRef: MutableRefObject<HTMLDivElement[]>,
+  toggleAlgorithmPlaying: (arg0: boolean) => void
 ) => {
   // TODO
   // 1. Calculate distances between left and right children positions
   // 2. Animate them
-  // 3. BUG: clicking on invert tree multiple times has weird effects
+  // 3. Improve aspect of highlighting nodes
+  toggleAlgorithmPlaying(true);
   const duration = 1000; //ms
   let rowIndex = 0;
   let colIndex = 0;
@@ -47,12 +49,12 @@ const invertTree = async (
     if (!nodeBox || !nodeBox.children.length) {
       continue;
     }
-    // Animate
+
     const nodeElement = nodeBox.children[0].children[0];
+
     const [nodeBoxLeft, nodeBoxRight] = getChildrenBoxes(rowIndex, colIndex, nodeBoxesRef);
-
     const distanceX = nodeBoxLeft ? getDistance(nodeBoxLeft, nodeBoxRight) : null;
-
+    // Animate
     const arrowLeft = nodeBoxLeft ? (nodeBoxLeft.children[1] as HTMLDivElement | undefined) : null;
     const arrowRight = nodeBoxRight
       ? (nodeBoxRight.children[1] as HTMLDivElement | undefined)
@@ -79,6 +81,7 @@ const invertTree = async (
     stack.push([rowIndex + 1, colIndex * 2]);
     stack.push([rowIndex + 1, colIndex * 2 + 1]);
   }
+  toggleAlgorithmPlaying(false);
 };
 
 export default invertTree;

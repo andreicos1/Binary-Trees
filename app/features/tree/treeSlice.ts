@@ -46,8 +46,8 @@ export const treeSlice = createSlice({
       }
     },
     generateRandom: (state) => {
-      const bothNodesLevel1Odds = 0.7;
-      const nodeExistsOdds = 0.33; // odds for levels 2 +
+      const bothNodesLevel1Odds = 0.85;
+      const nodeExistsOdds = 0.4; // odds for levels 2 +
       const tree = generateRandomNode();
       const queue: [TreeState, number][] = []; // number is level
       // Populate first level
