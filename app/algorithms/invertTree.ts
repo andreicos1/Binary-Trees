@@ -3,7 +3,15 @@ import { getIndexFromLevelAndCol } from "../features/tree/treeFunctions";
 import { swap } from "../features/tree/treeSlice";
 import { AppDispatch } from "../store";
 
+// TODO
+// 1. Gray out algorithm button during algorithm playing
+// 2. BUG: user can generate a new random tree and algorithm continues playing, as well as add/ delete, etc.
+// 1 & 2 --> context or store variable isPlaying. Move from Navbar
+// 3. Make duration editable by user
+
 const duration = 1000; //ms
+const highlightParentColor = process.env.NEXT_PUBLIC_HIGHLIGHTED_CURRENT_COLOR;
+const highlightChildren = process.env.NEXT_PUBLIC_HIGHLIGHTED_CHILDREN_COLOR;
 
 const waitAnimationEnd = (elem: Element) => {
   return Promise.all(
@@ -12,6 +20,24 @@ const waitAnimationEnd = (elem: Element) => {
     })
   );
 };
+
+const childKeyframes = (distanceX: number) => {
+  return [
+    { boxShadow: "0" },
+    {
+      boxShadow: "0 10px 10px black",
+      transform: `scaleX(120%) scaleY(120%) translateX(${distanceX / 2}px)`,
+    },
+    { boxShadow: "0", transform: `translateX(${distanceX}px)` },
+  ];
+};
+
+const highlightDirectChildren = [
+  { backgroundColor: highlightChildren, offset: 0.2 },
+  { backgroundColor: highlightChildren },
+];
+
+const animationOptions = { duration, delay: duration / 4 };
 
 const getDistance = (leftNode: Element, rightNode: Element) => {
   const distanceX = rightNode.getBoundingClientRect().x - leftNode.getBoundingClientRect().x;
@@ -57,20 +83,31 @@ const animate = async (
   }
   const arrowsLeft: HTMLDivElement[] = [];
   const arrowsRight: HTMLDivElement[] = [];
-  parent.animate([{ backgroundColor: "burlywood" }], { duration });
+  // If node has children
   if (leftBoxes.length > 0) {
+    parent.animate(
+      [
+        { backgroundColor: highlightParentColor, offset: 0.2 },
+        { backgroundColor: highlightParentColor },
+      ],
+      animationOptions
+    );
+    // Highlight direct children
     const parentLeft = leftBoxes[0];
     const parentRight = rightBoxes[0];
+    parentLeft.children[0] &&
+      parentLeft.children[0].children[0].animate(highlightDirectChildren, animationOptions);
+    parentRight.children[0] &&
+      parentRight.children[0].children[0].animate(highlightDirectChildren, animationOptions);
+    // Move all children, grandchildren, etc.
     const distanceX = getDistance(parentLeft, parentRight);
     for (let i = 0; i < leftBoxes.length; i++) {
       const arrowLeft = leftBoxes[i].children[1] as HTMLDivElement;
       const arrowRight = rightBoxes[i].children[1] as HTMLDivElement;
-      leftBoxes[i].animate([{ transform: `translateX(${distanceX}px)` }], {
-        duration,
-      });
-      rightBoxes[i].animate([{ transform: `translateX(-${distanceX}px)` }], {
-        duration,
-      });
+      const leftNode = leftBoxes[i].children[0] ? leftBoxes[i].children[0].children[0] : null;
+      const rightNode = rightBoxes[i].children[0] ? rightBoxes[i].children[0].children[0] : null;
+      leftNode && leftNode.animate(childKeyframes(distanceX), animationOptions);
+      rightNode && rightNode.animate(childKeyframes(-distanceX), animationOptions);
       if (arrowLeft) {
         arrowLeft.style.display = "none";
         arrowsLeft.push(arrowLeft);
@@ -80,6 +117,15 @@ const animate = async (
         arrowsRight.push(arrowRight);
       }
     }
+  } else {
+    // Node has no children -> animate faster
+    parent.animate(
+      [
+        { backgroundColor: highlightParentColor, offset: 0.2 },
+        { backgroundColor: highlightParentColor },
+      ],
+      { duration: duration / 4, delay: duration / 4 }
+    );
   }
   // Wait for animation to complete
   await waitAnimationEnd(parent);
@@ -96,10 +142,6 @@ const invertTree = async (
   nodeBoxesRef: MutableRefObject<HTMLDivElement[]>,
   toggleAlgorithmPlaying: (arg0: boolean) => void
 ) => {
-  // TODO
-  // 1. Improve aspect of highlighting nodes
-  // 2. Improve aspect of animating nodes
-  // 3. Gray out algorithm button during algorithm playing
   toggleAlgorithmPlaying(true);
   let rowIndex = 0;
   let colIndex = 0;
