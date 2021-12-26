@@ -34,6 +34,9 @@ const Toolbar = ({ addNodeDragConstraints, nodeBoxesRef }: ToolbarProps) => {
       id="toolkit"
       className={styles.toolbarBox}
       onClick={(event) => {
+        if (treeUpdateState.isPlaying) {
+          return;
+        }
         // Change selected toolkit item
         const target = event.target as HTMLElement;
         if (Object.keys(dispatchToolkitOptionById).includes(target.id)) {

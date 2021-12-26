@@ -4,6 +4,7 @@ const initialState = {
   deleting: false,
   adding: false,
   editing: false,
+  isPlaying: false,
 };
 
 export const treeUpdateSlice = createSlice({
@@ -30,8 +31,17 @@ export const treeUpdateSlice = createSlice({
       state.adding = false;
       state.editing = false;
     },
+    toggleIsPlaying: (state) => {
+      state.isPlaying = !state.isPlaying;
+      if (state.isPlaying) {
+        state.deleting = false;
+        state.adding = false;
+        state.editing = false;
+      }
+    },
   },
 });
 
-export const { toggleDelete, toggleAdd, toggleEdit, turnAllOff } = treeUpdateSlice.actions;
+export const { toggleDelete, toggleAdd, toggleEdit, turnAllOff, toggleIsPlaying } =
+  treeUpdateSlice.actions;
 export default treeUpdateSlice.reducer;

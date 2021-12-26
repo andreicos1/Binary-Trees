@@ -1,41 +1,44 @@
-import { Box } from "@chakra-ui/layout";
+import { Box, Text } from "@chakra-ui/layout";
 import { generateRandom } from "../../../features/tree/treeSlice";
-import { useAppDispatch } from "../../../store";
+import { RootState, useAppDispatch } from "../../../store";
 import NavbarItem from "../Navbar Item/NavbarItem";
 import styles from "./Navbar.module.scss";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { BoxesRefContext } from "../../../pages/_app";
 import invertTree from "../../../algorithms/invertTree";
+import { useSelector } from "react-redux";
+import { toggleIsPlaying } from "../../../features/tree/treeUpdateSlice";
 
 const Navbar = () => {
   // TODO
   // Add fade in/out to generating random tree
   const dispatch = useAppDispatch();
   const nodeBoxesRef = useContext(BoxesRefContext);
-  const [algorithmPlaying, setAlgorithmPlaying] = useState(false);
-  const toggleAlgorithmPlaying = (playing: boolean) => {
-    setAlgorithmPlaying(playing);
-  };
+  const treeUpdateState = useSelector((state: RootState) => state.treeUpdate);
 
   return (
     <Box className={styles.navbar}>
       <NavbarItem
         className={styles.generateRandom}
         text="Generate Random Tree"
-        onClick={() => dispatch(generateRandom())}
+        onClick={() => {
+          if (!treeUpdateState.isPlaying) {
+            dispatch(generateRandom());
+          }
+        }}
       />
       <NavbarItem
         text="Invert Tree"
         onClick={() => {
-          if (!algorithmPlaying) {
-            invertTree(dispatch, nodeBoxesRef, toggleAlgorithmPlaying);
+          if (!treeUpdateState.isPlaying) {
+            invertTree(dispatch, nodeBoxesRef, toggleIsPlaying);
           }
         }}
       />
       <NavbarItem text="Subtree of Another Tree" />
       <NavbarItem text="Lowest Common Ancestor" />
       <NavbarItem text="Kth Smallest Element" />
-      <NavbarItem className={styles.login} text="Log in" />
+      <Text className={styles.login}> Log In </Text>
     </Box>
   );
 };

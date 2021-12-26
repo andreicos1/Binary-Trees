@@ -1,7 +1,6 @@
 .toolbarItemBox {
   display: flex;
   align-items: center;
-  cursor: pointer;
   &:not(:last-child) {
     margin-bottom: 3.5rem;
   }

@@ -1,13 +1,13 @@
+import { ActionCreatorWithoutPayload } from "@reduxjs/toolkit";
 import { MutableRefObject } from "react";
 import { getIndexFromLevelAndCol } from "../features/tree/treeFunctions";
 import { swap } from "../features/tree/treeSlice";
 import { AppDispatch } from "../store";
 
 // TODO
-// 1. Gray out algorithm button during algorithm playing
-// 2. BUG: user can generate a new random tree and algorithm continues playing, as well as add/ delete, etc.
-// 1 & 2 --> context or store variable isPlaying. Move from Navbar
-// 3. Make duration editable by user
+// 1. Gray out buttons during algorithm playing
+
+// 2. Make duration editable by user (store variable)
 
 const duration = 1000; //ms
 const highlightParentColor = process.env.NEXT_PUBLIC_HIGHLIGHTED_CURRENT_COLOR;
@@ -140,9 +140,9 @@ const animate = async (
 const invertTree = async (
   dispatch: AppDispatch,
   nodeBoxesRef: MutableRefObject<HTMLDivElement[]>,
-  toggleAlgorithmPlaying: (arg0: boolean) => void
+  togglePlaying: ActionCreatorWithoutPayload<string>
 ) => {
-  toggleAlgorithmPlaying(true);
+  dispatch(togglePlaying());
   let rowIndex = 0;
   let colIndex = 0;
   var stack = [[rowIndex, colIndex]];
@@ -162,7 +162,7 @@ const invertTree = async (
     stack.push([rowIndex + 1, colIndex * 2]);
     stack.push([rowIndex + 1, colIndex * 2 + 1]);
   }
-  toggleAlgorithmPlaying(false);
+  dispatch(togglePlaying());
 };
 
 export default invertTree;

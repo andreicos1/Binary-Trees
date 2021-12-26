@@ -48,11 +48,11 @@ const ToolbarItemAdd = ({
   const controls = useAnimation();
 
   // TODO
-  // OPTION TO EDIT VALUE BEFORE ADDING
-  // XARROW SHOULDN'T DISPLAY ONDRAG IN INVALID POSITIONS
-  // XARROW SNAP SHOULD BE SMOOTH
-  // WEIRD SNAPPING NODE DISAPPEARS ONCLICK ADD
-  // FUNCTIONALITY BREAKS ON WINDOW RESIZE
+  // 1. OPTION TO EDIT VALUE BEFORE ADDING
+  // 2. XARROW SHOULDN'T DISPLAY ONDRAG IN INVALID POSITIONS
+  // 3. XARROW SNAP SHOULD BE SMOOTH
+  // 4. SNAPPING NODE DISAPPEARS ONCLICK ADD
+  // 5. FUNCTIONALITY BREAKS ON WINDOW RESIZE
 
   const getClosestParent = (event: PointerEvent, info: PanInfo): void => {
     // Behavior to add the node to the tree on drag end, if valid position
@@ -161,7 +161,12 @@ const ToolbarItemAdd = ({
   ) : null;
 
   return (
-    <Box className={styles.toolbarItemBox} id={id}>
+    <Box
+      className={styles.toolbarItemBox}
+      id={id}
+      cursor={!treeUpdateState.isPlaying ? "pointer" : "auto"}
+      opacity={!treeUpdateState.isPlaying ? "1" : "0.6"}
+    >
       <Box className={styles.icon}>{icon}</Box>
       <Text className={styles.toolbarItem}>{text}</Text>
       {addingNodeDisplay}
