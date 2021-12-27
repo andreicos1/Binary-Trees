@@ -9,7 +9,6 @@ import { AppDispatch } from "../store";
 
 // 2. Make duration editable by user (store variable)
 
-const duration = 1000; //ms
 const highlightParentColor = process.env.NEXT_PUBLIC_HIGHLIGHTED_CURRENT_COLOR;
 const highlightChildren = process.env.NEXT_PUBLIC_HIGHLIGHTED_CHILDREN_COLOR;
 
@@ -23,12 +22,12 @@ const waitAnimationEnd = (elem: Element) => {
 
 const childKeyframes = (distanceX: number) => {
   return [
-    { boxShadow: "0" },
+    { boxShadow: "none" },
     {
       boxShadow: "0 10px 10px black",
       transform: `scaleX(120%) scaleY(120%) translateX(${distanceX / 2}px)`,
     },
-    { boxShadow: "0", transform: `translateX(${distanceX}px)` },
+    { boxShadow: "none", transform: `translateX(${distanceX}px)` },
   ];
 };
 
@@ -37,7 +36,9 @@ const highlightDirectChildren = [
   { backgroundColor: highlightChildren },
 ];
 
-const animationOptions = { duration, delay: duration / 4 };
+const animationOptions = (duration: number) => {
+  return { duration, delay: duration / 4 };
+};
 
 const getDistance = (leftNode: Element, rightNode: Element) => {
   const distanceX = rightNode.getBoundingClientRect().x - leftNode.getBoundingClientRect().x;
@@ -76,7 +77,8 @@ const getChildrenBoxes = (
 const animate = async (
   parent: Element,
   leftBoxes: HTMLDivElement[],
-  rightBoxes: HTMLDivElement[]
+  rightBoxes: HTMLDivElement[],
+  duration: number
 ) => {
   if (leftBoxes.length !== rightBoxes.length) {
     throw "Left and Right boxes lengths should be equal";
@@ -90,15 +92,21 @@ const animate = async (
         { backgroundColor: highlightParentColor, offset: 0.2 },
         { backgroundColor: highlightParentColor },
       ],
-      animationOptions
+      animationOptions(duration)
     );
     // Highlight direct children
     const parentLeft = leftBoxes[0];
     const parentRight = rightBoxes[0];
     parentLeft.children[0] &&
-      parentLeft.children[0].children[0].animate(highlightDirectChildren, animationOptions);
+      parentLeft.children[0].children[0].animate(
+        highlightDirectChildren,
+        animationOptions(duration)
+      );
     parentRight.children[0] &&
-      parentRight.children[0].children[0].animate(highlightDirectChildren, animationOptions);
+      parentRight.children[0].children[0].animate(
+        highlightDirectChildren,
+        animationOptions(duration)
+      );
     // Move all children, grandchildren, etc.
     const distanceX = getDistance(parentLeft, parentRight);
     for (let i = 0; i < leftBoxes.length; i++) {
@@ -106,8 +114,8 @@ const animate = async (
       const arrowRight = rightBoxes[i].children[1] as HTMLDivElement;
       const leftNode = leftBoxes[i].children[0] ? leftBoxes[i].children[0].children[0] : null;
       const rightNode = rightBoxes[i].children[0] ? rightBoxes[i].children[0].children[0] : null;
-      leftNode && leftNode.animate(childKeyframes(distanceX), animationOptions);
-      rightNode && rightNode.animate(childKeyframes(-distanceX), animationOptions);
+      leftNode && leftNode.animate(childKeyframes(distanceX), animationOptions(duration));
+      rightNode && rightNode.animate(childKeyframes(-distanceX), animationOptions(duration));
       if (arrowLeft) {
         arrowLeft.style.display = "none";
         arrowsLeft.push(arrowLeft);
@@ -140,7 +148,8 @@ const animate = async (
 const invertTree = async (
   dispatch: AppDispatch,
   nodeBoxesRef: MutableRefObject<HTMLDivElement[]>,
-  togglePlaying: ActionCreatorWithoutPayload<string>
+  togglePlaying: ActionCreatorWithoutPayload<string>,
+  duration: number
 ) => {
   dispatch(togglePlaying());
   let rowIndex = 0;
@@ -155,7 +164,7 @@ const invertTree = async (
     }
     const nodeElement = nodeBox.children[0].children[0];
     const [leftBoxes, rightBoxes] = getChildrenBoxes(rowIndex, colIndex, nodeBoxesRef);
-    await animate(nodeElement, leftBoxes, rightBoxes);
+    await animate(nodeElement, leftBoxes, rightBoxes, duration);
     // Set new position
     dispatch(swap({ rowIndex, colIndex }));
     // Push children to stack

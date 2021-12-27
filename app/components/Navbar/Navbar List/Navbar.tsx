@@ -15,6 +15,7 @@ const Navbar = () => {
   const dispatch = useAppDispatch();
   const nodeBoxesRef = useContext(BoxesRefContext);
   const treeUpdateState = useSelector((state: RootState) => state.treeUpdate);
+  const animationSpeed = useSelector((state: RootState) => state.speed);
 
   return (
     <Box className={styles.navbar}>
@@ -31,7 +32,7 @@ const Navbar = () => {
         text="Invert Tree"
         onClick={() => {
           if (!treeUpdateState.isPlaying) {
-            invertTree(dispatch, nodeBoxesRef, toggleIsPlaying);
+            invertTree(dispatch, nodeBoxesRef, toggleIsPlaying, animationSpeed.duration);
           }
         }}
       />

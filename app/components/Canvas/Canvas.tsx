@@ -1,4 +1,4 @@
-import { Box, Circle, Flex } from "@chakra-ui/layout";
+import { Box, Flex } from "@chakra-ui/layout";
 import { useSelector } from "react-redux";
 import Node from "../Node/Node";
 import styles from "./Canvas.module.scss";
@@ -6,6 +6,7 @@ import { RootState } from "../../store";
 import dynamic from "next/dynamic";
 import { getIndexFromLevelAndCol, getNodesByLevel } from "../../features/tree/treeFunctions";
 import React from "react";
+import SpeedSlider from "../Slider/Slider";
 
 const Xarrow = dynamic(() => import("react-xarrows"), {
   ssr: false,
@@ -17,6 +18,7 @@ const Canvas = React.forwardRef((props: any, nodeBoxesRef: any) => {
 
   return (
     <Box className={styles.canvas}>
+      <SpeedSlider />
       {treeByLevels.map((level, levelIdx) => {
         return (
           <Flex width="100%" justifyContent="space-around" key={levelIdx}>
