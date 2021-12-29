@@ -1,3 +1,4 @@
+import { ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import * as cookieParser from "cookie-parser";
@@ -11,7 +12,8 @@ async function bootstrap() {
     origin: "http://localhost:3000",
     credentials: true,
   });
-
+  // Valdation DTO
+  app.useGlobalPipes(new ValidationPipe());
   const config = new DocumentBuilder()
     .setTitle("Binary Trees API")
     .setDescription("The binary trees API description")

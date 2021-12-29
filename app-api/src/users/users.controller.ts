@@ -33,24 +33,16 @@ export class UsersController {
   ) {}
 
   @Post("/signup")
-  async signup(
-    @Body() body: CreateUserDto,
-    @Session() session: Record<string, any>
-  ) {
+  async signup(@Body() body: CreateUserDto) {
     const user = await this.authService.signup(body.email, body.password);
     return user;
   }
 
   @Post("/confirm")
-  async confirm(
-    @Body() body: ConfirmEmailDto,
-    @Res({ passthrough: true }) response: Response
-  ) {
+  async confirm(@Body() body: ConfirmEmailDto, @Res({ passthrough: true }) response: Response) {
     try {
       // Mark email as confirmed in the database
-      const id: number = await this.authService.decodeConfirmationToken(
-        body.token
-      );
+      const id: number = await this.authService.decodeConfirmationToken(body.token);
       // Get the user and create a new jwt token
       const user = await this.usersService.findOne(id);
       if (!user) {
@@ -83,10 +75,7 @@ export class UsersController {
   }
 
   @Post("/logout")
-  async logout(
-    @Req() request: Request,
-    @Res({ passthrough: true }) response: Response
-  ) {
+  async logout(@Req() request: Request, @Res({ passthrough: true }) response: Response) {
     const cookie = request.cookies["jwt"];
     if (!cookie) {
       throw new NotFoundException("No current session data found");

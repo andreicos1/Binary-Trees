@@ -4,11 +4,6 @@ import { getIndexFromLevelAndCol } from "../features/tree/treeFunctions";
 import { swap } from "../features/tree/treeSlice";
 import { AppDispatch } from "../store";
 
-// TODO
-// 1. Gray out buttons during algorithm playing
-
-// 2. Make duration editable by user (store variable)
-
 const highlightParentColor = process.env.NEXT_PUBLIC_HIGHLIGHTED_CURRENT_COLOR;
 const highlightChildren = process.env.NEXT_PUBLIC_HIGHLIGHTED_CHILDREN_COLOR;
 

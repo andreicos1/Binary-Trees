@@ -7,18 +7,21 @@ import { UsersModule } from "./users/users.module";
 import { MailModule } from "./mail/mail.module";
 import { CommentsModule } from "./comments/comments.module";
 import { Comment } from "./comments/comments.entity";
+import { ViewsModule } from './views/views.module';
+import { View } from "./views/view.entity";
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       type: "sqlite",
       database: "db.sqlite",
-      entities: [User, Comment],
+      entities: [User, Comment, View],
       synchronize: true,
     }),
     UsersModule,
     MailModule,
     CommentsModule,
+    ViewsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
