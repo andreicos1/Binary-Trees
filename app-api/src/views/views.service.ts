@@ -13,7 +13,7 @@ export class ViewsService {
 
   async create(ip: string) {
     const oldView = await this.repo.find({ ip });
-    if (!oldView.length) {
+    if (ip && !oldView.length) {
       const viewedAt = Date.now();
       const view = this.repo.create({
         ip,

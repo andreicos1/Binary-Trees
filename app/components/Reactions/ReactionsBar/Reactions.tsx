@@ -1,12 +1,25 @@
-import { Image } from "@chakra-ui/image";
-import { Box, Text } from "@chakra-ui/layout";
+import { Box } from "@chakra-ui/layout";
+import { useState } from "react";
+import { ReactionsData } from "../../../pages";
 import ReactionsItem from "../ReactionsItem/ReactionsItem";
 import styles from "./Reactions.module.scss";
 
-const Reactions = () => {
+const Reactions = ({ totalViews, totalLikes }: ReactionsData) => {
+  const [currentLikes, setCurrentLikes] = useState(totalLikes);
+  const postLike = async () => {
+    const baseUrl = process.env.NEXT_PUBLIC_WEBSITE_URL;
+    const responseAddLike = await fetch(`${baseUrl}/likes`, { method: "POST" });
+    const addedLike = await responseAddLike.json();
+    if (addedLike) {
+      setCurrentLikes(currentLikes + 1);
+    } else {
+      setCurrentLikes(currentLikes - 1);
+    }
+  };
   return (
     <Box className={styles.reactionsBar}>
       <ReactionsItem
+        value={totalViews.toString()}
         icon={
           <svg className={styles.eye}>
             <use xlinkHref="/sprites.svg#icon-eye" />{" "}
@@ -14,6 +27,7 @@ const Reactions = () => {
         }
       />
       <ReactionsItem
+        value={totalLikes.toString()}
         icon={
           <svg className={styles.heart}>
             <use xlinkHref="/sprites.svg#icon-heart" />{" "}
@@ -21,11 +35,13 @@ const Reactions = () => {
         }
       />
       <ReactionsItem
+        value={currentLikes.toString()}
         icon={
           <svg className={styles.thumbsUp}>
             <use xlinkHref="/sprites.svg#icon-thumbs_up" />{" "}
           </svg>
         }
+        onClick={postLike}
       />
     </Box>
   );

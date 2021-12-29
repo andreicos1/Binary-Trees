@@ -3,13 +3,15 @@ import styles from "./ReactionsItem.module.scss";
 
 interface ReactionsItem {
   icon: JSX.Element;
+  value: string;
+  onClick?: () => void;
 }
 
-const ReactionsItem = ({ icon }: ReactionsItem) => {
+const ReactionsItem = ({ icon, value, onClick }: ReactionsItem) => {
   return (
-    <Box className={styles.iconGroup}>
+    <Box className={styles.iconGroup} onClick={() => onClick && onClick()}>
       <Box className={styles.iconBox}>{icon}</Box>
-      <Text className={styles.iconCount}>{17}</Text>
+      <Text className={styles.iconCount}>{value}</Text>
     </Box>
   );
 };

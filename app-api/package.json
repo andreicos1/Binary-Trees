@@ -45,7 +45,8 @@
     "sqlite": "^4.0.23",
     "sqlite3": "^5.0.2",
     "swagger-ui-express": "^4.1.6",
-    "typeorm": "^0.2.38"
+    "typeorm": "^0.2.38",
+    "uninstall": "^0.0.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^8.0.0",
