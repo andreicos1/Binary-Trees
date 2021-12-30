@@ -4,8 +4,9 @@ import { ReactionsData } from "../../../pages";
 import ReactionsItem from "../ReactionsItem/ReactionsItem";
 import styles from "./Reactions.module.scss";
 
-const Reactions = ({ totalViews, totalLikes }: ReactionsData) => {
+const Reactions = ({ totalViews, totalLikes, initialIsLiked }: ReactionsData) => {
   const [currentLikes, setCurrentLikes] = useState(totalLikes);
+  const [isLiked, setIsLiked] = useState(initialIsLiked);
   const postLike = async () => {
     const baseUrl = process.env.NEXT_PUBLIC_WEBSITE_URL;
     const responseAddLike = await fetch(`${baseUrl}/likes`, { method: "POST" });
@@ -15,6 +16,7 @@ const Reactions = ({ totalViews, totalLikes }: ReactionsData) => {
     } else {
       setCurrentLikes(currentLikes - 1);
     }
+    setIsLiked(!isLiked);
   };
   return (
     <Box className={styles.reactionsBar}>
@@ -22,7 +24,7 @@ const Reactions = ({ totalViews, totalLikes }: ReactionsData) => {
         value={totalViews.toString()}
         icon={
           <svg className={styles.eye}>
-            <use xlinkHref="/sprites.svg#icon-eye" />{" "}
+            <use xlinkHref="/sprites.svg#icon-eye" />
           </svg>
         }
       />
@@ -30,15 +32,15 @@ const Reactions = ({ totalViews, totalLikes }: ReactionsData) => {
         value={totalLikes.toString()}
         icon={
           <svg className={styles.heart}>
-            <use xlinkHref="/sprites.svg#icon-heart" />{" "}
+            <use xlinkHref="/sprites.svg#icon-heart" />
           </svg>
         }
       />
       <ReactionsItem
         value={currentLikes.toString()}
         icon={
-          <svg className={styles.thumbsUp}>
-            <use xlinkHref="/sprites.svg#icon-thumbs_up" />{" "}
+          <svg className={isLiked ? styles.thumbsUpLiked : styles.thumbsUpNotLiked}>
+            <use xlinkHref="/sprites.svg#icon-thumbs_up" />
           </svg>
         }
         onClick={postLike}

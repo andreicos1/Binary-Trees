@@ -18,17 +18,21 @@ export const getServerSideProps: GetServerSideProps = async () => {
   const responseLikes = await fetch(urlLikes);
   const totalLikes = await responseLikes.json();
 
+  const responseIsLiked = await fetch(`${urlLikes}/ip`);
+  const initialIsLiked = !(await responseIsLiked.json());
+
   return {
-    props: { totalViews, totalLikes },
+    props: { totalViews, totalLikes, initialIsLiked },
   };
 };
 
 export interface ReactionsData {
   totalViews: number;
   totalLikes: number;
+  initialIsLiked: boolean;
 }
 
-const Home = ({ totalViews, totalLikes }: ReactionsData) => {
+const Home = ({ totalViews, totalLikes, initialIsLiked }: ReactionsData) => {
   return (
     <Box>
       <Head>
@@ -43,7 +47,11 @@ const Home = ({ totalViews, totalLikes }: ReactionsData) => {
         <Navbar />
         <Box className={styles.content}>
           <ToolkitCanvasBox />
-          <Reactions totalViews={totalViews} totalLikes={totalLikes} />
+          <Reactions
+            totalViews={totalViews}
+            totalLikes={totalLikes}
+            initialIsLiked={initialIsLiked}
+          />
         </Box>
       </Box>
       <Box bg="#777" height="100px" color="white" fontSize="2rem">

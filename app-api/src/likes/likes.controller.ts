@@ -14,4 +14,9 @@ export class LikesController {
   getCount() {
     return this.likesService.getCount();
   }
+
+  @Get("ip")
+  findOneIp(@Request() request) {
+    return this.likesService.findOneIp(request.ip);
+  }
 }

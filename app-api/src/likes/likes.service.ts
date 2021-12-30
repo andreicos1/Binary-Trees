@@ -28,4 +28,9 @@ export class LikesService {
     this.repo.remove(oldLike);
     return false;
   }
+
+  async findOneIp(ip: string) {
+    const like = await this.repo.findOne({ ip });
+    return like ? true : false;
+  }
 }

@@ -13,7 +13,15 @@
   cursor: pointer;
 }
 
-.thumbsUp {
+.thumbsUpNotLiked {
   fill: #86bbd8;
+  cursor: pointer;
+  &:hover {
+    fill: #60a9d1;
+  }
+}
+
+.thumbsUpLiked {
+  fill: #2fa0de;
   cursor: pointer;
 }
