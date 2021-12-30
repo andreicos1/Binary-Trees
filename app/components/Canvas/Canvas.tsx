@@ -14,7 +14,9 @@ const Xarrow = dynamic(() => import("react-xarrows"), {
 
 const Canvas = React.forwardRef((props: any, nodeBoxesRef: any) => {
   const tree = useSelector((state: RootState) => state.tree);
+  const treeUpdate = useSelector((state: RootState) => state.treeUpdate);
   const treeByLevels = getNodesByLevel(tree);
+  const isHighlighting = treeUpdate.deleting || treeUpdate.editing;
 
   return (
     <Box className={styles.canvas}>
@@ -40,7 +42,7 @@ const Canvas = React.forwardRef((props: any, nodeBoxesRef: any) => {
                 ) : null;
               const nodeElement = node ? (
                 <>
-                  <Node value={node} />
+                  <Node value={node} isHighlighting= {isHighlighting} />
                   {connection}
                 </>
               ) : null;
