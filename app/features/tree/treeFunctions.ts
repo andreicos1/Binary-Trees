@@ -1,7 +1,10 @@
 import { WritableDraft } from "immer/dist/internal";
+import { MutableRefObject } from "react";
+import deleteNode from "../../algorithms/deleteNode";
 import { TreeState } from "./treeSlice";
+import { treeUpdate } from "./treeUpdateSlice";
 export const NUMBER_OF_LEVELS = parseInt(process.env.NEXT_PUBLIC_MAX_TREE_LEVELS as string);
-const MAX_VALUE = 99;
+const MAX_VALUE = 99; // maximum numeric value of a node
 
 const dfsAddToLevel = (
   node: TreeState | undefined,
@@ -155,4 +158,19 @@ export const generateRandomNode = () => {
   return {
     value: generateRandomValue().toString(),
   } as TreeState;
+};
+
+export const processNode = (
+  treeUpdate: treeUpdate,
+  index: number,
+  nodeBoxesRef: MutableRefObject<HTMLDivElement[]>
+) => {
+  if (treeUpdate.adding || treeUpdate.isPlaying) {
+    return;
+  }
+  if (treeUpdate.deleting) {
+    deleteNode(index, nodeBoxesRef);
+  } else if (treeUpdate.editing) {
+    console.log("editing");
+  }
 };

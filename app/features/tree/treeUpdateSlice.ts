@@ -1,5 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+export interface treeUpdate {
+  deleting: boolean;
+  adding: boolean;
+  editing: boolean;
+  isPlaying: boolean;
+}
+
 const initialState = {
   deleting: false,
   adding: false,

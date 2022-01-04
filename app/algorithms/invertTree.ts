@@ -7,7 +7,7 @@ import { AppDispatch } from "../store";
 const highlightParentColor = process.env.NEXT_PUBLIC_HIGHLIGHTED_CURRENT_COLOR;
 const highlightChildren = process.env.NEXT_PUBLIC_HIGHLIGHTED_CHILDREN_COLOR;
 
-const waitAnimationEnd = (elem: Element) => {
+export const waitAnimationEnd = (elem: Element) => {
   return Promise.all(
     elem.getAnimations().map(function (animation) {
       return animation.finished;
