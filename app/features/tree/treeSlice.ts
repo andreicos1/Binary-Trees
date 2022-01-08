@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
   generateRandomNode,
   getDirectionsFromRowAndCol,
+  getIndexFromLevelAndCol,
   getParentTreeFromRowAndCol,
   getTreeFromRowAndCol,
   NUMBER_OF_LEVELS,
@@ -106,15 +107,49 @@ export const treeSlice = createSlice({
       state.left = tree.left;
       state.right = tree.right;
     },
-    swap: (state, action: PayloadAction<uiRepresentation>) => {
+    swapChildren: (state, action: PayloadAction<uiRepresentation>) => {
       const node = getTreeFromRowAndCol(state, action.payload.rowIndex, action.payload.colIndex);
       if (node) {
         [node.left, node.right] = [node.right, node.left];
       }
     },
+    swapWithChild: (
+      state,
+      action: PayloadAction<{ parent: uiRepresentation; child: uiRepresentation }>
+    ) => {
+      const parent = getTreeFromRowAndCol(
+        state,
+        action.payload.parent.rowIndex,
+        action.payload.parent.colIndex
+      );
+      if (parent) {
+        const child = getTreeFromRowAndCol(
+          state,
+          action.payload.child.rowIndex,
+          action.payload.child.colIndex
+        );
+        const grandparent = getParentTreeFromRowAndCol(
+          state,
+          action.payload.parent.rowIndex,
+          action.payload.parent.colIndex
+        );
+        const index = getIndexFromLevelAndCol(
+          action.payload.child.rowIndex,
+          action.payload.child.colIndex
+        );
+        // Left or right child of grandparent
+        if (index % 2 === 0) {
+          grandparent.left = child;
+        } else {
+          grandparent.right = child;
+        }
+      } else {
+        console.log("Inexistent node selected for deletion");
+      }
+    },
   },
 });
 
-export const { addNode, generateRandom, swap } = treeSlice.actions;
+export const { addNode, generateRandom, swapChildren, swapWithChild } = treeSlice.actions;
 
 export default treeSlice.reducer;

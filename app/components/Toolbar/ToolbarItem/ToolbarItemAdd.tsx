@@ -88,7 +88,7 @@ const ToolbarItemAdd = ({
       const currentParentIndex = Math.floor((minDistanceIndex - 1) / 2);
       if (currentParentIndex >= 0) {
         const [parentRowIndex, parentColIndex] = getRowAndColFromIndex(currentParentIndex);
-        setCurrentParent(`${parentRowIndex},${parentColIndex}`);
+        setCurrentParent(`node-${parentRowIndex},${parentColIndex}`);
       }
       return;
     }

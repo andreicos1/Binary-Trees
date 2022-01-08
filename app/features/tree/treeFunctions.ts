@@ -1,6 +1,7 @@
 import { WritableDraft } from "immer/dist/internal";
 import { MutableRefObject } from "react";
 import deleteNode from "../../algorithms/deleteNode";
+import { AppDispatch } from "../../store";
 import { TreeState } from "./treeSlice";
 import { treeUpdate } from "./treeUpdateSlice";
 export const NUMBER_OF_LEVELS = parseInt(process.env.NEXT_PUBLIC_MAX_TREE_LEVELS as string);
@@ -163,13 +164,14 @@ export const generateRandomNode = () => {
 export const processNode = (
   treeUpdate: treeUpdate,
   index: number,
-  nodeBoxesRef: MutableRefObject<HTMLDivElement[]>
+  nodeBoxesRef: MutableRefObject<HTMLDivElement[]>,
+  dispatch: AppDispatch
 ) => {
   if (treeUpdate.adding || treeUpdate.isPlaying) {
     return;
   }
   if (treeUpdate.deleting) {
-    deleteNode(index, nodeBoxesRef);
+    deleteNode(index, nodeBoxesRef, dispatch);
   } else if (treeUpdate.editing) {
     console.log("editing");
   }

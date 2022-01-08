@@ -1,7 +1,7 @@
 import { ActionCreatorWithoutPayload } from "@reduxjs/toolkit";
 import { MutableRefObject } from "react";
 import { getIndexFromLevelAndCol } from "../features/tree/treeFunctions";
-import { swap } from "../features/tree/treeSlice";
+import { swapChildren } from "../features/tree/treeSlice";
 import { AppDispatch } from "../store";
 
 const highlightParentColor = process.env.NEXT_PUBLIC_HIGHLIGHTED_CURRENT_COLOR;
@@ -161,7 +161,7 @@ const invertTree = async (
     const [leftBoxes, rightBoxes] = getChildrenBoxes(rowIndex, colIndex, nodeBoxesRef);
     await animate(nodeElement, leftBoxes, rightBoxes, duration);
     // Set new position
-    dispatch(swap({ rowIndex, colIndex }));
+    dispatch(swapChildren({ rowIndex, colIndex }));
     // Push children to stack
     stack.push([rowIndex + 1, colIndex * 2]);
     stack.push([rowIndex + 1, colIndex * 2 + 1]);
