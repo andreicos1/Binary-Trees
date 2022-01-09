@@ -134,14 +134,26 @@ export const treeSlice = createSlice({
           action.payload.parent.colIndex
         );
         const index = getIndexFromLevelAndCol(
-          action.payload.child.rowIndex,
-          action.payload.child.colIndex
+          action.payload.parent.rowIndex,
+          action.payload.parent.colIndex
         );
         // Left or right child of grandparent
         if (index % 2 === 0) {
-          grandparent.left = child;
-        } else {
           grandparent.right = child;
+        } else {
+          grandparent.left = child;
+        }
+        if (child) {
+          const [left, right] = [child.left, child.right];
+          if (parent.left) {
+            child.left = parent;
+            child.right = parent.right;
+          } else {
+            child.right = parent;
+            child.left = parent.left;
+          }
+          parent.left = left;
+          parent.right = right;
         }
       } else {
         console.log("Inexistent node selected for deletion");
