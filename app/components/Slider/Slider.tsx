@@ -2,22 +2,22 @@ import { Box, Slider, SliderTrack, SliderFilledTrack, SliderThumb, Text } from "
 import { useSelector } from "react-redux";
 import { updateSpeed } from "../../features/speed/speedSlice";
 import { RootState, useAppDispatch } from "../../store";
+import { ANIMATION_MULTIPLIER, ANIMATION_SLIDER_MODIFIER } from "../../types";
 
 import styles from "./Slider.module.scss";
 
 const SpeedSlider = () => {
   const treeUpdateState = useSelector((state: RootState) => state.treeUpdate);
-  const speedState = useSelector((state: RootState) => state.speed);
   const dispatch = useAppDispatch();
-  const modifier = 15; // from scale 0-100 to ms
+
   const updateAnimationSpeed = (val: number) => {
-    const maximumSpeed = 85;
+    const maximumSpeed = ANIMATION_MULTIPLIER - ANIMATION_SLIDER_MODIFIER;
     const newSpeed =
       val <= maximumSpeed
-        ? 100 * modifier - val * 10
+        ? ANIMATION_MULTIPLIER * ANIMATION_SLIDER_MODIFIER - val * 10
         : val === 100
         ? 0
-        : 100 * modifier - maximumSpeed * 10;
+        : ANIMATION_MULTIPLIER * ANIMATION_SLIDER_MODIFIER - maximumSpeed * 10;
     dispatch(updateSpeed(newSpeed));
   };
 

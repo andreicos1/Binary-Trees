@@ -1,17 +1,18 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { MAX_TREE_LEVELS } from "../../types";
 import {
   generateRandomNode,
   getDirectionsFromRowAndCol,
   getIndexFromLevelAndCol,
   getParentTreeFromRowAndCol,
   getTreeFromRowAndCol,
-  NUMBER_OF_LEVELS,
 } from "./treeFunctions";
 
 export interface TreeState {
   value: string;
   right?: TreeState;
   left?: TreeState;
+  isEditing?: boolean;
 }
 
 const initialState = {
@@ -68,7 +69,7 @@ export const treeSlice = createSlice({
       // Populate rest of leveles
       let level = 1;
       let parent = tree;
-      while (level < NUMBER_OF_LEVELS - 1) {
+      while (level < MAX_TREE_LEVELS - 1) {
         if (!queue.length) {
           // if no nodes before last level
           if (Math.random() < 0.5) {
@@ -82,7 +83,7 @@ export const treeSlice = createSlice({
           }
         } else {
           [parent, level] = queue.shift() as [TreeState, number];
-          if (level >= NUMBER_OF_LEVELS - 1) {
+          if (level >= MAX_TREE_LEVELS - 1) {
             break;
           }
           let randomNumber = Math.random();
@@ -106,12 +107,6 @@ export const treeSlice = createSlice({
       state.value = tree.value;
       state.left = tree.left;
       state.right = tree.right;
-    },
-    swapChildren: (state, action: PayloadAction<uiRepresentation>) => {
-      const node = getTreeFromRowAndCol(state, action.payload.rowIndex, action.payload.colIndex);
-      if (node) {
-        [node.left, node.right] = [node.right, node.left];
-      }
     },
     swapWithChild: (
       state,
@@ -159,9 +154,29 @@ export const treeSlice = createSlice({
         console.log("Inexistent node selected for deletion");
       }
     },
+    editNodeValue: (state, action: PayloadAction<uiRepresentation>) => {
+      const node = getTreeFromRowAndCol(state, action.payload.rowIndex, action.payload.colIndex);
+      node.isEditing = true;
+    },
+    turnOffEditing: (state, action: PayloadAction<uiRepresentation>) => {
+      const node = getTreeFromRowAndCol(state, action.payload.rowIndex, action.payload.colIndex);
+      if (node) node.isEditing = false;
+    },
+    changeNodeValue: (state, action: PayloadAction<addData>) => {
+      const node = getTreeFromRowAndCol(state, action.payload.rowIndex, action.payload.colIndex);
+      node.isEditing = false;
+      node.value = action.payload.newNodeValue;
+    },
   },
 });
 
-export const { addNode, generateRandom, swapChildren, swapWithChild } = treeSlice.actions;
+export const {
+  addNode,
+  generateRandom,
+  swapWithChild,
+  editNodeValue,
+  turnOffEditing,
+  changeNodeValue,
+} = treeSlice.actions;
 
 export default treeSlice.reducer;

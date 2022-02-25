@@ -1,11 +1,16 @@
-import { ActionCreatorWithoutPayload } from "@reduxjs/toolkit";
+import { ActionCreatorWithoutPayload, ActionCreatorWithPayload } from "@reduxjs/toolkit";
 import { MutableRefObject } from "react";
 import { getIndexFromLevelAndCol } from "../features/tree/treeFunctions";
-import { swapChildren } from "../features/tree/treeSlice";
+import { UpdatePosition } from "../features/tree/treePositionsSlice";
 import { AppDispatch } from "../store";
 
 const highlightParentColor = process.env.NEXT_PUBLIC_HIGHLIGHTED_CURRENT_COLOR;
 const highlightChildren = process.env.NEXT_PUBLIC_HIGHLIGHTED_CHILDREN_COLOR;
+
+interface nodeData {
+  index: number;
+  element: HTMLDivElement;
+}
 
 export const waitAnimationEnd = (elem: Element) => {
   return Promise.all(
@@ -13,17 +18,6 @@ export const waitAnimationEnd = (elem: Element) => {
       return animation.finished;
     })
   );
-};
-
-const childKeyframes = (distanceX: number) => {
-  return [
-    { boxShadow: "none" },
-    {
-      boxShadow: "0 10px 10px black",
-      transform: `scaleX(120%) scaleY(120%) translateX(${distanceX / 2}px)`,
-    },
-    { boxShadow: "none", transform: `translateX(${distanceX}px)` },
-  ];
 };
 
 const highlightDirectChildren = [
@@ -35,21 +29,19 @@ const animationOptions = (duration: number) => {
   return { duration, delay: duration / 4 };
 };
 
-const getDistance = (leftNode: Element, rightNode: Element) => {
-  const distanceX = rightNode.getBoundingClientRect().x - leftNode.getBoundingClientRect().x;
-  return distanceX;
-};
-
-const getAllChildren = (parentIndex: number, nodeBoxesRef: MutableRefObject<HTMLDivElement[]>) => {
+const getAllChildren = (
+  parentIndex: number,
+  nodeBoxesRef: MutableRefObject<HTMLDivElement[]>
+): nodeData[] => {
   let nodes: number[] = [parentIndex];
-  let boxes: HTMLDivElement[] = [];
+  let boxes: nodeData[] = [];
   let current: number;
   while (nodes.length) {
     current = nodes.pop() as number;
     if (current >= nodeBoxesRef.current.length) {
       continue;
     }
-    boxes.push(nodeBoxesRef.current[current]);
+    boxes.push({ index: current, element: nodeBoxesRef.current[current] });
     nodes.push(current * 2 + 1);
     nodes.push(current * 2 + 2);
   }
@@ -60,7 +52,7 @@ const getChildrenBoxes = (
   rowIndex: number,
   colIndex: number,
   nodeBoxesRef: MutableRefObject<HTMLDivElement[]>
-): [HTMLDivElement[], HTMLDivElement[]] => {
+): [nodeData[], nodeData[]] => {
   const leftIndex = getIndexFromLevelAndCol(rowIndex + 1, colIndex * 2);
   const rightIndex = getIndexFromLevelAndCol(rowIndex + 1, colIndex * 2 + 1);
 
@@ -71,9 +63,11 @@ const getChildrenBoxes = (
 
 const animate = async (
   parent: Element,
-  leftBoxes: HTMLDivElement[],
-  rightBoxes: HTMLDivElement[],
-  duration: number
+  leftBoxes: nodeData[],
+  rightBoxes: nodeData[],
+  duration: number,
+  dispatch: AppDispatch,
+  updatePosition: ActionCreatorWithPayload<UpdatePosition>
 ) => {
   if (leftBoxes.length !== rightBoxes.length) {
     throw "Left and Right boxes lengths should be equal";
@@ -92,25 +86,22 @@ const animate = async (
     // Highlight direct children
     const parentLeft = leftBoxes[0];
     const parentRight = rightBoxes[0];
-    parentLeft.children[0] &&
-      parentLeft.children[0].children[0].animate(
+    parentLeft.element.children[0] &&
+      parentLeft.element.children[0].children[0].animate(
         highlightDirectChildren,
         animationOptions(duration)
       );
-    parentRight.children[0] &&
-      parentRight.children[0].children[0].animate(
+    parentRight.element.children[0] &&
+      parentRight.element.children[0].children[0].animate(
         highlightDirectChildren,
         animationOptions(duration)
       );
     // Move all children, grandchildren, etc.
-    const distanceX = getDistance(parentLeft, parentRight);
     for (let i = 0; i < leftBoxes.length; i++) {
-      const arrowLeft = leftBoxes[i].children[1] as HTMLDivElement;
-      const arrowRight = rightBoxes[i].children[1] as HTMLDivElement;
-      const leftNode = leftBoxes[i].children[0] ? leftBoxes[i].children[0].children[0] : null;
-      const rightNode = rightBoxes[i].children[0] ? rightBoxes[i].children[0].children[0] : null;
-      leftNode && leftNode.animate(childKeyframes(distanceX), animationOptions(duration));
-      rightNode && rightNode.animate(childKeyframes(-distanceX), animationOptions(duration));
+      const elementLeft = leftBoxes[i].element;
+      const elementRight = rightBoxes[i].element;
+      const arrowLeft = elementLeft.children[1] as HTMLDivElement;
+      const arrowRight = elementRight.children[1] as HTMLDivElement;
       if (arrowLeft) {
         arrowLeft.style.display = "none";
         arrowsLeft.push(arrowLeft);
@@ -119,6 +110,32 @@ const animate = async (
         arrowRight.style.display = "none";
         arrowsRight.push(arrowRight);
       }
+      const styleLeft = getComputedStyle(elementLeft);
+      const styleRight = getComputedStyle(elementRight);
+      const [colStartLeft, rowStartLeft] = [
+        parseInt(styleLeft.gridColumnStart),
+        parseInt(styleLeft.gridRowStart),
+      ];
+      const [colStartRight, rowStartRight] = [
+        parseInt(styleRight.gridColumnStart),
+        parseInt(styleRight.gridRowStart),
+      ];
+      dispatch(
+        updatePosition({
+          index: leftBoxes[i].index,
+          rowStart: rowStartRight,
+          colStart: colStartRight,
+        })
+      );
+      elementLeft.focus();
+      dispatch(
+        updatePosition({
+          index: rightBoxes[i].index,
+          rowStart: rowStartLeft,
+          colStart: colStartLeft,
+        })
+      );
+      elementRight.focus();
     }
   } else {
     // Node has no children -> animate faster
@@ -144,6 +161,7 @@ const invertTree = async (
   dispatch: AppDispatch,
   nodeBoxesRef: MutableRefObject<HTMLDivElement[]>,
   togglePlaying: ActionCreatorWithoutPayload<string>,
+  updatePosition: ActionCreatorWithPayload<UpdatePosition>,
   duration: number
 ) => {
   dispatch(togglePlaying());
@@ -159,13 +177,12 @@ const invertTree = async (
     }
     const nodeElement = nodeBox.children[0].children[0];
     const [leftBoxes, rightBoxes] = getChildrenBoxes(rowIndex, colIndex, nodeBoxesRef);
-    await animate(nodeElement, leftBoxes, rightBoxes, duration);
-    // Set new position
-    dispatch(swapChildren({ rowIndex, colIndex }));
+    await animate(nodeElement, leftBoxes, rightBoxes, duration, dispatch, updatePosition);
     // Push children to stack
     stack.push([rowIndex + 1, colIndex * 2]);
     stack.push([rowIndex + 1, colIndex * 2 + 1]);
   }
+
   dispatch(togglePlaying());
 };
 

@@ -9,7 +9,6 @@ import {
   getHighestValidParent,
   getIndexFromLevelAndCol,
   getRowAndColFromIndex,
-  processNode,
 } from "../../../features/tree/treeFunctions";
 import { addNode } from "../../../features/tree/treeSlice";
 import { toggleAdd } from "../../../features/tree/treeUpdateSlice";

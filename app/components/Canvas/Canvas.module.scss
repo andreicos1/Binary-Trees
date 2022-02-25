@@ -1,17 +1,13 @@
 .canvas {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  grid-template-columns: repeat(15, 1fr);
+  grid-template-rows: repeat(4, 1fr);
   background-color: $davys-grey;
   width: 100%;
   padding: 4rem;
+  align-items: center;
+  padding-top: 0;
   overflow: scroll;
   &::-webkit-scrollbar {
     display: none;
   }
-}
-
-.nodeBox {
-  width: 6rem;
-  height: 6rem;
 }

@@ -8,6 +8,7 @@ import { BoxesRefContext } from "../../../pages/_app";
 import invertTree from "../../../algorithms/invertTree";
 import { useSelector } from "react-redux";
 import { toggleIsPlaying } from "../../../features/tree/treeUpdateSlice";
+import { updatePosition } from "../../../features/tree/treePositionsSlice";
 
 const Navbar = () => {
   // TODO
@@ -32,7 +33,13 @@ const Navbar = () => {
         text="Invert Tree"
         onClick={() => {
           if (!treeUpdateState.isPlaying) {
-            invertTree(dispatch, nodeBoxesRef, toggleIsPlaying, animationSpeed.duration);
+            invertTree(
+              dispatch,
+              nodeBoxesRef,
+              toggleIsPlaying,
+              updatePosition,
+              animationSpeed.duration
+            );
           }
         }}
       />

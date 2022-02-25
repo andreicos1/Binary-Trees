@@ -1,4 +1,4 @@
-import { Box, Flex } from "@chakra-ui/layout";
+import { Grid } from "@chakra-ui/layout";
 import { useSelector } from "react-redux";
 import Node from "../Node/Node";
 import styles from "./Canvas.module.scss";
@@ -7,25 +7,47 @@ import dynamic from "next/dynamic";
 import {
   getIndexFromLevelAndCol,
   getNodesByLevel,
+  getRowAndColFromIndex,
+  getTreeFromRowAndCol,
   processNode,
 } from "../../features/tree/treeFunctions";
-import React from "react";
+import { forwardRef, Fragment, useEffect } from "react";
 import SpeedSlider from "../Slider/Slider";
 import { turnAllOff } from "../../features/tree/treeUpdateSlice";
+import { GridItem } from "@chakra-ui/react";
+import { NodeBox } from "../Node/NodeBox";
+import { useAnimation } from "framer-motion";
+import { MAX_TREE_LEVELS } from "../../types";
+import { turnOffEditing } from "../../features/tree/treeSlice";
 
 const Xarrow = dynamic(() => import("react-xarrows"), {
   ssr: false,
 });
 
-const Canvas = React.forwardRef((props: any, nodeBoxesRef: any) => {
+const Canvas = forwardRef((props: any, nodeBoxesRef: any) => {
   const dispatch = useAppDispatch();
   const tree = useSelector((state: RootState) => state.tree);
   const treeUpdate = useSelector((state: RootState) => state.treeUpdate);
+  const treePositions = useSelector((state: RootState) => state.treePositions);
+  const animationSpeed = useSelector((state: RootState) => state.speed);
+  const controls = useAnimation();
+
+  const handleFocus = () => {
+    controls.start({
+      boxShadow: ["0 0px 0px 0px black", "0px 3px 20px 10px black", "0 0px 0px 0px black"],
+    });
+  };
+
+  const spring = {
+    type: "spring",
+    duration: animationSpeed.duration / 1000,
+  };
+
   const treeByLevels = getNodesByLevel(tree);
   const isHighlighting = treeUpdate.deleting || treeUpdate.editing;
 
   return (
-    <Box
+    <Grid
       id="canvas"
       className={styles.canvas}
       onClick={(event) => {
@@ -40,15 +62,18 @@ const Canvas = React.forwardRef((props: any, nodeBoxesRef: any) => {
         }
       }}
     >
-      <SpeedSlider />
+      <GridItem gridColumn={"1 / 2"} gridRow={"1 / 2"} marginTop="-4rem">
+        <SpeedSlider />
+      </GridItem>
       {treeByLevels.map((level, levelIdx) => {
         return (
-          <Flex id={`row-${level}`} width="100%" justifyContent="space-around" key={levelIdx}>
+          <Fragment key={levelIdx}>
             {level.map((node, columnIdx) => {
               const currNodeId = `node-${levelIdx},${columnIdx}`;
               const parentNodeColumn = columnIdx >> 1;
               const parentNodeId = `node-${levelIdx - 1},${parentNodeColumn}`;
               const nodeIndex = getIndexFromLevelAndCol(levelIdx, columnIdx);
+
               const connection =
                 levelIdx !== 0 ? (
                   <Xarrow
@@ -66,29 +91,45 @@ const Canvas = React.forwardRef((props: any, nodeBoxesRef: any) => {
                   <Node
                     value={node}
                     isHighlighting={isHighlighting}
-                    onClick={() => processNode(treeUpdate, nodeIndex, nodeBoxesRef, dispatch)}
+                    onClick={() =>
+                      processNode(
+                        treeUpdate,
+                        nodeIndex,
+                        nodeBoxesRef,
+                        dispatch,
+                        levelIdx,
+                        columnIdx
+                      )
+                    }
+                    treeNode={getTreeFromRowAndCol(tree, levelIdx, columnIdx)}
+                    dispatch={dispatch}
+                    rowIndex={levelIdx}
+                    colIndex={columnIdx}
                   />
                   {connection}
                 </>
               ) : null;
 
               return (
-                <Box
-                  id={currNodeId}
-                  key={columnIdx}
-                  className={styles.nodeBox}
-                  ref={(el: HTMLDivElement) => {
+                <NodeBox
+                  key={currNodeId}
+                  currNodeId={currNodeId}
+                  gridRowStart={treePositions[nodeIndex].rowStart}
+                  gridColumnStart={treePositions[nodeIndex].colStart}
+                  transition={animationSpeed.duration ? spring : null}
+                  setRef={(el: HTMLDivElement) => {
                     nodeBoxesRef.current[nodeIndex] = el;
                   }}
+                  onFocus={handleFocus}
                 >
                   {nodeElement}
-                </Box>
+                </NodeBox>
               );
             })}
-          </Flex>
+          </Fragment>
         );
       })}
-    </Box>
+    </Grid>
   );
 });
 

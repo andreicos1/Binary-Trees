@@ -15,9 +15,6 @@ const deleteNode = async (
   nodeBoxesRef: MutableRefObject<HTMLDivElement[]>,
   dispatch: AppDispatch
 ) => {
-  // (node.childNodes as NodeListOf<HTMLElement>).forEach((element) => {
-  //   element.style.opacity = "none";
-  // });
   if (index === 0) return;
   while (index < nodeBoxesRef.current.length) {
     let node = nodeBoxesRef.current[index];
@@ -32,7 +29,6 @@ const deleteNode = async (
       leftIndex < nodeBoxesRef.current.length && nodeBoxesRef.current[leftIndex].childElementCount
         ? colIndex * 2
         : colIndex * 2 + 1;
-    // console.log({ rowIndex, colIndex, childRowIndex, childColIndex });
     dispatch(
       swapWithChild({
         parent: { rowIndex, colIndex },
@@ -40,7 +36,6 @@ const deleteNode = async (
       })
     );
     index = getIndexFromLevelAndCol(childRowIndex, childColIndex);
-    // Get left and right
   }
 };
 

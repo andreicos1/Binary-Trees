@@ -2,9 +2,9 @@ import { WritableDraft } from "immer/dist/internal";
 import { MutableRefObject } from "react";
 import deleteNode from "../../algorithms/deleteNode";
 import { AppDispatch } from "../../store";
-import { TreeState } from "./treeSlice";
-import { treeUpdate } from "./treeUpdateSlice";
-export const NUMBER_OF_LEVELS = parseInt(process.env.NEXT_PUBLIC_MAX_TREE_LEVELS as string);
+import { MAX_TREE_LEVELS } from "../../types";
+import { changeNodeValue, editNodeValue, TreeState } from "./treeSlice";
+import { toggleEdit, treeUpdate } from "./treeUpdateSlice";
 const MAX_VALUE = 99; // maximum numeric value of a node
 
 const dfsAddToLevel = (
@@ -31,7 +31,7 @@ export const getNodesByLevel = (node: TreeState): string[][] => {
   // Add the nodes to an array for easy rendering
   // Initialize as empty strings for all rows & cols
   const levels = new Array<Array<string>>();
-  for (let i = 0; i < NUMBER_OF_LEVELS; i++) {
+  for (let i = 0; i < MAX_TREE_LEVELS; i++) {
     const thisLevel = new Array(Math.pow(2, i));
     thisLevel.fill("");
     levels.push(thisLevel);
@@ -52,7 +52,7 @@ export const getEmptyValidChildren = (root: TreeState): coordinates[] => {
     parentColumn: number,
     directionLeft: boolean
   ): void {
-    if (level === NUMBER_OF_LEVELS) {
+    if (level === MAX_TREE_LEVELS) {
       return;
     }
     let column = parentColumn * 2;
@@ -74,7 +74,7 @@ export const getEmptyValidChildren = (root: TreeState): coordinates[] => {
 };
 
 export const getHighestValidParent = (possibleNewChildrenPositions: coordinates[]): number => {
-  let highestValidParent = NUMBER_OF_LEVELS;
+  let highestValidParent = MAX_TREE_LEVELS;
   possibleNewChildrenPositions.forEach((position) => {
     highestValidParent = Math.min(highestValidParent, position.rowIndex - 1);
   });
@@ -165,7 +165,9 @@ export const processNode = (
   treeUpdate: treeUpdate,
   index: number,
   nodeBoxesRef: MutableRefObject<HTMLDivElement[]>,
-  dispatch: AppDispatch
+  dispatch: AppDispatch,
+  rowIndex: number,
+  colIndex: number
 ) => {
   if (treeUpdate.adding || treeUpdate.isPlaying) {
     return;
@@ -173,6 +175,11 @@ export const processNode = (
   if (treeUpdate.deleting) {
     deleteNode(index, nodeBoxesRef, dispatch);
   } else if (treeUpdate.editing) {
-    console.log("editing");
+    dispatch(toggleEdit());
+    dispatch(editNodeValue({ rowIndex, colIndex }));
   }
+};
+
+export const colIndexToGridColMultiplier = (colIndex: number, rowIndex: number) => {
+  return Math.pow(2, MAX_TREE_LEVELS - rowIndex - 1) * (2 * colIndex + 1);
 };
