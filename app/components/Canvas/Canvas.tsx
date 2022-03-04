@@ -122,6 +122,7 @@ const Canvas = forwardRef((props: any, nodeBoxesRef: any) => {
                   }}
                   onFocus={handleFocus}
                 >
+                  
                   {nodeElement}
                 </NodeBox>
               );

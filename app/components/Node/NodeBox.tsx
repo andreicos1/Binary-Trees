@@ -1,4 +1,4 @@
-import { GridItem } from "@chakra-ui/react";
+import { GridItem, Text } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { Spring } from "../../types";
 
@@ -37,6 +37,11 @@ export const NodeBox = ({
       className={styles.nodeBox}
       ref={setRef}
     >
+      {false && (
+        <Text opacity="1" className={styles.label}>
+          34
+        </Text>
+      )}
       {children}
     </MotionBox>
   );

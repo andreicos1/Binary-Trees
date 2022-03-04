@@ -1,4 +1,13 @@
 .nodeBox {
+  position: relative;
   width: 6rem;
   height: 6rem;
+}
+
+.label {
+  position: absolute;
+  top: 0%;
+  left: -40%;
+  color: $light-gray;
+  font-size: 1.8rem;
 }

@@ -3,14 +3,11 @@ import { MutableRefObject } from "react";
 import { getIndexFromLevelAndCol } from "../features/tree/treeFunctions";
 import { UpdatePosition } from "../features/tree/treePositionsSlice";
 import { AppDispatch } from "../store";
+import { nodeData } from "../types";
+import { getChildrenBoxes } from "./helpers";
 
 const highlightParentColor = process.env.NEXT_PUBLIC_HIGHLIGHTED_CURRENT_COLOR;
 const highlightChildren = process.env.NEXT_PUBLIC_HIGHLIGHTED_CHILDREN_COLOR;
-
-interface nodeData {
-  index: number;
-  element: HTMLDivElement;
-}
 
 export const waitAnimationEnd = (elem: Element) => {
   return Promise.all(
@@ -27,38 +24,6 @@ const highlightDirectChildren = [
 
 const animationOptions = (duration: number) => {
   return { duration, delay: duration / 4 };
-};
-
-const getAllChildren = (
-  parentIndex: number,
-  nodeBoxesRef: MutableRefObject<HTMLDivElement[]>
-): nodeData[] => {
-  let nodes: number[] = [parentIndex];
-  let boxes: nodeData[] = [];
-  let current: number;
-  while (nodes.length) {
-    current = nodes.pop() as number;
-    if (current >= nodeBoxesRef.current.length) {
-      continue;
-    }
-    boxes.push({ index: current, element: nodeBoxesRef.current[current] });
-    nodes.push(current * 2 + 1);
-    nodes.push(current * 2 + 2);
-  }
-  return boxes;
-};
-
-const getChildrenBoxes = (
-  rowIndex: number,
-  colIndex: number,
-  nodeBoxesRef: MutableRefObject<HTMLDivElement[]>
-): [nodeData[], nodeData[]] => {
-  const leftIndex = getIndexFromLevelAndCol(rowIndex + 1, colIndex * 2);
-  const rightIndex = getIndexFromLevelAndCol(rowIndex + 1, colIndex * 2 + 1);
-
-  const leftBoxes = getAllChildren(leftIndex, nodeBoxesRef);
-  const rightBoxes = getAllChildren(rightIndex, nodeBoxesRef);
-  return [leftBoxes, rightBoxes];
 };
 
 const animate = async (

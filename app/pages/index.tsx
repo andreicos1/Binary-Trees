@@ -11,19 +11,25 @@ export const getServerSideProps: GetServerSideProps = async () => {
   const baseUrl = process.env.NEXT_PUBLIC_WEBSITE_URL;
   const urlViews = `${baseUrl}/views`;
   const urlLikes = `${baseUrl}/likes`;
-  await fetch(urlViews, { method: "POST" }); // Add new view
-  const responseViews = await fetch(urlViews);
-  const totalViews = await responseViews.json();
+  try {
+    await fetch(urlViews, { method: "POST" }); // Add new view
+    const responseViews = await fetch(urlViews);
+    const totalViews = await responseViews.json();
 
-  const responseLikes = await fetch(urlLikes);
-  const totalLikes = await responseLikes.json();
+    const responseLikes = await fetch(urlLikes);
+    const totalLikes = await responseLikes.json();
 
-  const responseIsLiked = await fetch(`${urlLikes}/ip`);
-  const initialIsLiked = !(await responseIsLiked.json());
+    const responseIsLiked = await fetch(`${urlLikes}/ip`);
+    const initialIsLiked = !(await responseIsLiked.json());
 
-  return {
-    props: { totalViews, totalLikes, initialIsLiked },
-  };
+    return {
+      props: { totalViews, totalLikes, initialIsLiked },
+    };
+  } catch (error) {
+    return {
+      props: { totalViews: "N/A", totalLikes: "N/A", initialIsLiked: "N/A" },
+    };
+  }
 };
 
 export interface ReactionsData {

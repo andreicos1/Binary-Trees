@@ -13,3 +13,8 @@ export interface Spring {
   type: string;
   duration: number;
 }
+
+export interface nodeData {
+  index: number;
+  element: HTMLDivElement;
+}

@@ -29,7 +29,6 @@ const Node = ({
   rowIndex,
   colIndex,
 }: NodeInterface) => {
-  console.log({ treeNode });
   const [newValue, setNewValue] = useState("");
   const handleValueChange = (value: string) => {
     setNewValue(value);
