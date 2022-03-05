@@ -49,7 +49,7 @@ const Navbar = () => {
         text="Maximum Path Sum"
         onClick={() => {
           if (!treeUpdateState.isPlaying) {
-            maximumPathSum(dispatch, nodeBoxesRef, animationSpeed.duration);
+            maximumPathSum(dispatch, nodeBoxesRef, toggleIsPlaying, animationSpeed.duration);
           }
         }}
       />

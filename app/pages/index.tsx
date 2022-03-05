@@ -27,7 +27,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
     };
   } catch (error) {
     return {
-      props: { totalViews: "N/A", totalLikes: "N/A", initialIsLiked: "N/A" },
+      props: { totalViews: "...", totalLikes: "...", initialIsLiked: "..." },
     };
   }
 };

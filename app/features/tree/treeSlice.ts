@@ -13,6 +13,7 @@ export interface TreeState {
   right?: TreeState;
   left?: TreeState;
   isEditing?: boolean;
+  label?: string | null;
 }
 
 const initialState = {
@@ -26,6 +27,10 @@ export interface uiRepresentation {
 
 interface addData extends uiRepresentation {
   newNodeValue: string;
+}
+
+interface labelData extends uiRepresentation {
+  label?: string | null;
 }
 
 export const treeSlice = createSlice({
@@ -167,6 +172,11 @@ export const treeSlice = createSlice({
       node.isEditing = false;
       node.value = action.payload.newNodeValue;
     },
+    updateLabel: (state, action: PayloadAction<labelData>) => {
+      const node = getTreeFromRowAndCol(state, action.payload.rowIndex, action.payload.colIndex);
+      console.log(action.payload.label);
+      if (node) node.label = action.payload.label;
+    },
   },
 });
 
@@ -177,6 +187,7 @@ export const {
   editNodeValue,
   turnOffEditing,
   changeNodeValue,
+  updateLabel,
 } = treeSlice.actions;
 
 export default treeSlice.reducer;

@@ -7,7 +7,6 @@ import dynamic from "next/dynamic";
 import {
   getIndexFromLevelAndCol,
   getNodesByLevel,
-  getRowAndColFromIndex,
   getTreeFromRowAndCol,
   processNode,
 } from "../../features/tree/treeFunctions";
@@ -17,8 +16,6 @@ import { turnAllOff } from "../../features/tree/treeUpdateSlice";
 import { GridItem } from "@chakra-ui/react";
 import { NodeBox } from "../Node/NodeBox";
 import { useAnimation } from "framer-motion";
-import { MAX_TREE_LEVELS } from "../../types";
-import { turnOffEditing } from "../../features/tree/treeSlice";
 
 const Xarrow = dynamic(() => import("react-xarrows"), {
   ssr: false,
@@ -30,6 +27,7 @@ const Canvas = forwardRef((props: any, nodeBoxesRef: any) => {
   const treeUpdate = useSelector((state: RootState) => state.treeUpdate);
   const treePositions = useSelector((state: RootState) => state.treePositions);
   const animationSpeed = useSelector((state: RootState) => state.speed);
+  const message = useSelector((state: RootState) => state.messages);
   const controls = useAnimation();
 
   const handleFocus = () => {
@@ -121,8 +119,8 @@ const Canvas = forwardRef((props: any, nodeBoxesRef: any) => {
                     nodeBoxesRef.current[nodeIndex] = el;
                   }}
                   onFocus={handleFocus}
+                  label={getTreeFromRowAndCol(tree, levelIdx, columnIdx)?.label}
                 >
-                  
                   {nodeElement}
                 </NodeBox>
               );
@@ -130,6 +128,9 @@ const Canvas = forwardRef((props: any, nodeBoxesRef: any) => {
           </Fragment>
         );
       })}
+      <GridItem gridColumn={"-4 / -1"} gridRow={"1 / 2"}>
+        <p className={styles.text}>{message.main}</p>
+      </GridItem>
     </Grid>
   );
 });

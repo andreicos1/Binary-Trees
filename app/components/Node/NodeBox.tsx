@@ -14,6 +14,7 @@ type Props = {
   setRef: (element: HTMLDivElement) => void;
   onFocus: () => void;
   children: JSX.Element | null;
+  label?: string | null;
 };
 
 export const NodeBox = ({
@@ -24,6 +25,7 @@ export const NodeBox = ({
   setRef,
   children,
   onFocus,
+  label,
 }: Props) => {
   return (
     <MotionBox
@@ -37,11 +39,7 @@ export const NodeBox = ({
       className={styles.nodeBox}
       ref={setRef}
     >
-      {false && (
-        <Text opacity="1" className={styles.label}>
-          34
-        </Text>
-      )}
+      {label && <Text className={styles.label}>{label}</Text>}
       {children}
     </MotionBox>
   );

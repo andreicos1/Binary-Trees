@@ -1,5 +1,6 @@
 import { ActionCreatorWithoutPayload, ActionCreatorWithPayload } from "@reduxjs/toolkit";
 import { MutableRefObject } from "react";
+import { updateMessage } from "../features/messages/messagesSlice";
 import { getIndexFromLevelAndCol } from "../features/tree/treeFunctions";
 import { UpdatePosition } from "../features/tree/treePositionsSlice";
 import { AppDispatch } from "../store";
@@ -130,6 +131,7 @@ const invertTree = async (
   duration: number
 ) => {
   dispatch(togglePlaying());
+  dispatch(updateMessage(""));
   let rowIndex = 0;
   let colIndex = 0;
   var stack = [[rowIndex, colIndex]];

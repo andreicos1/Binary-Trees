@@ -1,8 +1,11 @@
+import { ActionCreatorWithoutPayload } from "@reduxjs/toolkit";
 import { MutableRefObject } from "react";
 import { highlightChildren } from "../constants";
-import { getIndexFromLevelAndCol } from "../features/tree/treeFunctions";
-import { toggleIsPlaying } from "../features/tree/treeUpdateSlice";
+import { updateMessage } from "../features/messages/messagesSlice";
+import { getIndexFromLevelAndCol, getRowAndColFromIndex } from "../features/tree/treeFunctions";
+import { updateLabel } from "../features/tree/treeSlice";
 import { AppDispatch } from "../store";
+import { MAX_TREE_LEVELS } from "../types";
 import { waitAnimationEnd } from "./invertTree";
 
 const animationOptions = (duration: number) => {
@@ -19,10 +22,11 @@ const animate = async (nodeElement: Element, duration: number) => {
 export default async function maximumPathSum(
   dispatch: AppDispatch,
   nodeBoxesRef: MutableRefObject<HTMLDivElement[]>,
+  toggleIsPlaying: ActionCreatorWithoutPayload<string>,
   duration: number
 ) {
   dispatch(toggleIsPlaying());
-
+  dispatch(updateMessage(""));
   async function dfs(rowIndex: number, colIndex: number): Promise<number> {
     const index = getIndexFromLevelAndCol(rowIndex, colIndex);
     const nodeBox = nodeBoxesRef.current[index];
@@ -38,10 +42,17 @@ export default async function maximumPathSum(
       0
     );
     const nodeValue = nodeElement.children[0].innerHTML;
-    return maxChildSum + parseInt(nodeValue);
+    const nodeMaxSum = maxChildSum + parseInt(nodeValue);
+    dispatch(updateLabel({ rowIndex, colIndex, label: nodeMaxSum.toString() }));
+    await new Promise((r) => setTimeout(r, (duration * 3) / 4));
+    return nodeMaxSum;
   }
-  const result = dfs(0, 0);
-  console.log({ result });
-
+  const result = await dfs(0, 0);
+  // Reset all labels
+  for (let index = 0; index < Math.pow(2, MAX_TREE_LEVELS) - 1; index++) {
+    const [rowIndex, colIndex] = getRowAndColFromIndex(index);
+    dispatch(updateLabel({ rowIndex, colIndex, label: null }));
+  }
   dispatch(toggleIsPlaying());
+  dispatch(updateMessage(`Maximum Path Sum = ${result}`));
 }
