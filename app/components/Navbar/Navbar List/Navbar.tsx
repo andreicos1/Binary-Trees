@@ -1,5 +1,5 @@
 import { Box, Text } from "@chakra-ui/layout";
-import { generateRandom } from "../../../features/tree/treeSlice";
+import { generateRandom, updateLabel } from "../../../features/tree/treeSlice";
 import { RootState, useAppDispatch } from "../../../store";
 import NavbarItem from "../Navbar Item/NavbarItem";
 import styles from "./Navbar.module.scss";
@@ -10,6 +10,8 @@ import { useSelector } from "react-redux";
 import { toggleIsPlaying } from "../../../features/tree/treeUpdateSlice";
 import { updatePosition } from "../../../features/tree/treePositionsSlice";
 import maximumPathSum from "../../../algorithms/maximumPathSum";
+import constructFromInPostorder from "../../../algorithms/constructFromInPostorder";
+import { clearMessage, updateMessage } from "../../../features/messages/messagesSlice";
 
 const Navbar = () => {
   // TODO
@@ -27,6 +29,7 @@ const Navbar = () => {
         text="Generate Random Tree"
         onClick={() => {
           if (!treeUpdateState.isPlaying) {
+            dispatch(clearMessage());
             dispatch(generateRandom());
           }
         }}
@@ -35,6 +38,7 @@ const Navbar = () => {
         text="Invert Tree"
         onClick={() => {
           if (!treeUpdateState.isPlaying) {
+            dispatch(clearMessage());
             invertTree(
               dispatch,
               nodeBoxesRef,
@@ -49,11 +53,25 @@ const Navbar = () => {
         text="Maximum Path Sum"
         onClick={() => {
           if (!treeUpdateState.isPlaying) {
+            dispatch(clearMessage());
             maximumPathSum(dispatch, nodeBoxesRef, toggleIsPlaying, animationSpeed.duration);
           }
         }}
       />
-      <NavbarItem text="Lowest Common Ancestor" />
+      <NavbarItem
+        text="Construct Tree From Inorder & Postorder Traversals"
+        onClick={() => {
+          if (!treeUpdateState.isPlaying) {
+            dispatch(clearMessage());
+            constructFromInPostorder(
+              dispatch,
+              nodeBoxesRef,
+              toggleIsPlaying,
+              animationSpeed.duration
+            );
+          }
+        }}
+      />
       <NavbarItem text="Kth Smallest Element" />
       <Text className={styles.login}> Log In </Text>
     </Box>

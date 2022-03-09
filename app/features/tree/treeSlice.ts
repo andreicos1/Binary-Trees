@@ -113,6 +113,10 @@ export const treeSlice = createSlice({
       state.left = tree.left;
       state.right = tree.right;
     },
+    resetTree: (state) => {
+      state.left = undefined;
+      state.right = undefined;
+    },
     swapWithChild: (
       state,
       action: PayloadAction<{ parent: uiRepresentation; child: uiRepresentation }>
@@ -156,7 +160,7 @@ export const treeSlice = createSlice({
           parent.right = right;
         }
       } else {
-        console.log("Inexistent node selected for deletion");
+        // Inexistent node selected for deletion
       }
     },
     editNodeValue: (state, action: PayloadAction<uiRepresentation>) => {
@@ -174,7 +178,6 @@ export const treeSlice = createSlice({
     },
     updateLabel: (state, action: PayloadAction<labelData>) => {
       const node = getTreeFromRowAndCol(state, action.payload.rowIndex, action.payload.colIndex);
-      console.log(action.payload.label);
       if (node) node.label = action.payload.label;
     },
   },
@@ -183,6 +186,7 @@ export const treeSlice = createSlice({
 export const {
   addNode,
   generateRandom,
+  resetTree,
   swapWithChild,
   editNodeValue,
   turnOffEditing,

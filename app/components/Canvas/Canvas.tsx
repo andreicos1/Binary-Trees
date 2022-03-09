@@ -128,8 +128,16 @@ const Canvas = forwardRef((props: any, nodeBoxesRef: any) => {
           </Fragment>
         );
       })}
-      <GridItem gridColumn={"-4 / -1"} gridRow={"1 / 2"}>
-        <p className={styles.text}>{message.main}</p>
+      <GridItem gridColumn={"-7 / -1"} gridRow={"1 / 2"}>
+        <div className={styles.text}>
+          {message.main.map((msg) => {
+            return (
+              <span id={msg} key={`${msg}`}>
+                {msg}
+              </span>
+            );
+          })}
+        </div>
       </GridItem>
     </Grid>
   );

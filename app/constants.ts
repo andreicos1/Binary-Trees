@@ -1,3 +1,3 @@
-export const highlightParentColor = process.env.NEXT_PUBLIC_HIGHLIGHTED_CURRENT_COLOR;
-export const highlightChildren = process.env.NEXT_PUBLIC_HIGHLIGHTED_CHILDREN_COLOR;
+export const highlightParentColor = "burlywood";
+export const highlightChildren = "#99C2C2";
 export const MAX_TREE_LEVELS = 4;

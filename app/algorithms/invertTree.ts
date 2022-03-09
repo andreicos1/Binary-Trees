@@ -1,14 +1,11 @@
 import { ActionCreatorWithoutPayload, ActionCreatorWithPayload } from "@reduxjs/toolkit";
 import { MutableRefObject } from "react";
-import { updateMessage } from "../features/messages/messagesSlice";
+import { highlightChildren, highlightParentColor } from "../constants";
 import { getIndexFromLevelAndCol } from "../features/tree/treeFunctions";
 import { UpdatePosition } from "../features/tree/treePositionsSlice";
 import { AppDispatch } from "../store";
 import { nodeData } from "../types";
 import { getChildrenBoxes } from "./helpers";
-
-const highlightParentColor = process.env.NEXT_PUBLIC_HIGHLIGHTED_CURRENT_COLOR;
-const highlightChildren = process.env.NEXT_PUBLIC_HIGHLIGHTED_CHILDREN_COLOR;
 
 export const waitAnimationEnd = (elem: Element) => {
   return Promise.all(
@@ -131,7 +128,6 @@ const invertTree = async (
   duration: number
 ) => {
   dispatch(togglePlaying());
-  dispatch(updateMessage(""));
   let rowIndex = 0;
   let colIndex = 0;
   var stack = [[rowIndex, colIndex]];

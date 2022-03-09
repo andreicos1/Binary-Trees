@@ -26,7 +26,6 @@ export default async function maximumPathSum(
   duration: number
 ) {
   dispatch(toggleIsPlaying());
-  dispatch(updateMessage(""));
   async function dfs(rowIndex: number, colIndex: number): Promise<number> {
     const index = getIndexFromLevelAndCol(rowIndex, colIndex);
     const nodeBox = nodeBoxesRef.current[index];
