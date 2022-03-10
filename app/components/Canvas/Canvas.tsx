@@ -130,9 +130,9 @@ const Canvas = forwardRef((props: any, nodeBoxesRef: any) => {
       })}
       <GridItem gridColumn={"-7 / -1"} gridRow={"1 / 2"}>
         <div className={styles.text}>
-          {message.main.map((msg) => {
+          {message.main.map((msg, index) => {
             return (
-              <span id={msg} key={`${msg}`}>
+              <span id={msg} key={`${msg}-${index}`}>
                 {msg}
               </span>
             );

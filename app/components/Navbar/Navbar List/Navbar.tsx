@@ -22,6 +22,15 @@ const Navbar = () => {
   const treeUpdateState = useSelector((state: RootState) => state.treeUpdate);
   const animationSpeed = useSelector((state: RootState) => state.speed);
 
+  const animateTreeChange = async (func: any, args: any) => {
+    if (!treeUpdateState.isPlaying) {
+      dispatch(toggleIsPlaying());
+      dispatch(clearMessage());
+      await func(...args);
+      dispatch(toggleIsPlaying());
+    }
+  };
+
   return (
     <Box className={styles.navbar}>
       <NavbarItem
@@ -36,41 +45,30 @@ const Navbar = () => {
       />
       <NavbarItem
         text="Invert Tree"
-        onClick={() => {
-          if (!treeUpdateState.isPlaying) {
-            dispatch(clearMessage());
-            invertTree(
-              dispatch,
-              nodeBoxesRef,
-              toggleIsPlaying,
-              updatePosition,
-              animationSpeed.duration
-            );
-          }
-        }}
+        onClick={() =>
+          animateTreeChange(invertTree, [
+            dispatch,
+            nodeBoxesRef,
+            updatePosition,
+            animationSpeed.duration,
+          ])
+        }
       />
       <NavbarItem
         text="Maximum Path Sum"
-        onClick={() => {
-          if (!treeUpdateState.isPlaying) {
-            dispatch(clearMessage());
-            maximumPathSum(dispatch, nodeBoxesRef, toggleIsPlaying, animationSpeed.duration);
-          }
-        }}
+        onClick={() =>
+          animateTreeChange(maximumPathSum, [dispatch, nodeBoxesRef, animationSpeed.duration])
+        }
       />
       <NavbarItem
         text="Construct Tree From Inorder & Postorder Traversals"
-        onClick={() => {
-          if (!treeUpdateState.isPlaying) {
-            dispatch(clearMessage());
-            constructFromInPostorder(
-              dispatch,
-              nodeBoxesRef,
-              toggleIsPlaying,
-              animationSpeed.duration
-            );
-          }
-        }}
+        onClick={() =>
+          animateTreeChange(constructFromInPostorder, [
+            dispatch,
+            nodeBoxesRef,
+            animationSpeed.duration,
+          ])
+        }
       />
       <NavbarItem text="Kth Smallest Element" />
       <Text className={styles.login}> Log In </Text>

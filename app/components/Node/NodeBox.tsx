@@ -1,5 +1,7 @@
 import { GridItem, Text } from "@chakra-ui/react";
 import { motion } from "framer-motion";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store";
 import { Spring } from "../../types";
 
 import styles from "./NodeBox.module.scss";
@@ -27,6 +29,8 @@ export const NodeBox = ({
   onFocus,
   label,
 }: Props) => {
+  const treeUpdate = useSelector((state: RootState) => state.treeUpdate);
+  const isLabelPositionDown = treeUpdate.labelPosDown;
   return (
     <MotionBox
       key={currNodeId}
@@ -39,7 +43,9 @@ export const NodeBox = ({
       className={styles.nodeBox}
       ref={setRef}
     >
-      {label && <Text className={styles.label}>{label}</Text>}
+      {label && (
+        <Text className={styles[isLabelPositionDown ? "label-down" : "label"]}>{label}</Text>
+      )}
       {children}
     </MotionBox>
   );

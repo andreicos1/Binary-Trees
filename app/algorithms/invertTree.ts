@@ -1,4 +1,4 @@
-import { ActionCreatorWithoutPayload, ActionCreatorWithPayload } from "@reduxjs/toolkit";
+import { ActionCreatorWithPayload } from "@reduxjs/toolkit";
 import { MutableRefObject } from "react";
 import { highlightChildren, highlightParentColor } from "../constants";
 import { getIndexFromLevelAndCol } from "../features/tree/treeFunctions";
@@ -123,11 +123,9 @@ const animate = async (
 const invertTree = async (
   dispatch: AppDispatch,
   nodeBoxesRef: MutableRefObject<HTMLDivElement[]>,
-  togglePlaying: ActionCreatorWithoutPayload<string>,
   updatePosition: ActionCreatorWithPayload<UpdatePosition>,
   duration: number
 ) => {
-  dispatch(togglePlaying());
   let rowIndex = 0;
   let colIndex = 0;
   var stack = [[rowIndex, colIndex]];
@@ -145,8 +143,6 @@ const invertTree = async (
     stack.push([rowIndex + 1, colIndex * 2]);
     stack.push([rowIndex + 1, colIndex * 2 + 1]);
   }
-
-  dispatch(togglePlaying());
 };
 
 export default invertTree;

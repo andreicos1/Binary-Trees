@@ -26,10 +26,8 @@ const wait = (duration: number) => {
 export default async function constructFromInPostorder(
   dispatch: AppDispatch,
   nodeBoxesRef: MutableRefObject<HTMLDivElement[]>,
-  toggleIsPlaying: ActionCreatorWithoutPayload<string>,
   duration: number
 ) {
-  dispatch(toggleIsPlaying());
   let label = "Inorder Traversal:";
   const inorder = [] as string[];
   const postorder = [] as string[];
@@ -79,6 +77,4 @@ export default async function constructFromInPostorder(
   await dfs(0, 0, false, true);
   dispatch(updateMessage(label.slice(0, -1)));
   dispatch(resetTree());
-
-  dispatch(toggleIsPlaying());
 }

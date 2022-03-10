@@ -12,6 +12,7 @@ const initialState = {
   adding: false,
   editing: false,
   isPlaying: false,
+  labelPosDown: false,
 };
 
 export const treeUpdateSlice = createSlice({
@@ -46,9 +47,18 @@ export const treeUpdateSlice = createSlice({
         state.editing = false;
       }
     },
+    toggleLabelPositon: (state) => {
+      state.labelPosDown = !state.labelPosDown;
+    },
   },
 });
 
-export const { toggleDelete, toggleAdd, toggleEdit, turnAllOff, toggleIsPlaying } =
-  treeUpdateSlice.actions;
+export const {
+  toggleDelete,
+  toggleAdd,
+  toggleEdit,
+  turnAllOff,
+  toggleIsPlaying,
+  toggleLabelPositon,
+} = treeUpdateSlice.actions;
 export default treeUpdateSlice.reducer;

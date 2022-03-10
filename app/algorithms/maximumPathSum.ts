@@ -22,10 +22,8 @@ const animate = async (nodeElement: Element, duration: number) => {
 export default async function maximumPathSum(
   dispatch: AppDispatch,
   nodeBoxesRef: MutableRefObject<HTMLDivElement[]>,
-  toggleIsPlaying: ActionCreatorWithoutPayload<string>,
   duration: number
 ) {
-  dispatch(toggleIsPlaying());
   async function dfs(rowIndex: number, colIndex: number): Promise<number> {
     const index = getIndexFromLevelAndCol(rowIndex, colIndex);
     const nodeBox = nodeBoxesRef.current[index];
@@ -52,6 +50,5 @@ export default async function maximumPathSum(
     const [rowIndex, colIndex] = getRowAndColFromIndex(index);
     dispatch(updateLabel({ rowIndex, colIndex, label: null }));
   }
-  dispatch(toggleIsPlaying());
   dispatch(updateMessage(`Maximum Path Sum = ${result}`));
 }

@@ -11,3 +11,14 @@
   color: $light-gray;
   font-size: 1.8rem;
 }
+
+.label-down {
+  z-index: 10;
+  position: absolute;
+  bottom: -60%;
+  left: 50%;
+  color: $light-gray;
+  font-size: 2rem;
+
+  transform: translateX(-50%);
+}
