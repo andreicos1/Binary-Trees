@@ -7,7 +7,7 @@ import {
   NumberInputStepper,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { changeNodeValue, TreeState, turnOffEditing } from "../../features/tree/treeSlice";
+import { changeNodeValue, TreeState } from "../../features/tree/treeSlice";
 import styles from "./Node.module.scss";
 
 interface NodeInterface {
@@ -31,7 +31,17 @@ const Node = ({
 }: NodeInterface) => {
   const [newValue, setNewValue] = useState("");
   const handleValueChange = (value: string) => {
+    if (value[0] === "-") value = "0";
+    else if (value.length > 2) value = "99";
     setNewValue(value);
+  };
+  const handleSubmit = () => {
+    dispatch(changeNodeValue({ rowIndex, colIndex, newNodeValue: newValue }));
+  };
+  const handleKeyPress = (event: any) => {
+    if (["Escape", "Enter"].includes(event.key)) {
+      handleSubmit();
+    }
   };
   useEffect(() => {
     treeNode && setNewValue(treeNode.value);
@@ -42,7 +52,8 @@ const Node = ({
         <NumberInput value={newValue} onChange={handleValueChange} min={0} max={99}>
           <NumberInputField
             autoFocus
-            onBlur={() => dispatch(changeNodeValue({ rowIndex, colIndex, newNodeValue: newValue }))}
+            onBlur={handleSubmit}
+            onKeyDown={handleKeyPress}
             className={styles.input}
           />
           <NumberInputStepper>
