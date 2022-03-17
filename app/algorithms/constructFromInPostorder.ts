@@ -3,17 +3,24 @@ import { MutableRefObject } from "react";
 import { AppDispatch } from "../store";
 import { addMessage, updateMessage } from "../features/messages/messagesSlice";
 import { getIndexFromLevelAndCol } from "../features/tree/treeFunctions";
-import { changeNodeValue, resetTree, TreeState } from "../features/tree/treeSlice";
+import {
+  addNode,
+  changeNodeValue,
+  resetTree,
+  TreeState,
+  updateLabel,
+} from "../features/tree/treeSlice";
 import { highlightChildren, highlightParentColor } from "../constants";
 import { waitAnimationEnd } from "./invertTree";
 import { toggleLabelPositon } from "../features/tree/treeUpdateSlice";
+import { uiRepresentation } from "../types";
 
 type indexMap = {
   [key: string]: number;
 };
 
 const animationOptions = (duration: number) => {
-  return { duration, delay: duration / 2 };
+  return { duration, delay: duration / 4 };
 };
 
 const animate = async (nodeElement: Element, duration: number, color: string) => {
@@ -24,7 +31,7 @@ const animate = async (nodeElement: Element, duration: number, color: string) =>
 };
 
 const wait = (duration: number) => {
-  return new Promise((r) => setTimeout(r, (duration * 3) / 4));
+  return new Promise((r) => setTimeout(r, duration / 2));
 };
 
 export default async function constructFromInPostorder(
@@ -87,11 +94,10 @@ export default async function constructFromInPostorder(
   await dfs(0, 0);
   label = label.slice(0, -1);
   dispatch(updateMessage(label));
-  label = "\nPostorder Traversal:";
+  label = "\nPreorder Traversal:";
   dispatch(addMessage(label));
   await dfs(0, 0, false, true);
   dispatch(updateMessage(label.slice(0, -1)));
-  console.log({ inorder, preorder });
   // dispatch(resetTree());
 
   // Get map of indexes of inorder
@@ -100,23 +106,78 @@ export default async function constructFromInPostorder(
     return prev;
   }, {} as indexMap);
 
-  function construct(
+  async function construct(
     leftIn: number,
     rightIn: number,
     leftPre: number,
-    rightPre: number
-  ): TreeState | undefined {
+    rightPre: number,
+    { rowIndex, colIndex }: uiRepresentation
+  ) {
     if (rightPre <= leftPre || !preorder[leftPre]) return;
+
+    // Highlight elements being parsed
+    for (let index = leftPre; index < rightPre; index++) {
+      const element =
+        document.getElementById(`${index + 3 + inorder.length}- ${preorder[index]},`) ||
+        document.getElementById(`${index + 3 + inorder.length}- ${preorder[index]}`);
+      element!.style.backgroundColor = highlightChildren;
+    }
+    for (let index = leftIn; index < rightIn; index++) {
+      const element =
+        document.getElementById(`${index + 2}- ${inorder[index]},`) ||
+        document.getElementById(`${index + 2}- ${inorder[index]}`);
+      element!.style.backgroundColor = highlightChildren;
+    }
+
     const rootValue = preorder[leftPre];
     const indexIn = inorderMap[rootValue];
-    const sizeLeft = indexIn - leftIn;
-    const root = { value: rootValue.toString() } as TreeState;
-    root.left = construct(leftIn, indexIn, leftPre + 1, leftPre + sizeLeft + 1);
-    root.right = construct(indexIn + 1, rightIn, leftPre + sizeLeft + 1, rightPre);
-    return root;
-  }
-  // dispatch(resetTree());
-  console.log(construct(0, inorder.length, 0, preorder.length));
+    // Highlight current element
+    const preorderElement =
+      document.getElementById(`${leftPre + 3 + inorder.length}- ${rootValue},`) ||
+      document.getElementById(`${leftPre + 3 + inorder.length}- ${rootValue}`);
+    const inorderElement =
+      document.getElementById(`${indexIn + 2}- ${rootValue},`) ||
+      document.getElementById(`${indexIn + 2}- ${rootValue}`);
 
+    preorderElement!.style.backgroundColor = highlightParentColor;
+    inorderElement!.style.backgroundColor = highlightParentColor;
+
+    // Add the node
+    if (rowIndex !== 0) dispatch(addNode({ rowIndex, colIndex, newNodeValue: rootValue }));
+    // Show the values as labels
+    dispatch(
+      updateLabel({ rowIndex, colIndex, label: preorder.slice(leftPre, rightPre).join(", ") })
+    );
+    const sizeLeft = indexIn - leftIn;
+
+    await wait(duration * 2);
+    // Remove highlighting
+    for (let index = leftPre; index < rightPre; index++) {
+      const element =
+        document.getElementById(`${index + 3 + inorder.length}- ${preorder[index]},`) ||
+        document.getElementById(`${index + 3 + inorder.length}- ${preorder[index]}`);
+      element!.style.backgroundColor = "unset";
+    }
+    for (let index = leftIn; index < rightIn; index++) {
+      const element =
+        document.getElementById(`${index + 2}- ${inorder[index]},`) ||
+        document.getElementById(`${index + 2}- ${inorder[index]}`);
+      element!.style.backgroundColor = "unset";
+    }
+    preorderElement!.style.backgroundColor = "unset";
+    inorderElement!.style.backgroundColor = "unset";
+
+    await construct(leftIn, indexIn, leftPre + 1, leftPre + sizeLeft + 1, {
+      rowIndex: rowIndex + 1,
+      colIndex: colIndex * 2,
+    });
+    await construct(indexIn + 1, rightIn, leftPre + sizeLeft + 1, rightPre, {
+      rowIndex: rowIndex + 1,
+      colIndex: colIndex * 2 + 1,
+    });
+    dispatch(updateLabel({ rowIndex, colIndex, label: null }));
+  }
+  dispatch(resetTree());
+  await construct(0, inorder.length, 0, preorder.length, { rowIndex: 0, colIndex: 0 });
   dispatch(toggleLabelPositon());
 }

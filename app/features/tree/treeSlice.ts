@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { MAX_TREE_LEVELS } from "../../types";
+import { MAX_TREE_LEVELS, uiRepresentation } from "../../types";
 import {
   generateRandomNode,
   getDirectionsFromRowAndCol,
@@ -19,11 +19,6 @@ export interface TreeState {
 const initialState = {
   value: "0",
 } as TreeState;
-
-export interface uiRepresentation {
-  rowIndex: number;
-  colIndex: number;
-}
 
 interface addData extends uiRepresentation {
   newNodeValue: string;

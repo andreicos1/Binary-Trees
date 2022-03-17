@@ -18,3 +18,8 @@ export interface nodeData {
   index: number;
   element: HTMLDivElement;
 }
+
+export interface uiRepresentation {
+  rowIndex: number;
+  colIndex: number;
+}

@@ -1,4 +1,3 @@
-import { ActionCreatorWithoutPayload } from "@reduxjs/toolkit";
 import { MutableRefObject } from "react";
 import { highlightChildren } from "../constants";
 import { updateMessage } from "../features/messages/messagesSlice";

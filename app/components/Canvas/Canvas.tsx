@@ -132,7 +132,7 @@ const Canvas = forwardRef((props: any, nodeBoxesRef: any) => {
         <div className={styles.text}>
           {message.main.map((msg, index) => {
             return (
-              <span id={msg} key={`${msg}-${index}`}>
+              <span id={`${index}-${msg}`} key={`${msg}-${index}`} className={styles.message}>
                 {msg}
               </span>
             );
