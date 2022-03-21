@@ -1,5 +1,5 @@
 import { Box, Text } from "@chakra-ui/layout";
-import { generateRandom, updateLabel } from "../../../features/tree/treeSlice";
+import { generateRandom } from "../../../features/tree/treeSlice";
 import { RootState, useAppDispatch } from "../../../store";
 import NavbarItem from "../Navbar Item/NavbarItem";
 import styles from "./Navbar.module.scss";
@@ -10,8 +10,9 @@ import { useSelector } from "react-redux";
 import { toggleIsPlaying } from "../../../features/tree/treeUpdateSlice";
 import { updatePosition } from "../../../features/tree/treePositionsSlice";
 import maximumPathSum from "../../../algorithms/maximumPathSum";
-import constructFromInPostorder from "../../../algorithms/constructFromInPostorder";
-import { clearMessage, updateMessage } from "../../../features/messages/messagesSlice";
+import constructFromInPreorder from "../../../algorithms/constructFromInPreorder";
+import { clearMessage } from "../../../features/messages/messagesSlice";
+import serializeAndDeserialize from "../../../algorithms/serializeAndDeserialize";
 
 const Navbar = () => {
   // TODO
@@ -63,15 +64,24 @@ const Navbar = () => {
       <NavbarItem
         text="Construct Tree From Inorder & Postorder Traversals"
         onClick={() =>
-          animateTreeChange(constructFromInPostorder, [
+          animateTreeChange(constructFromInPreorder, [
             dispatch,
             nodeBoxesRef,
             animationSpeed.duration,
           ])
         }
       />
-      <NavbarItem text="Kth Smallest Element" />
-      <Text className={styles.login}> Log In </Text>
+      <NavbarItem
+        text="Serialize & Deserialize Binary Tree"
+        onClick={() =>
+          animateTreeChange(serializeAndDeserialize, [
+            dispatch,
+            nodeBoxesRef,
+            animationSpeed.duration,
+          ])
+        }
+      />
+      <Text className={styles.login}>Log In</Text>
     </Box>
   );
 };

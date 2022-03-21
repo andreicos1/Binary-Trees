@@ -5,6 +5,9 @@ import { Provider } from "react-redux";
 import { store } from "../store";
 import { createContext, MutableRefObject, useRef } from "react";
 
+// TODO
+// 1. Fix Invert Tree wrong inversion
+// 2. Fix invert tree break on max speed
 export const BoxesRefContext = createContext([] as unknown as MutableRefObject<HTMLDivElement[]>);
 function MyApp({ Component, pageProps }: AppProps) {
   const nodeBoxesRef = useRef(new Array<HTMLDivElement>());

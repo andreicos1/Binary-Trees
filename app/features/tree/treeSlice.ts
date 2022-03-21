@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { MAX_TREE_LEVELS, uiRepresentation } from "../../types";
+import { MAX_TREE_LEVELS } from "../../constants";
+import { uiRepresentation } from "../../types";
 import {
   generateRandomNode,
   getDirectionsFromRowAndCol,

@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { MAX_TREE_LEVELS } from "../../types";
+import { MAX_TREE_LEVELS } from "../../constants";
 import { colIndexToGridColMultiplier, getRowAndColFromIndex } from "./treeFunctions";
 
 export interface Position {

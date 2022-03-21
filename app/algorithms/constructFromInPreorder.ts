@@ -3,18 +3,14 @@ import { MutableRefObject } from "react";
 import { AppDispatch } from "../store";
 import { addMessage, updateMessage } from "../features/messages/messagesSlice";
 import { getIndexFromLevelAndCol } from "../features/tree/treeFunctions";
-import {
-  addNode,
-  changeNodeValue,
-  resetTree,
-  TreeState,
-  updateLabel,
-} from "../features/tree/treeSlice";
+import { addNode, changeNodeValue, resetTree, updateLabel } from "../features/tree/treeSlice";
 import { highlightChildren, highlightParentColor } from "../constants";
 import { waitAnimationEnd } from "./invertTree";
 import { toggleLabelPositon } from "../features/tree/treeUpdateSlice";
 import { uiRepresentation } from "../types";
 
+// TODO
+// 1. Add animation to adding nodes
 type indexMap = {
   [key: string]: number;
 };

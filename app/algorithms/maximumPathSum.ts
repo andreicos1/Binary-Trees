@@ -1,10 +1,9 @@
 import { MutableRefObject } from "react";
-import { highlightChildren } from "../constants";
+import { highlightChildren, MAX_TREE_LEVELS } from "../constants";
 import { updateMessage } from "../features/messages/messagesSlice";
 import { getIndexFromLevelAndCol, getRowAndColFromIndex } from "../features/tree/treeFunctions";
 import { updateLabel } from "../features/tree/treeSlice";
 import { AppDispatch } from "../store";
-import { MAX_TREE_LEVELS } from "../types";
 import { waitAnimationEnd } from "./invertTree";
 
 const animationOptions = (duration: number) => {

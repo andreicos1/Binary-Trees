@@ -1,9 +1,9 @@
 import { WritableDraft } from "immer/dist/internal";
 import { MutableRefObject } from "react";
 import deleteNode from "../../algorithms/deleteNode";
+import { MAX_TREE_LEVELS } from "../../constants";
 import { AppDispatch } from "../../store";
-import { MAX_TREE_LEVELS } from "../../types";
-import { changeNodeValue, editNodeValue, TreeState } from "./treeSlice";
+import { editNodeValue, TreeState } from "./treeSlice";
 import { toggleEdit, treeUpdate } from "./treeUpdateSlice";
 const MAX_VALUE = 99; // maximum numeric value of a node
 

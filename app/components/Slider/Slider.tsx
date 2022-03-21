@@ -1,8 +1,8 @@
 import { Box, Slider, SliderTrack, SliderFilledTrack, SliderThumb, Text } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
+import { ANIMATION_MULTIPLIER, ANIMATION_SLIDER_MODIFIER } from "../../constants";
 import { updateSpeed } from "../../features/speed/speedSlice";
 import { RootState, useAppDispatch } from "../../store";
-import { ANIMATION_MULTIPLIER, ANIMATION_SLIDER_MODIFIER } from "../../types";
 
 import styles from "./Slider.module.scss";
 
