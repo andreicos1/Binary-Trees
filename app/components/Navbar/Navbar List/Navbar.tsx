@@ -17,7 +17,7 @@ import serializeAndDeserialize from "../../../algorithms/serializeAndDeserialize
 const Navbar = () => {
   // TODO
   // Add fade in/out to generating random tree
-  // Add edge animation
+  // Remove arrows when generating tree
   const dispatch = useAppDispatch();
   const nodeBoxesRef = useContext(BoxesRefContext);
   const treeUpdateState = useSelector((state: RootState) => state.treeUpdate);

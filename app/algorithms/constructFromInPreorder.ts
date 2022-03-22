@@ -5,12 +5,12 @@ import { addMessage, updateMessage } from "../features/messages/messagesSlice";
 import { getIndexFromLevelAndCol } from "../features/tree/treeFunctions";
 import { addNode, changeNodeValue, resetTree, updateLabel } from "../features/tree/treeSlice";
 import { highlightChildren, highlightParentColor } from "../constants";
-import { waitAnimationEnd } from "./invertTree";
 import { toggleLabelPositon } from "../features/tree/treeUpdateSlice";
 import { uiRepresentation } from "../types";
 
 // TODO
 // 1. Add animation to adding nodes
+// 2. Add left / right arrow to labels
 type indexMap = {
   [key: string]: number;
 };
@@ -50,8 +50,6 @@ export default async function constructFromInPostorder(
     const nodeElement = nodeBox.children[0].children[0];
     const nodeValue = nodeElement.children[0].innerHTML;
 
-    await animate(nodeElement, duration, highlightChildren);
-    await waitAnimationEnd(nodeElement);
     if (isInOrder) {
       await dfs(rowIndex + 1, colIndex * 2);
       let newValue = parseInt(nodeValue);
@@ -64,12 +62,12 @@ export default async function constructFromInPostorder(
       }
       label = ` ${newValue.toString()},`;
       inorder.push(newValue.toString());
-      await animate(nodeElement, duration, highlightParentColor);
+      await animate(nodeElement, duration, highlightChildren);
       await wait(duration);
       dispatch(addMessage(label));
       await dfs(rowIndex + 1, colIndex * 2 + 1);
     } else if (isPreorder) {
-      await animate(nodeElement, duration, highlightParentColor);
+      await animate(nodeElement, duration, highlightChildren);
       let newValue = parseInt(nodeValue);
       // No distincts are allowed
       while (isInOrder && inorder.includes(newValue.toString())) {

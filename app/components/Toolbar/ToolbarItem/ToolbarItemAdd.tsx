@@ -154,6 +154,7 @@ const ToolbarItemAdd = ({
         onDrag={throttledGetClosestParent}
         onDragEnd={addDraggedNodeToTree}
       >
+        {/* @ts-ignore */}
         <Node value={value} />
       </motion.div>
       {arrow}
