@@ -4,10 +4,25 @@
   height: 6rem;
 
   path {
-    stroke-dasharray: 300;
-    stroke-dashoffset: 300;
-    animation: arrow 1s ease-in-out;
+    stroke-dasharray: 600;
+    stroke-dashoffset: 600;
+    animation: arrow 0.5s ease-in;
     animation-fill-mode: forwards;
+
+    @media only screen and (max-width: 120em) {
+      stroke-dasharray: 300;
+      stroke-dashoffset: 300;
+    }
+
+    @media only screen and (max-width: 180em) {
+      stroke-dasharray: 500;
+      stroke-dashoffset: 500;
+    }
+
+    @media only screen and (min-width: 200em) {
+      stroke-dasharray: 800;
+      stroke-dashoffset: 800;
+    }
   }
 }
 
