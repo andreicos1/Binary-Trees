@@ -1,6 +1,6 @@
 import { ActionCreatorWithPayload } from "@reduxjs/toolkit";
 import { MutableRefObject } from "react";
-import { highlightChildren, highlightParentColor } from "../constants";
+import { highlightChildren, highlightParentColor, MAX_TREE_LEVELS } from "../constants";
 import { getIndexFromLevelAndCol } from "../features/tree/treeFunctions";
 import { UpdatePosition } from "../features/tree/treePositionsSlice";
 import { AppDispatch } from "../store";
@@ -25,7 +25,7 @@ const animationOptions = (duration: number) => {
 };
 
 const animate = async (
-  parent: Element,
+  parent: Element | null,
   leftBoxes: nodeData[],
   rightBoxes: nodeData[],
   duration: number,
@@ -35,17 +35,19 @@ const animate = async (
   if (leftBoxes.length !== rightBoxes.length) {
     throw "Left and Right boxes lengths should be equal";
   }
+
   const arrowsLeft: HTMLDivElement[] = [];
   const arrowsRight: HTMLDivElement[] = [];
   // If node has children
   if (leftBoxes.length > 0) {
-    parent.animate(
-      [
-        { backgroundColor: highlightParentColor, offset: 0.2 },
-        { backgroundColor: highlightParentColor },
-      ],
-      animationOptions(duration)
-    );
+    parent &&
+      parent.animate(
+        [
+          { backgroundColor: highlightParentColor, offset: 0.2 },
+          { backgroundColor: highlightParentColor },
+        ],
+        animationOptions(duration)
+      );
     // Highlight direct children
     const parentLeft = leftBoxes[0];
     const parentRight = rightBoxes[0];
@@ -63,6 +65,8 @@ const animate = async (
     for (let i = 0; i < leftBoxes.length; i++) {
       const elementLeft = leftBoxes[i].element;
       const elementRight = rightBoxes[i].element;
+      const indexLeft = leftBoxes[i].index;
+      const indexRight = rightBoxes[i].index;
       const arrowLeft = elementLeft.children[1] as HTMLDivElement;
       const arrowRight = elementRight.children[1] as HTMLDivElement;
       if (arrowLeft) {
@@ -85,7 +89,7 @@ const animate = async (
       ];
       dispatch(
         updatePosition({
-          index: leftBoxes[i].index,
+          index: indexLeft,
           rowStart: rowStartRight,
           colStart: colStartRight,
         })
@@ -93,7 +97,7 @@ const animate = async (
       elementLeft.focus();
       dispatch(
         updatePosition({
-          index: rightBoxes[i].index,
+          index: indexRight,
           rowStart: rowStartLeft,
           colStart: colStartLeft,
         })
@@ -102,16 +106,17 @@ const animate = async (
     }
   } else {
     // Node has no children -> animate faster
-    parent.animate(
-      [
-        { backgroundColor: highlightParentColor, offset: 0.2 },
-        { backgroundColor: highlightParentColor },
-      ],
-      { duration: duration / 4, delay: duration / 4 }
-    );
+    parent &&
+      parent.animate(
+        [
+          { backgroundColor: highlightParentColor, offset: 0.2 },
+          { backgroundColor: highlightParentColor },
+        ],
+        { duration: duration / 4, delay: duration / 4 }
+      );
   }
   // Wait for animation to complete
-  await waitAnimationEnd(parent);
+  parent && (await waitAnimationEnd(parent));
   arrowsLeft.forEach((arrow) => {
     arrow.style.display = "";
   });
@@ -133,10 +138,10 @@ const invertTree = async (
     [rowIndex, colIndex] = stack.pop() as number[];
     const index = getIndexFromLevelAndCol(rowIndex, colIndex);
     const nodeBox = nodeBoxesRef.current[index];
-    if (!nodeBox || !nodeBox.children.length) {
+    if (!nodeBox) {
       continue;
     }
-    const nodeElement = nodeBox.children[0].children[0];
+    const nodeElement = nodeBox.children[0]?.children[0];
     const [leftBoxes, rightBoxes] = getChildrenBoxes(rowIndex, colIndex, nodeBoxesRef);
     await animate(nodeElement, leftBoxes, rightBoxes, duration, dispatch, updatePosition);
     // Push children to stack

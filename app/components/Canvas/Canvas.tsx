@@ -10,7 +10,7 @@ import {
   getTreeFromRowAndCol,
   processNode,
 } from "../../features/tree/treeFunctions";
-import { forwardRef, Fragment, useEffect } from "react";
+import { forwardRef, Fragment } from "react";
 import SpeedSlider from "../Slider/Slider";
 import { turnAllOff } from "../../features/tree/treeUpdateSlice";
 import { GridItem } from "@chakra-ui/react";
