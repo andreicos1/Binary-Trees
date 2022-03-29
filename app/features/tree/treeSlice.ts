@@ -7,6 +7,7 @@ import {
   getIndexFromLevelAndCol,
   getParentTreeFromRowAndCol,
   getTreeFromRowAndCol,
+  invert,
 } from "./treeFunctions";
 
 export interface TreeState {
@@ -176,6 +177,9 @@ export const treeSlice = createSlice({
       const node = getTreeFromRowAndCol(state, action.payload.rowIndex, action.payload.colIndex);
       if (node) node.label = action.payload.label;
     },
+    invertTreeSlice: (state) => {
+      invert(state);
+    },
   },
 });
 
@@ -188,6 +192,7 @@ export const {
   turnOffEditing,
   changeNodeValue,
   updateLabel,
+  invertTreeSlice,
 } = treeSlice.actions;
 
 export default treeSlice.reducer;

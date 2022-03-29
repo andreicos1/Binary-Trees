@@ -13,9 +13,10 @@ import {
 import { forwardRef, Fragment } from "react";
 import SpeedSlider from "../Slider/Slider";
 import { turnAllOff } from "../../features/tree/treeUpdateSlice";
-import { GridItem } from "@chakra-ui/react";
+import { GridItem, Spinner } from "@chakra-ui/react";
 import { NodeBox } from "../Node/NodeBox";
 import { useAnimation } from "framer-motion";
+import { MAX_TREE_LEVELS } from "../../constants";
 
 const Xarrow = dynamic(() => import("react-xarrows"), {
   ssr: false,
@@ -60,6 +61,21 @@ const Canvas = forwardRef((props: any, nodeBoxesRef: any) => {
         }
       }}
     >
+      {treeUpdate.isLoading && (
+        <Spinner
+          thickness="4px"
+          speed="0.65s"
+          emptyColor="gray.200"
+          color="blue.500"
+          size="xl"
+          gridColumn={`${Math.floor(nodeBoxesRef.current.length / 2) + 1} / ${
+            Math.floor(nodeBoxesRef.current.length / 2) + 2
+          }`}
+          gridRow={`${MAX_TREE_LEVELS - 2} / ${MAX_TREE_LEVELS - 1}`}
+          justifySelf="center"
+          alignSelf="center"
+        />
+      )}
       <GridItem gridColumn={"1 / 2"} gridRow={"1 / 2"} marginTop="-4rem">
         <SpeedSlider />
       </GridItem>
@@ -110,6 +126,7 @@ const Canvas = forwardRef((props: any, nodeBoxesRef: any) => {
 
               return (
                 <NodeBox
+                  display={treeUpdate.isLoading ? "none" : "block"}
                   key={currNodeId}
                   currNodeId={currNodeId}
                   gridRowStart={treePositions[nodeIndex].rowStart}

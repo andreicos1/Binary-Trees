@@ -183,3 +183,10 @@ export const processNode = (
 export const colIndexToGridColMultiplier = (colIndex: number, rowIndex: number) => {
   return Math.pow(2, MAX_TREE_LEVELS - rowIndex - 1) * (2 * colIndex + 1);
 };
+
+export const invert = (state: WritableDraft<TreeState> | undefined) => {
+  if (!state) return;
+  [state.left, state.right] = [state.right, state.left];
+  invert(state.left);
+  invert(state.right);
+};

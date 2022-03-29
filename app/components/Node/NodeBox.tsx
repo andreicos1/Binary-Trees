@@ -17,6 +17,7 @@ type Props = {
   onFocus: () => void;
   children: JSX.Element | null;
   label?: string | null;
+  display?: string;
 };
 
 export const NodeBox = ({
@@ -28,6 +29,7 @@ export const NodeBox = ({
   children,
   onFocus,
   label,
+  display,
 }: Props) => {
   const treeUpdate = useSelector((state: RootState) => state.treeUpdate);
   const isLabelPositionDown = treeUpdate.labelPosDown;
@@ -42,6 +44,7 @@ export const NodeBox = ({
       onFocus={onFocus}
       className={styles.nodeBox}
       ref={setRef}
+      display={display || ""}
     >
       {label && (
         <Text className={styles[isLabelPositionDown ? "label-down" : "label"]}>{label}</Text>

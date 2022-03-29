@@ -13,6 +13,7 @@ const initialState = {
   editing: false,
   isPlaying: false,
   labelPosDown: false,
+  isLoading: false,
 };
 
 export const treeUpdateSlice = createSlice({
@@ -50,6 +51,9 @@ export const treeUpdateSlice = createSlice({
     toggleLabelPositon: (state) => {
       state.labelPosDown = !state.labelPosDown;
     },
+    toggleIsLoading: (state) => {
+      state.isLoading = !state.isLoading;
+    },
   },
 });
 
@@ -60,5 +64,6 @@ export const {
   turnAllOff,
   toggleIsPlaying,
   toggleLabelPositon,
+  toggleIsLoading,
 } = treeUpdateSlice.actions;
 export default treeUpdateSlice.reducer;

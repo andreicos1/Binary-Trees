@@ -1,8 +1,10 @@
 import { ActionCreatorWithPayload } from "@reduxjs/toolkit";
 import { MutableRefObject } from "react";
 import { highlightChildren, highlightParentColor, MAX_TREE_LEVELS } from "../constants";
-import { getIndexFromLevelAndCol } from "../features/tree/treeFunctions";
+import { getIndexFromLevelAndCol, getRowAndColFromIndex } from "../features/tree/treeFunctions";
 import { UpdatePosition } from "../features/tree/treePositionsSlice";
+import { invertTreeSlice } from "../features/tree/treeSlice";
+import { toggleIsLoading } from "../features/tree/treeUpdateSlice";
 import { AppDispatch } from "../store";
 import { nodeData } from "../types";
 import { getChildrenBoxes } from "./helpers";
@@ -148,6 +150,45 @@ const invertTree = async (
     stack.push([rowIndex + 1, colIndex * 2]);
     stack.push([rowIndex + 1, colIndex * 2 + 1]);
   }
+  dispatch(toggleIsLoading());
+  // Reset orders
+  for (let level = 0; level < MAX_TREE_LEVELS; level++) {
+    const startIndex = Math.pow(2, level) - 1;
+    const endIndex = startIndex + Math.pow(2, level);
+    for (let index = startIndex; index < Math.floor((endIndex + startIndex) / 2); index++) {
+      const indexLeft = index;
+      const indexRight = endIndex - index + startIndex - 1;
+      const elementLeft = nodeBoxesRef.current[indexLeft];
+      const elementRight = nodeBoxesRef.current[indexRight];
+      const styleLeft = getComputedStyle(elementLeft);
+      const styleRight = getComputedStyle(elementRight);
+      const [colStartLeft, rowStartLeft] = [
+        parseInt(styleLeft.gridColumnStart),
+        parseInt(styleLeft.gridRowStart),
+      ];
+      const [colStartRight, rowStartRight] = [
+        parseInt(styleRight.gridColumnStart),
+        parseInt(styleRight.gridRowStart),
+      ];
+      dispatch(
+        updatePosition({
+          index: indexLeft,
+          rowStart: rowStartRight,
+          colStart: colStartRight,
+        })
+      );
+      dispatch(
+        updatePosition({
+          index: indexRight,
+          rowStart: rowStartLeft,
+          colStart: colStartLeft,
+        })
+      );
+    }
+  }
+  await new Promise((resolve) => setTimeout(resolve, 300));
+  dispatch(invertTreeSlice());
+  dispatch(toggleIsLoading());
 };
 
 export default invertTree;
