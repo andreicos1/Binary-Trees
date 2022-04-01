@@ -173,7 +173,7 @@ export const processNode = (
     return;
   }
   if (treeUpdate.deleting) {
-    deleteNode(index, nodeBoxesRef, dispatch);
+    deleteNode(index, nodeBoxesRef, dispatch, treeUpdate.displayRootDeleteError);
   } else if (treeUpdate.editing) {
     dispatch(toggleEdit());
     dispatch(editNodeValue({ rowIndex, colIndex }));

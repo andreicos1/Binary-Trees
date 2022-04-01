@@ -1,10 +1,13 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface treeUpdate {
   deleting: boolean;
   adding: boolean;
   editing: boolean;
   isPlaying: boolean;
+  labelPosDown: boolean;
+  isLoading: boolean;
+  displayRootDeleteError: boolean;
 }
 
 const initialState = {
@@ -14,6 +17,7 @@ const initialState = {
   isPlaying: false,
   labelPosDown: false,
   isLoading: false,
+  displayRootDeleteError: false,
 };
 
 export const treeUpdateSlice = createSlice({
@@ -54,6 +58,9 @@ export const treeUpdateSlice = createSlice({
     toggleIsLoading: (state) => {
       state.isLoading = !state.isLoading;
     },
+    setShowDisplayRootDeleteError: (state, action: PayloadAction<boolean>) => {
+      state.displayRootDeleteError = action.payload;
+    },
   },
 });
 
@@ -65,5 +72,6 @@ export const {
   toggleIsPlaying,
   toggleLabelPositon,
   toggleIsLoading,
+  setShowDisplayRootDeleteError,
 } = treeUpdateSlice.actions;
 export default treeUpdateSlice.reducer;

@@ -13,7 +13,7 @@ import {
 import { forwardRef, Fragment } from "react";
 import SpeedSlider from "../Slider/Slider";
 import { turnAllOff } from "../../features/tree/treeUpdateSlice";
-import { GridItem, Spinner } from "@chakra-ui/react";
+import { Alert, AlertIcon, GridItem, Spinner, Text } from "@chakra-ui/react";
 import { NodeBox } from "../Node/NodeBox";
 import { useAnimation } from "framer-motion";
 import { MAX_TREE_LEVELS } from "../../constants";
@@ -61,6 +61,19 @@ const Canvas = forwardRef((props: any, nodeBoxesRef: any) => {
         }
       }}
     >
+      {treeUpdate.displayRootDeleteError && (
+        <Alert
+          width="500px"
+          position="absolute"
+          top={0}
+          left={"50%"}
+          transform="translateX(-50%)"
+          status="error"
+        >
+          <AlertIcon boxSize="20px" />
+          <Text fontSize="20px">Cannot Delete Root Node</Text>
+        </Alert>
+      )}
       {treeUpdate.isLoading && (
         <Spinner
           thickness="4px"

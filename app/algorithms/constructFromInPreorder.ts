@@ -92,7 +92,6 @@ export default async function constructFromInPostorder(
   dispatch(addMessage(label));
   await dfs(0, 0, false, true);
   dispatch(updateMessage(label.slice(0, -1)));
-  // dispatch(resetTree());
 
   // Get map of indexes of inorder
   const inorderMap = inorder.reduce((prev, curr, index) => {
