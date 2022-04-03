@@ -1,0 +1,35 @@
+.formRoot {
+  width: 100%;
+  padding: 2.5rem 4rem;
+  margin-top: 6rem;
+  background-color: lighten($davys-grey, 4);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+}
+
+.formmButton {
+  padding: 2rem;
+  &:hover {
+    background-color: lighten($primary-color, 2) !important;
+  }
+}
+
+.linksBox {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  margin-top: 1.2rem;
+}
+
+.link {
+  align-self: center;
+  color: $light-gray;
+  font-size: 1.8rem;
+  &:hover {
+    color: lighten($light-gray, 5);
+  }
+}

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Box, Text } from "@chakra-ui/layout";
 import { generateRandom } from "../../../features/tree/treeSlice";
 import { RootState, useAppDispatch } from "../../../store";
@@ -81,7 +82,11 @@ const Navbar = () => {
           ])
         }
       />
-      <Text className={styles.login}>Log In</Text>
+      <Text className={styles.login}>
+        <Link href="/signin">
+          <a>Log In</a>
+        </Link>
+      </Text>
     </Box>
   );
 };

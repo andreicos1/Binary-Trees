@@ -1,18 +1,18 @@
 import { Box } from "@chakra-ui/react";
 import Link from "next/link";
-import SigninForm from "../components/Forms/SigninForm";
+import SignUpForm from "../components/Forms/SignUpForm";
 import { SecondaryNavigation } from "../components/Navbar/SecondaryNavigation/SecondaryNavigation";
 import styles from "../styles/pages/Auth.module.scss";
 
-const Signin = () => {
+const Signup = () => {
   return (
     <Box className={styles.root}>
       <Box className={styles.content}>
         <SecondaryNavigation />
-        <SigninForm />
+        <SignUpForm />
       </Box>
     </Box>
   );
 };
 
-export default Signin;
+export default Signup;
