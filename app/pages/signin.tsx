@@ -1,5 +1,4 @@
 import { Box } from "@chakra-ui/react";
-import Link from "next/link";
 import SigninForm from "../components/Forms/SigninForm";
 import { SecondaryNavigation } from "../components/Navbar/SecondaryNavigation/SecondaryNavigation";
 import styles from "../styles/pages/Auth.module.scss";

@@ -1,17 +1,17 @@
 import { Box } from "@chakra-ui/react";
-import SignUpForm from "../components/Forms/SignUpForm";
+import ForgotPasswordForm from "../components/Forms/ForgotPasswordForm";
 import { SecondaryNavigation } from "../components/Navbar/SecondaryNavigation/SecondaryNavigation";
 import styles from "../styles/pages/Auth.module.scss";
 
-const Signup = () => {
+const ForgotPassword = () => {
   return (
     <Box className={styles.root}>
       <Box className={styles.content}>
         <SecondaryNavigation />
-        <SignUpForm />
+        <ForgotPasswordForm />
       </Box>
     </Box>
   );
 };
 
-export default Signup;
+export default ForgotPassword;
