@@ -1,0 +1,27 @@
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.6rem 10rem;
+  flex: 1;
+
+  background-color: $dark-gray;
+}
+
+.contact {
+  color: $light-gray;
+  font-size: 1.6rem;
+}
+
+.link {
+  color: #7fa1dc;
+  &:hover {
+    color: lighten(#7fa1dc, 5);
+  }
+}
+
+.heading {
+  color: $light-gray;
+  font-size: 2.2rem;
+  font-weight: 600;
+}

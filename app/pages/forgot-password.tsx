@@ -1,5 +1,5 @@
 import { Box } from "@chakra-ui/react";
-import ForgotPasswordForm from "../components/Forms/ForgotPasswordForm";
+import ForgotPasswordForm from "../components/Forms/auth/ForgotPasswordForm";
 import { SecondaryNavigation } from "../components/Navbar/SecondaryNavigation/SecondaryNavigation";
 import styles from "../styles/pages/Auth.module.scss";
 

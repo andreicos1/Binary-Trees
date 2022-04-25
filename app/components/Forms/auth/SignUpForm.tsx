@@ -3,9 +3,9 @@ import Link from "next/link";
 import { ChangeEvent, useState } from "react";
 
 import styles from "./Forms.module.scss";
-import AuthInput from "./Inputs/AuthInput";
-import Title from "./title/Title";
-import { EMAIL_ERROR_MESSAGE, PASSWORD_ERROR_MESSAGE } from "./Validation/validation";
+import AuthInput from "../Inputs/AuthInput";
+import Title from "../title/Title";
+import { EMAIL_ERROR_MESSAGE, PASSWORD_ERROR_MESSAGE } from "../Validation/validation";
 
 const SigninForm = () => {
   const [email, setEmail] = useState("");

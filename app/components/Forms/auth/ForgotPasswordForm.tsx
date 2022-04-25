@@ -1,22 +1,19 @@
 import { Box, Button } from "@chakra-ui/react";
 import { ChangeEvent, useState } from "react";
 
-import AuthInput from "./Inputs/AuthInput";
-import { EMAIL_ERROR_MESSAGE, PASSWORD_ERROR_MESSAGE } from "./Validation/validation";
+import AuthInput from "../Inputs/AuthInput";
+import { EMAIL_ERROR_MESSAGE } from "../Validation/validation";
 
 import styles from "./Forms.module.scss";
-import Title from "./title/Title";
+import Title from "../title/Title";
 import Link from "next/link";
 
-const SigninForm = () => {
+const ForgotPasswordForm = () => {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
 
   const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value);
-  const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value);
 
   const onSubmit = () => {};
-
   return (
     <Box className={styles.formRoot}>
       <Box className={styles.form}>
@@ -30,15 +27,6 @@ const SigninForm = () => {
           label="Email"
           errorMessage={EMAIL_ERROR_MESSAGE}
         />
-        <AuthInput
-          value={password}
-          onChange={handlePasswordChange}
-          type="password"
-          id="password"
-          placeholder="Password"
-          label="Password"
-          errorMessage={PASSWORD_ERROR_MESSAGE}
-        />
 
         <Button
           marginTop="0.8rem"
@@ -48,14 +36,14 @@ const SigninForm = () => {
           className={styles.formmButton}
           onClick={onSubmit}
         >
-          Log In
+          Recover Password
         </Button>
         <Box className={styles.linksBox}>
           <Link href="/signup">
             <a className={styles.link}>Sign Up</a>
           </Link>
-          <Link href="/forgot-password">
-            <a className={styles.link}>Forgot Password</a>
+          <Link href="/signin">
+            <a className={styles.link}>Log In</a>
           </Link>
         </Box>
       </Box>
@@ -63,4 +51,4 @@ const SigninForm = () => {
   );
 };
 
-export default SigninForm;
+export default ForgotPasswordForm;

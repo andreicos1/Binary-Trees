@@ -2,6 +2,7 @@ import { Box } from "@chakra-ui/layout";
 import type { GetServerSideProps } from "next";
 import Head from "next/head";
 import React from "react";
+import Footer from "../components/Footer/Footer";
 import Navbar from "../components/Navbar/Navbar List/Navbar";
 import Reactions from "../components/Reactions/ReactionsBar/Reactions";
 import ToolkitCanvasBox from "../components/ToolkitCanvasBox/ToolkitCanvasBox";
@@ -59,9 +60,7 @@ const Home = ({ totalViews, totalLikes, initialIsLiked }: ReactionsData) => {
             initialIsLiked={initialIsLiked}
           />
         </Box>
-      </Box>
-      <Box bg="#777" height="100px" color="white" fontSize="2rem">
-        Comments
+        <Footer />
       </Box>
     </Box>
   );
