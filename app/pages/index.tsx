@@ -6,27 +6,31 @@ import Footer from "../components/Footer/Footer";
 import Navbar from "../components/Navbar/Navbar List/Navbar";
 import Reactions from "../components/Reactions/ReactionsBar/Reactions";
 import ToolkitCanvasBox from "../components/ToolkitCanvasBox/ToolkitCanvasBox";
+import { BASE_URL } from "../constants";
 import styles from "../styles/Home.module.scss";
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const baseUrl = process.env.NEXT_PUBLIC_WEBSITE_URL;
-  const urlViews = `${baseUrl}/views`;
-  const urlLikes = `${baseUrl}/likes`;
+  const urlViews = `${BASE_URL}/views`;
+  const urlLikes = `${BASE_URL}/likes`;
   try {
-    await fetch(urlViews, { method: "POST" }); // Add new view
-    const responseViews = await fetch(urlViews);
-    const totalViews = await responseViews.json();
+    const [_, responseViews, responseLikes, responseIsLiked] = await Promise.all([
+      fetch(urlViews, { method: "POST" }), // Add new view
+      fetch(urlViews),
+      fetch(urlLikes),
+      fetch(`${urlLikes}/ip`),
+    ]);
 
-    const responseLikes = await fetch(urlLikes);
-    const totalLikes = await responseLikes.json();
-
-    const responseIsLiked = await fetch(`${urlLikes}/ip`);
-    const initialIsLiked = !(await responseIsLiked.json());
+    const [totalViews, totalLikes, initialIsLiked] = await Promise.all([
+      responseViews.json(),
+      responseLikes.json(),
+      !responseIsLiked.json(),
+    ]);
 
     return {
       props: { totalViews, totalLikes, initialIsLiked },
     };
   } catch (error) {
+    console.log({ error });
     return {
       props: { totalViews: "...", totalLikes: "...", initialIsLiked: "..." },
     };

@@ -9,7 +9,7 @@ export class ViewsController {
   async create(@Request() request) {
     const newView = await this.viewsService.create(request.ip);
     if (newView) {
-      return "Resource Created";
+      return this.viewsService.getCount();
     }
     return "Already exists";
   }

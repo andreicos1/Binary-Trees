@@ -1,21 +1,41 @@
 import { Box, Button } from "@chakra-ui/react";
 import { ChangeEvent, useState } from "react";
+import { EMAIL_ERROR_MESSAGE, PASSWORD_ERROR_MESSAGE } from "../Validation/validation";
+import { BASE_URL } from "../../../constants";
 
+import { useAppDispatch } from "../../../store";
+import { setUser } from "../../../features/user/userSlice";
 import Link from "next/link";
 import Title from "../title/Title";
 import AuthInput from "../Inputs/AuthInput";
 
-import styles from './Forms.module.scss'
-import { EMAIL_ERROR_MESSAGE, PASSWORD_ERROR_MESSAGE } from "../Validation/validation";
+import styles from "./Forms.module.scss";
 
 const SigninForm = () => {
+  const dispatch = useAppDispatch();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value);
   const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value);
 
-  const onSubmit = () => {};
+  const onSubmit = async () => {
+    try {
+      const response = await fetch(`${BASE_URL}/auth/login`, {
+        method: "POST",
+        body: JSON.stringify({ email, password }),
+        credentials: "include",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      });
+      dispatch(setUser());
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <Box className={styles.formRoot}>

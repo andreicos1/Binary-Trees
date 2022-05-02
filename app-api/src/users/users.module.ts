@@ -3,6 +3,7 @@ import { JwtModule } from "@nestjs/jwt";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { MailModule } from "src/mail/mail.module";
 import { AuthService } from "./auth.service";
+import { jwtConstants } from "./constants";
 import { JwtStrategy } from "./jwt/jwt.strategy";
 import { UsersController } from "./users.controller";
 import { User } from "./users.entity";
@@ -12,7 +13,7 @@ import { UsersService } from "./users.service";
   imports: [
     TypeOrmModule.forFeature([User]),
     JwtModule.register({
-      secret: "secretKey",
+      secret: jwtConstants.secret,
       signOptions: { expiresIn: "1d" },
     }),
     MailModule,

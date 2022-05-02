@@ -4,8 +4,7 @@ import Link from "next/link";
 
 import styles from "./SecondaryNavigation.module.scss";
 
-type Props = {};
-export const SecondaryNavigation = (props: Props) => {
+export const SecondaryNavigation = () => {
   return (
     <Link href="/">
       <Box className={styles.root}>

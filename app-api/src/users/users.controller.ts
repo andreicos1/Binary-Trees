@@ -22,6 +22,7 @@ import { CreateUserDto } from "./dtos/create-user.dto";
 import { JwtAuthGuard } from "../guards/jwt-auth.guard";
 import { UsersService } from "./users.service";
 import { EmailConfirmationGuard } from "src/guards/email-confirmation.guard";
+import { request } from "http";
 
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller("auth")
@@ -40,11 +41,11 @@ export class UsersController {
 
   @Post("/confirm")
   async confirm(@Body() body: ConfirmEmailDto, @Res({ passthrough: true }) response: Response) {
+    // Mark email as confirmed in the database
     try {
-      // Mark email as confirmed in the database
-      const id: number = await this.authService.decodeConfirmationToken(body.token);
+      const email: string = await this.authService.decodeConfirmationToken(body.token);
       // Get the user and create a new jwt token
-      const user = await this.usersService.findOne(id);
+      const user = (await this.usersService.find(email))[0];
       if (!user) {
         throw new NotFoundException("User not found");
       }
@@ -56,9 +57,9 @@ export class UsersController {
       };
       const jwt = await this.jwtService.signAsync(payload);
       response.cookie("jwt", jwt, { httpOnly: true });
-      return user;
+      return "Email Confirmed!";
     } catch (error) {
-      throw new BadRequestException("Invalid token provided");
+      throw new BadRequestException(error.message);
     }
   }
 
@@ -68,7 +69,7 @@ export class UsersController {
     @Res({ passthrough: true /* send to frontend */ }) response: Response
   ) {
     const user = await this.authService.login(body.email, body.password);
-    const payload = { id: user.id, email: user.email };
+    const payload = { id: user.id, email: user.email, isEmailConfirmed: user.isEmailConfirmed };
     const jwt = await this.jwtService.signAsync(payload);
     response.cookie("jwt", jwt, { httpOnly: true });
     return user;
@@ -81,6 +82,7 @@ export class UsersController {
       throw new NotFoundException("No current session data found");
     }
     response.clearCookie("jwt");
+    request.logout();
     return {
       message: "success",
     };
@@ -96,6 +98,20 @@ export class UsersController {
         throw new UnauthorizedException();
       }
       const user = await this.usersService.findOne(data.id);
+      return user;
+    } catch (error) {
+      throw new UnauthorizedException();
+    }
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post("/resend-confirmation")
+  async resendConfirmation(@Req() request: Request) {
+    try {
+      const cookie = request.cookies["jwt"];
+      const data = await this.jwtService.verifyAsync(cookie);
+      const user = await this.usersService.findOne(data.id);
+      await this.authService.resendConfirmation(user.email);
       return user;
     } catch (error) {
       throw new UnauthorizedException();

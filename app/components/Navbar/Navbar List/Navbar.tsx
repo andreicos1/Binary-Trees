@@ -14,6 +14,8 @@ import maximumPathSum from "../../../algorithms/maximumPathSum";
 import constructFromInPreorder from "../../../algorithms/constructFromInPreorder";
 import { clearMessage } from "../../../features/messages/messagesSlice";
 import serializeAndDeserialize from "../../../algorithms/serializeAndDeserialize";
+import { BASE_URL } from "../../../constants";
+import { getUser } from "../../../features/user/userSlice";
 
 const Navbar = () => {
   // TODO
@@ -21,6 +23,7 @@ const Navbar = () => {
   // Remove arrows when generating tree
   const dispatch = useAppDispatch();
   const nodeBoxesRef = useContext(BoxesRefContext);
+  const user = getUser();
   const treeUpdateState = useSelector((state: RootState) => state.treeUpdate);
   const animationSpeed = useSelector((state: RootState) => state.speed);
 
@@ -30,6 +33,22 @@ const Navbar = () => {
       dispatch(clearMessage());
       await func(...args);
       dispatch(toggleIsPlaying());
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await fetch(`${BASE_URL}/auth/logout`, { method: "POST" });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleResendConfirmation = async () => {
+    try {
+      await fetch(`${BASE_URL}/auth/resend-confirmation`, { method: "POST" });
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -82,11 +101,24 @@ const Navbar = () => {
           ])
         }
       />
-      <Text className={styles.login}>
-        <Link href="/signin">
-          <a>Log In</a>
-        </Link>
-      </Text>
+      {user ? (
+        <Text className={styles.login}>
+          <Link href="/signin">
+            <a>Log In</a>
+          </Link>
+        </Text>
+      ) : (
+        <>
+          <a className={styles.login} onClick={handleLogout}>
+            Log Out
+          </a>
+          {true && (
+            <a className={styles.login} onClick={handleResendConfirmation}>
+              Resend Confirmation Email
+            </a>
+          )}
+        </>
+      )}
     </Box>
   );
 };

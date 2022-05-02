@@ -5,6 +5,7 @@ import speedSlice from "./features/speed/speedSlice";
 import treePositionsSlice from "./features/tree/treePositionsSlice";
 import treeReducer from "./features/tree/treeSlice";
 import treeUpdateSlice from "./features/tree/treeUpdateSlice";
+import userSlice from "./features/user/userSlice";
 
 export const store = configureStore({
   reducer: {
@@ -13,6 +14,7 @@ export const store = configureStore({
     treePositions: treePositionsSlice,
     speed: speedSlice,
     messages: messagesSlice,
+    user: userSlice,
   },
 });
 

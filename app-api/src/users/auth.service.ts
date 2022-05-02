@@ -35,11 +35,11 @@ export class AuthService {
     return "Email successfully confirmed";
   }
 
-  async decodeConfirmationToken(token: string) {
+  decodeConfirmationToken(token: string) {
     try {
-      const payload = await this.jwtService.verify(token);
-      if (typeof payload === "object" && "id" in payload) {
-        return payload.id;
+      const payload = this.jwtService.decode(token);
+      if (typeof payload === "object" && payload.hasOwnProperty("email")) {
+        return payload.email;
       }
       throw new BadRequestException();
     } catch (error) {
@@ -59,5 +59,9 @@ export class AuthService {
       throw new BadGatewayException("Incorrect password");
     }
     return user;
+  }
+
+  async resendConfirmation(email: string) {
+    await this.mailService.sendConfirmationMail(email);
   }
 }

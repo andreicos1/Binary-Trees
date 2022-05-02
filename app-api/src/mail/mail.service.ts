@@ -11,21 +11,21 @@ export class MailService {
     this.nodemailerTransport = createTransport({
       service: "gmail",
       auth: {
-        user: "",
-        pass: "",
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASSWORD,
       },
     });
   }
 
-  sendConfirmationMail(userEmail: string) {
-    const baseUrl = "http://localhost:3000";
-    const token = this.jwtService.sign({ userEmail });
-    const url = `${baseUrl}?token=${token}`;
+  sendConfirmationMail(email: string) {
+    const baseUrl = process.env.ROOT_URL;
+    const token = this.jwtService.sign({ email });
+    const url = `${baseUrl}/confirm-email/${token}`;
     const subject = "Confirmation Email";
-    const text = `Welcome to the application. To confirm the email address, click here: ${url}`;
+    const text = `Welcome to the Binary Trees App. To confirm your email address, please click the following link: ${url}`;
 
     return this.nodemailerTransport.sendMail({
-      to: userEmail,
+      to: email,
       subject,
       text,
     });

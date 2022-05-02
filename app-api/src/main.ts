@@ -3,15 +3,18 @@ import { NestFactory } from "@nestjs/core";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import * as cookieParser from "cookie-parser";
 import { AppModule } from "./app.module";
+import { addBearer } from "./middlewares/addBearer";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   // Config required to be able to retrieve user from cookie
   app.use(cookieParser());
   app.enableCors({
-    origin: "http://localhost:3000",
+    origin: process.env.ROOT_URL,
     credentials: true,
   });
+  // Add Global Middleware
+  app.use(addBearer);
   // Valdation DTO
   app.useGlobalPipes(new ValidationPipe());
   const config = new DocumentBuilder()
@@ -22,7 +25,6 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup("api", app, document);
-  // await app.listen(process.env.PORT || 3001);
-  await app.listen(80);
+  await app.listen(process.env.PORT);
 }
 bootstrap();

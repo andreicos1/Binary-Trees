@@ -25,12 +25,12 @@ export class LikesService {
       this.repo.save(like);
       return true;
     }
-    this.repo.remove(oldLike);
+    this.repo.delete(oldLike);
     return false;
   }
 
   async findOneIp(ip: string) {
     const like = await this.repo.findOne({ ip });
-    return like ? true : false;
+    return !!like;
   }
 }

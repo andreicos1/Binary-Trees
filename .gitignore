@@ -76,3 +76,9 @@ build/config\.gypi
 
 # dist
 **/dist
+
+#env
+.env
+
+#config
+config.yaml

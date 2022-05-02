@@ -2,12 +2,18 @@ import { Box, Button } from "@chakra-ui/react";
 import Link from "next/link";
 import { ChangeEvent, useState } from "react";
 
-import styles from "./Forms.module.scss";
+import { useAppDispatch } from "../../../store";
 import AuthInput from "../Inputs/AuthInput";
 import Title from "../title/Title";
 import { EMAIL_ERROR_MESSAGE, PASSWORD_ERROR_MESSAGE } from "../Validation/validation";
+import { BASE_URL } from "../../../constants";
+import { setUser } from "../../../features/user/userSlice";
+
+import styles from "./Forms.module.scss";
 
 const SigninForm = () => {
+  const dispatch = useAppDispatch();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -17,7 +23,20 @@ const SigninForm = () => {
   const handleConfirmPasswordChange = (e: ChangeEvent<HTMLInputElement>) =>
     setConfirmPassword(e.target.value);
 
-  const onSubmit = () => {};
+  const onSubmit = async () => {
+    try {
+      await fetch(`${BASE_URL}/auth/signup`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+      dispatch(setUser());
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <Box className={styles.formRoot}>
