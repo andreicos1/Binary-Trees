@@ -1,4 +1,4 @@
-import { Box } from "@chakra-ui/layout";
+import { Box } from "@chakra-ui/react";
 import React, { useContext, useRef } from "react";
 import { useSelector } from "react-redux";
 import { BoxesRefContext } from "../../pages/_app";

@@ -1,4 +1,4 @@
-import { Box, Text } from "@chakra-ui/layout";
+import { Box, Text } from "@chakra-ui/react";
 import styles from "./ReactionsItem.module.scss";
 
 interface ReactionsItem {

@@ -1,4 +1,4 @@
-import { Box, Text } from "@chakra-ui/layout";
+import { Box, Text } from "@chakra-ui/react";
 import ToolbarItem from "../ToolbarItem/ToolbarItem";
 import ToolbarItemAdd from "../ToolbarItem/ToolbarItemAdd";
 import styles from "./Toolbar.module.scss";

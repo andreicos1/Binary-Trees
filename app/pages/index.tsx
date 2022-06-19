@@ -1,4 +1,4 @@
-import { Box } from "@chakra-ui/layout";
+import { Box } from "@chakra-ui/react";
 import type { GetServerSideProps } from "next";
 import Head from "next/head";
 import React from "react";

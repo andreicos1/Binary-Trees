@@ -5,10 +5,16 @@ const initialState = {
   email: null,
 } as { email: null | string };
 
-export const setUser = createAsyncThunk("/auth/me", async () => {
-  const response = await fetch(`${BASE_URL}/auth/me`);
-  const data = await response.json();
-  if (data.status.code < 300) return data;
+export const setUser = createAsyncThunk("/auth/me", async (token) => {
+  // Set the access token cookie as a Bearer Authentication header
+  // const token = document.access_token
+  // console.log(token)
+  const header = new Headers({
+    Authorization: `Bearer ${token}`,
+  });
+  // const response = await fetch(`${BASE_URL}/auth/me`, );
+  // const data = await response.json();
+  // if (data.status.code < 300) return data;
 });
 
 export const userSlice = createSlice({

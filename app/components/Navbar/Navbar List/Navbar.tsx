@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Box, Text } from "@chakra-ui/layout";
+import { Box, Text } from "@chakra-ui/react";
 import { generateRandom } from "../../../features/tree/treeSlice";
 import { RootState, useAppDispatch } from "../../../store";
 import NavbarItem from "../Navbar Item/NavbarItem";

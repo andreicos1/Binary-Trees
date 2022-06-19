@@ -1,6 +1,11 @@
-import { Box, Button } from "@chakra-ui/react";
+import { Box, Button, useToast } from "@chakra-ui/react";
 import { ChangeEvent, useState } from "react";
-import { EMAIL_ERROR_MESSAGE, PASSWORD_ERROR_MESSAGE } from "../Validation/validation";
+import {
+  EMAIL_ERROR_MESSAGE,
+  isValidEmail,
+  isValidPassword,
+  PASSWORD_ERROR_MESSAGE,
+} from "../Validation/validation";
 import { BASE_URL } from "../../../constants";
 
 import { useAppDispatch } from "../../../store";
@@ -13,6 +18,15 @@ import styles from "./Forms.module.scss";
 
 const SigninForm = () => {
   const dispatch = useAppDispatch();
+  const toast = useToast({
+    position: "top",
+    isClosable: true,
+    status: "error",
+    duration: 4000,
+    containerStyle: {
+      fontSize: 16,
+    },
+  });
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -21,6 +35,16 @@ const SigninForm = () => {
   const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value);
 
   const onSubmit = async () => {
+    if (!isValidEmail(email)) {
+      return toast({
+        title: "Invalid email",
+      });
+    }
+    if (!isValidPassword(password)) {
+      return toast({
+        title: "Invalid password",
+      });
+    }
     try {
       const response = await fetch(`${BASE_URL}/auth/login`, {
         method: "POST",
@@ -31,9 +55,22 @@ const SigninForm = () => {
           "Content-Type": "application/json",
         },
       });
-      dispatch(setUser());
+      if (response?.status < 200 || response?.status > 299) {
+        toast({
+          title: "Invalid email and password combination",
+        });
+      }
+      console.log(response.headers);
+      // dispatch(setUser());
+      toast({
+        title: "Logged in Successfully",
+        status: "success",
+      });
     } catch (error) {
-      console.log(error);
+      console.log({ error });
+      toast({
+        title: error as string,
+      });
     }
   };
 

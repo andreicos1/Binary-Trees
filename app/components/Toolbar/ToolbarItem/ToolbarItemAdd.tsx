@@ -1,5 +1,5 @@
 import { Box } from "@chakra-ui/react";
-import { Text } from "@chakra-ui/layout";
+import { Text } from "@chakra-ui/react";
 import { motion, PanInfo, useAnimation } from "framer-motion";
 import dynamic from "next/dynamic";
 import { useSelector } from "react-redux";

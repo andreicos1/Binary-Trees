@@ -1,4 +1,4 @@
-import { Circle, Text } from "@chakra-ui/layout";
+import { Circle, Text } from "@chakra-ui/react";
 import {
   NumberDecrementStepper,
   NumberIncrementStepper,

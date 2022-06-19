@@ -1,4 +1,4 @@
-import { Box } from "@chakra-ui/layout";
+import { Box } from "@chakra-ui/react";
 import { useState } from "react";
 import { BASE_URL } from "../../../constants";
 import { ReactionsData } from "../../../pages";

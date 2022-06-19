@@ -1,7 +1,6 @@
-import { Grid } from "@chakra-ui/layout";
+import { Grid } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
 import Node from "../Node/Node";
-import styles from "./Canvas.module.scss";
 import { RootState, useAppDispatch } from "../../store";
 import dynamic from "next/dynamic";
 import {
@@ -17,6 +16,8 @@ import { Alert, AlertIcon, GridItem, Spinner, Text } from "@chakra-ui/react";
 import { NodeBox } from "../Node/NodeBox";
 import { useAnimation } from "framer-motion";
 import { MAX_TREE_LEVELS } from "../../constants";
+
+import styles from "./Canvas.module.scss";
 
 const Xarrow = dynamic(() => import("react-xarrows"), {
   ssr: false,
