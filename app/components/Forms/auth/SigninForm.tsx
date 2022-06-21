@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import { Box, Button, useToast } from "@chakra-ui/react";
 import { ChangeEvent, useState } from "react";
 import {
@@ -18,6 +19,7 @@ import styles from "./Forms.module.scss";
 
 const SigninForm = () => {
   const dispatch = useAppDispatch();
+  const router = useRouter();
   const toast = useToast({
     position: "top",
     isClosable: true,
@@ -28,6 +30,7 @@ const SigninForm = () => {
     },
   });
 
+  const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -35,17 +38,21 @@ const SigninForm = () => {
   const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value);
 
   const onSubmit = async () => {
+    setIsLoading(true);
     if (!isValidEmail(email)) {
+      setIsLoading(false);
       return toast({
         title: "Invalid email",
       });
     }
     if (!isValidPassword(password)) {
+      setIsLoading(false);
       return toast({
         title: "Invalid password",
       });
     }
     try {
+      await fetch("http://localhost:3000/api/signin", { credentials: "include" });
       const response = await fetch(`${BASE_URL}/auth/login`, {
         method: "POST",
         body: JSON.stringify({ email, password }),
@@ -56,21 +63,22 @@ const SigninForm = () => {
         },
       });
       if (response?.status < 200 || response?.status > 299) {
-        toast({
+        setIsLoading(false);
+        return toast({
           title: "Invalid email and password combination",
         });
       }
-      console.log(response.headers);
-      // dispatch(setUser());
+      dispatch(setUser());
       toast({
         title: "Logged in Successfully",
         status: "success",
       });
+      router.push("/");
     } catch (error) {
-      console.log({ error });
       toast({
         title: error as string,
       });
+      setIsLoading(false);
     }
   };
 
@@ -104,6 +112,7 @@ const SigninForm = () => {
           fontSize="1.8rem"
           className={styles.formmButton}
           onClick={onSubmit}
+          isLoading={isLoading}
         >
           Log In
         </Button>

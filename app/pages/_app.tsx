@@ -4,7 +4,6 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { Provider } from "react-redux";
 import { store } from "../store";
 import { createContext, MutableRefObject, useRef } from "react";
-import { BASE_URL } from "../constants";
 
 interface CustomAppProps extends AppProps {
   user?: {
@@ -25,14 +24,5 @@ function MyApp({ Component, pageProps, user }: CustomAppProps) {
     </ChakraProvider>
   );
 }
-
-MyApp.getInitialProps = async () => {
-  try {
-    const user = fetch(`${BASE_URL}/auth/me`);
-    return { user };
-  } catch (error) {
-    return;
-  }
-};
 
 export default MyApp;
