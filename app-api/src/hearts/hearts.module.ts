@@ -2,20 +2,20 @@ import { Module } from "@nestjs/common";
 import { JwtModule } from "@nestjs/jwt";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { UsersModule } from "src/users/users.module";
-import { CommentsController } from "./comments.controller";
-import { Comment } from "./comments.entity";
-import { CommentsService } from "./comments.service";
+import { HeartsController } from "./hearts.controller";
+import { Heart } from "./hearts.entity";
+import { HeartsService } from "./hearts.service";
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Comment]),
+    TypeOrmModule.forFeature([Heart]),
     UsersModule,
     JwtModule.register({
       secret: "secretKey",
       signOptions: { expiresIn: "1d" },
     }),
   ],
-  controllers: [CommentsController],
-  providers: [CommentsService],
+  controllers: [HeartsController],
+  providers: [HeartsService],
 })
-export class CommentsModule {}
+export class HeartsModule {}

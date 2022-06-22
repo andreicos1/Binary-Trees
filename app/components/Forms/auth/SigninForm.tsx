@@ -7,7 +7,7 @@ import {
   isValidPassword,
   PASSWORD_ERROR_MESSAGE,
 } from "../Validation/validation";
-import { BASE_URL } from "../../../constants";
+import { BASE_URL, TOAST_ERROR } from "../../../constants";
 
 import { useAppDispatch } from "../../../store";
 import { setUser } from "../../../features/user/userSlice";
@@ -20,15 +20,7 @@ import styles from "./Forms.module.scss";
 const SigninForm = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const toast = useToast({
-    position: "top",
-    isClosable: true,
-    status: "error",
-    duration: 4000,
-    containerStyle: {
-      fontSize: 16,
-    },
-  });
+  const toast = useToast(TOAST_ERROR);
 
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");

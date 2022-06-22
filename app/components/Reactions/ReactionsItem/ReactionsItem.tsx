@@ -3,7 +3,7 @@ import styles from "./ReactionsItem.module.scss";
 
 interface ReactionsItem {
   icon: JSX.Element;
-  value: string;
+  value: number;
   onClick?: () => void;
 }
 

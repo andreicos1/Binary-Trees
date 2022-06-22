@@ -7,8 +7,8 @@ import { AppService } from "./app.service";
 import { User } from "./users/users.entity";
 import { UsersModule } from "./users/users.module";
 import { MailModule } from "./mail/mail.module";
-import { CommentsModule } from "./comments/comments.module";
-import { Comment } from "./comments/comments.entity";
+import { HeartsModule } from "./hearts/hearts.module";
+import { Heart } from "./hearts/hearts.entity";
 import { ViewsModule } from "./views/views.module";
 import { View } from "./views/view.entity";
 import { LikesModule } from "./likes/likes.module";
@@ -20,12 +20,12 @@ import { Like } from "./likes/like.entity";
     TypeOrmModule.forRoot({
       type: "sqlite",
       database: "db.sqlite",
-      entities: [User, Comment, View, Like],
+      entities: [User, Heart, View, Like],
       synchronize: true,
     }),
     UsersModule,
     MailModule,
-    CommentsModule,
+    HeartsModule,
     ViewsModule,
     LikesModule,
   ],

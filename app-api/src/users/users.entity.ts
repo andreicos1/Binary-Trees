@@ -1,5 +1,5 @@
 import { Exclude } from "class-transformer";
-import { Comment } from "src/comments/comments.entity";
+import { Heart } from "src/hearts/hearts.entity";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
@@ -18,6 +18,6 @@ export class User {
   @Column()
   password: string;
 
-  @OneToMany(() => Comment, (comment) => comment.user)
-  comments: Comment[];
+  @OneToMany(() => Heart, (heart) => heart.user)
+  hearts: Heart[];
 }

@@ -31,6 +31,6 @@ export class LikesService {
 
   async findOneIp(ip: string) {
     const like = await this.repo.findOne({ ip });
-    return !!like;
+    return Boolean(like);
   }
 }

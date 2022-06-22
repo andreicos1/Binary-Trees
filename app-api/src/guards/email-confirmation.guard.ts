@@ -7,6 +7,7 @@ import {
 } from "@nestjs/common";
 import { Request } from "express";
 import { JwtService } from "@nestjs/jwt";
+import { User } from "src/users/users.entity";
 
 @Injectable()
 export class EmailConfirmationGuard implements CanActivate {
@@ -14,7 +15,7 @@ export class EmailConfirmationGuard implements CanActivate {
   async canActivate(context: ExecutionContext) {
     const request: Request = context.switchToHttp().getRequest();
     const jwtToken = request.cookies["jwt"];
-    const payload = await this.jwtService.verify(jwtToken);
+    const payload = this.jwtService.decode(jwtToken) as User;
     if (!payload["email"]) {
       throw new BadRequestException("Invalid token provided.");
     }

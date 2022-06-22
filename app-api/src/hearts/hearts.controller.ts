@@ -2,6 +2,7 @@ import {
   Body,
   ClassSerializerInterceptor,
   Controller,
+  Get,
   Post,
   Req,
   UnauthorizedException,
@@ -13,36 +14,48 @@ import { Request } from "express";
 import { EmailConfirmationGuard } from "src/guards/email-confirmation.guard";
 import { User } from "src/users/users.entity";
 import { UsersService } from "src/users/users.service";
-import { CommentsService } from "./comments.service";
-import { CreateCommentDto } from "./dtos/create-comment.dto";
+import { HeartsService } from "./hearts.service";
 
 @UseInterceptors(ClassSerializerInterceptor)
-@Controller("/comments")
-export class CommentsController {
+@Controller("/hearts")
+export class HeartsController {
   constructor(
-    private readonly commentsService: CommentsService,
+    private readonly heartsService: HeartsService,
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService
   ) {}
 
-  @Post()
-  @UseGuards(EmailConfirmationGuard)
-  async postComment(
-    @Body() comment: CreateCommentDto,
-    @Req() request: Request
-  ) {
+  async getUser(@Req() request: Request) {
+    this.heartsService.getTotal();
     const cookie = request.cookies["jwt"];
     const jwt = this.jwtService.decode(cookie) as User;
     if (!jwt || !jwt.isEmailConfirmed) {
       throw new UnauthorizedException(
-        "Only logged in users with a confirmed email address can comment."
+        "Only logged in users with a confirmed email address can favorite."
       );
     }
     const user = await this.usersService.findOne(jwt.id);
     if (!user) {
       throw new UnauthorizedException("Invalid user session.");
     }
-    this.commentsService.create(comment.content, user);
-    return comment;
+    return user;
+  }
+
+  @Get()
+  async getTotalHearts() {
+    return this.heartsService.getTotal();
+  }
+
+  @Get("/me")
+  async getHasReacted(@Req() request: Request) {
+    const user = await this.getUser(request);
+    return await this.heartsService.getIsFavorited(user.id);
+  }
+
+  @Post()
+  @UseGuards(EmailConfirmationGuard)
+  async postHeart(@Req() request: Request) {
+    const user = await this.getUser(request);
+    return this.heartsService.create(user);
   }
 }

@@ -8,7 +8,6 @@ const initialState = {
 
 export const setUser = createAsyncThunk("/auth/me", async () => {
   const response = await fetch(`${BASE_URL}/auth/me`, { credentials: "include" });
-  console.log({ response });
   if (response.status === 401) return { status: 401 };
   const data = await response.json();
   if (data.email) return data;

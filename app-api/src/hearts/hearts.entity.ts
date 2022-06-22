@@ -2,16 +2,13 @@ import { User } from "src/users/users.entity";
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
-export class Comment {
+export class Heart {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  content: string;
+  createdAt: Date;
 
-  @Column()
-  postedAt: Date;
-
-  @ManyToOne(() => User, (user) => user.comments)
+  @ManyToOne(() => User, (user) => user.hearts)
   user: User;
 }

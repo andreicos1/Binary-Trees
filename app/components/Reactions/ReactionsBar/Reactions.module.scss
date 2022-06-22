@@ -2,15 +2,24 @@
   display: flex;
   justify-content: space-around;
   margin: 1.5rem 0;
+  height: 30px;
 }
 
 .eye {
   fill: #f3f3f3;
 }
 
-.heart {
+.favorited {
   fill: red;
   cursor: pointer;
+}
+
+.notFavorited {
+  fill: #f75c5c;
+  cursor: pointer;
+  &:hover {
+    fill: #fa3d3d;
+  }
 }
 
 .thumbsUpNotLiked {
