@@ -12,6 +12,7 @@ import {
 import { JwtService } from "@nestjs/jwt";
 import { Request } from "express";
 import { EmailConfirmationGuard } from "src/guards/email-confirmation.guard";
+import { JwtAuthGuard } from "src/guards/jwt-auth.guard";
 import { User } from "src/users/users.entity";
 import { UsersService } from "src/users/users.service";
 import { HeartsService } from "./hearts.service";
@@ -29,11 +30,6 @@ export class HeartsController {
     this.heartsService.getTotal();
     const cookie = request.cookies["jwt"];
     const jwt = this.jwtService.decode(cookie) as User;
-    if (!jwt || !jwt.isEmailConfirmed) {
-      throw new UnauthorizedException(
-        "Only logged in users with a confirmed email address can favorite."
-      );
-    }
     const user = await this.usersService.findOne(jwt.id);
     if (!user) {
       throw new UnauthorizedException("Invalid user session.");
@@ -47,6 +43,7 @@ export class HeartsController {
   }
 
   @Get("/me")
+  @UseGuards(JwtAuthGuard)
   async getHasReacted(@Req() request: Request) {
     const user = await this.getUser(request);
     return await this.heartsService.getIsFavorited(user.id);

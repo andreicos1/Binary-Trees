@@ -1,6 +1,5 @@
 import { Box, Slider, SliderTrack, SliderFilledTrack, SliderThumb, Text } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
-import { ANIMATION_MULTIPLIER, ANIMATION_SLIDER_MODIFIER } from "../../constants";
 import { updateSpeed } from "../../features/speed/speedSlice";
 import { RootState, useAppDispatch } from "../../store";
 
@@ -10,14 +9,12 @@ const SpeedSlider = () => {
   const treeUpdateState = useSelector((state: RootState) => state.treeUpdate);
   const dispatch = useAppDispatch();
 
+  // Duration shoulld be between 300ms and 600ms 300/100 = 3
+  // 100 --> 300ms
+  // 0 --> 600ms
+  // 10 --> 600 - 10 * 3 = 570
   const updateAnimationSpeed = (val: number) => {
-    const maximumSpeed = ANIMATION_MULTIPLIER - ANIMATION_SLIDER_MODIFIER;
-    const newSpeed =
-      val <= maximumSpeed
-        ? ANIMATION_MULTIPLIER * ANIMATION_SLIDER_MODIFIER - val * 10
-        : val === 100
-        ? 0
-        : ANIMATION_MULTIPLIER * ANIMATION_SLIDER_MODIFIER - maximumSpeed * 10;
+    const newSpeed = 600 - val * 3;
     dispatch(updateSpeed(newSpeed));
   };
 
@@ -31,7 +28,7 @@ const SpeedSlider = () => {
       <Slider
         id="slider-track-1"
         aria-label="slider"
-        defaultValue={40}
+        defaultValue={60}
         isDisabled={treeUpdateState.isPlaying}
         onChangeEnd={updateAnimationSpeed}
       >
