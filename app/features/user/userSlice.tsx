@@ -21,7 +21,8 @@ export const userSlice = createSlice({
     // Add reducers for additional action types here, and handle loading state as needed
     builder.addCase(setUser.fulfilled, (state, action) => {
       if (action.payload.status === 401) {
-        return;
+        state.email = null;
+        state.isEmailConfirmed = null;
       }
       // Set state as the user
       state.email = action.payload.email;

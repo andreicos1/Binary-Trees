@@ -75,6 +75,7 @@ export class UsersController {
     return user;
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post("/logout")
   async logout(@Req() request: Request, @Res({ passthrough: true }) response: Response) {
     const cookie = request.cookies["jwt"];

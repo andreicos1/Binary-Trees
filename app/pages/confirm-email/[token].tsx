@@ -8,6 +8,9 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   try {
     const response = await fetch(`${BASE_URL}/auth/confirm`, {
       method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({ token: query.token }),
     });
     if (response.status > 299) return { props: { confirmed: false } };

@@ -1,6 +1,6 @@
-import { Box, Spinner } from "@chakra-ui/react";
+import { Box, Spinner, useToast } from "@chakra-ui/react";
 import { useEffect, useReducer, useState } from "react";
-import { BASE_URL } from "../../../constants";
+import { BASE_URL, TOAST_ERROR } from "../../../constants";
 import ReactionsItem from "../ReactionsItem/ReactionsItem";
 import styles from "./Reactions.module.scss";
 
@@ -60,6 +60,7 @@ const Reactions = () => {
       isLiked: false,
       isFavorited: false,
     });
+  const toast = useToast(TOAST_ERROR);
 
   const getReactions = async () => {
     const urlViews = `${BASE_URL}/views`;
@@ -104,6 +105,7 @@ const Reactions = () => {
   const postLike = async () => {
     try {
       const responseAddLike = await fetch(`${BASE_URL}/likes`, { method: "POST" });
+      if (responseAddLike.status > 299) throw "Something went wrong";
       const addedLike = await responseAddLike.json();
       dispatch({ type: "changeLikes", payload: addedLike });
     } catch (error) {}
@@ -115,6 +117,10 @@ const Reactions = () => {
         method: "POST",
         credentials: "include",
       });
+      if (responseAddHeart.status === 401) {
+        toast({ title: "Only signed in users with a confirmed email address can favorite" });
+      }
+      if (responseAddHeart.status > 299) throw "Something went wrong";
       const addedHeart = await responseAddHeart.json();
       dispatch({ type: "changeHearts", payload: addedHeart });
     } catch (error) {}
