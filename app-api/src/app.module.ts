@@ -18,8 +18,12 @@ import { Like } from "./likes/like.entity";
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot({
-      type: "sqlite",
-      database: "db.sqlite",
+      type: 'mysql',
+      host: process.env.HOST,
+      port: 3306,
+      username: process.env.USER,
+      password: process.env.PASSWORD,
+      database: process.env.DATABASE,
       entities: [User, Heart, View, Like],
       synchronize: true,
     }),

@@ -17,7 +17,7 @@ export class LikesService {
     }
     const oldLike = await this.repo.findOne({ ip });
     if (!oldLike) {
-      const likedAt = Date.now();
+      const likedAt = new Date(Date.now());
       const like = this.repo.create({
         ip,
         likedAt,

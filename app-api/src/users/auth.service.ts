@@ -7,6 +7,8 @@ import {
 import { UsersService } from "./users.service";
 import { MailService } from "src/mail/mail.service";
 import { User } from "./users.entity";
+import * as bcrypt from 'bcrypt';
+
 import { JwtService } from "@nestjs/jwt";
 
 @Injectable()
@@ -22,7 +24,10 @@ export class AuthService {
     if (existingUser.length) {
       throw new BadRequestException("email in use");
     }
-    const user = await this.usersService.create(email, password);
+    const saltRounds = 10
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+    const user = await this.usersService.create(email, hashedPassword);
     await this.mailService.sendConfirmationMail(email);
     return user;
   }
@@ -55,7 +60,7 @@ export class AuthService {
     if (!user) {
       throw new NotFoundException("User not found");
     }
-    if (password !== user.password) {
+    if (!(await bcrypt.compare(password, user.password))) {
       throw new BadGatewayException("Incorrect password");
     }
     return user;

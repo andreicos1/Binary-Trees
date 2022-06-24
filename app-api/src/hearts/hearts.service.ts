@@ -23,7 +23,7 @@ export class HeartsService {
   }
 
   async create(user: User) {
-    const createdAt = Date.now();
+    const createdAt = new Date(Date.now());
     const oldFavorites = await this.repo.find({
       where: { user: { id: user.id } },
     });

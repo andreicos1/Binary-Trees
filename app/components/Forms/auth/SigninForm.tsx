@@ -44,7 +44,6 @@ const SigninForm = () => {
       });
     }
     try {
-      await fetch("http://localhost:3000/api/signin", { credentials: "include" });
       const response = await fetch(`${BASE_URL}/auth/login`, {
         method: "POST",
         body: JSON.stringify({ email, password }),

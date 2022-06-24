@@ -1,19 +1,23 @@
-import { Box, Button } from "@chakra-ui/react";
+import { Box, Button, useToast } from "@chakra-ui/react";
 import Link from "next/link";
 import { ChangeEvent, useState } from "react";
+import { useRouter } from "next/router";
 
 import { useAppDispatch } from "../../../store";
 import AuthInput from "../Inputs/AuthInput";
 import Title from "../title/Title";
 import { EMAIL_ERROR_MESSAGE, PASSWORD_ERROR_MESSAGE } from "../Validation/validation";
-import { BASE_URL } from "../../../constants";
+import { BASE_URL, TOAST_ERROR } from "../../../constants";
 import { setUser } from "../../../features/user/userSlice";
 
 import styles from "./Forms.module.scss";
 
 const SigninForm = () => {
   const dispatch = useAppDispatch();
+  const router = useRouter();
+  const toast = useToast(TOAST_ERROR);
 
+  const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -24,6 +28,7 @@ const SigninForm = () => {
     setConfirmPassword(e.target.value);
 
   const onSubmit = async () => {
+    setIsLoading(true);
     try {
       await fetch(`${BASE_URL}/auth/signup`, {
         method: "POST",
@@ -33,8 +38,11 @@ const SigninForm = () => {
         body: JSON.stringify({ email, password }),
       });
       dispatch(setUser());
+      toast({ title: "Signed up. Please confirm your email.", status: "success" });
+      router.push('/')
     } catch (error) {
-      console.log(error);
+      toast({ title: "Something went wrong" });
+      setIsLoading(false);
     }
   };
 
@@ -77,6 +85,7 @@ const SigninForm = () => {
           fontSize="1.8rem"
           className={styles.formmButton}
           onClick={onSubmit}
+          isLoading={isLoading}
         >
           Sign Up
         </Button>

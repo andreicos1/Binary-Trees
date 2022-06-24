@@ -14,6 +14,7 @@ const ForgotPasswordForm = () => {
   const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value);
 
   const onSubmit = () => {};
+  
   return (
     <Box className={styles.formRoot}>
       <Box className={styles.form}>
