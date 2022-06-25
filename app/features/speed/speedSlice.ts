@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { INITIAL_SPEED } from "../../components/Slider/Slider";
 
-const initialState = { duration: 1000 };
+const initialState = { duration: INITIAL_SPEED };
 
 export const speedSlice = createSlice({
   name: "speed",

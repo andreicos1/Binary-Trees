@@ -5,6 +5,11 @@ import { RootState, useAppDispatch } from "../../store";
 
 import styles from "./Slider.module.scss";
 
+const MIN_SPEED = 600
+const INCREMENT = 3
+const INITIAL_VALUE = 60
+export const INITIAL_SPEED = 600 - 60 * 3
+
 const SpeedSlider = () => {
   const treeUpdateState = useSelector((state: RootState) => state.treeUpdate);
   const dispatch = useAppDispatch();
@@ -14,7 +19,7 @@ const SpeedSlider = () => {
   // 0 --> 600ms
   // 10 --> 600 - 10 * 3 = 570
   const updateAnimationSpeed = (val: number) => {
-    const newSpeed = 600 - val * 3;
+    const newSpeed = MIN_SPEED - val * INCREMENT;
     dispatch(updateSpeed(newSpeed));
   };
 
@@ -28,7 +33,7 @@ const SpeedSlider = () => {
       <Slider
         id="slider-track-1"
         aria-label="slider"
-        defaultValue={60}
+        defaultValue={INITIAL_VALUE}
         isDisabled={treeUpdateState.isPlaying}
         onChangeEnd={updateAnimationSpeed}
       >
