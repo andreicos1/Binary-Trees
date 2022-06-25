@@ -28,4 +28,8 @@ export class UsersService {
       }
     );
   }
+
+  async resetPassword(id: number, password: string) {
+    return this.repo.update({ id }, { password });
+  }
 }

@@ -117,10 +117,9 @@ const Reactions = () => {
         method: "POST",
         credentials: "include",
       });
-      if (responseAddHeart.status === 401) {
-        toast({ title: "Only signed in users with a confirmed email address can favorite" });
-      }
-      if (responseAddHeart.status > 299) throw "Something went wrong";
+      if (responseAddHeart.status === 401)
+        throw toast({ title: "Only signed in users with a confirmed email address can favorite" });
+      if (responseAddHeart.status > 299) throw toast({ title: "Something went wrong" });
       const addedHeart = await responseAddHeart.json();
       dispatch({ type: "changeHearts", payload: addedHeart });
     } catch (error) {}

@@ -7,7 +7,7 @@ import {
 import { UsersService } from "./users.service";
 import { MailService } from "src/mail/mail.service";
 import { User } from "./users.entity";
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from "bcrypt";
 
 import { JwtService } from "@nestjs/jwt";
 
@@ -24,7 +24,7 @@ export class AuthService {
     if (existingUser.length) {
       throw new BadRequestException("email in use");
     }
-    const saltRounds = 10
+    const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
     const user = await this.usersService.create(email, hashedPassword);
@@ -68,5 +68,15 @@ export class AuthService {
 
   async resendConfirmation(email: string) {
     await this.mailService.sendConfirmationMail(email);
+  }
+
+  async sendPasswordResetEmail(email: string) {
+    await this.mailService.sendPasswordResetEmail(email);
+  }
+
+  async resetPassword(id: number, password: string) {
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    this.usersService.resetPassword(id, hashedPassword);
   }
 }

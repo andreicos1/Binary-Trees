@@ -9,7 +9,6 @@ import {
   Post,
   Req,
   Res,
-  Session,
   UnauthorizedException,
   UseGuards,
   UseInterceptors,
@@ -22,7 +21,8 @@ import { CreateUserDto } from "./dtos/create-user.dto";
 import { JwtAuthGuard } from "../guards/jwt-auth.guard";
 import { UsersService } from "./users.service";
 import { EmailConfirmationGuard } from "src/guards/email-confirmation.guard";
-import { request } from "http";
+import { ResetPasswordDto } from "./dtos/reset-password.dto";
+import { UserDto } from "./dtos/user.dto";
 
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller("auth")
@@ -43,7 +43,7 @@ export class UsersController {
   async confirm(@Body() body: ConfirmEmailDto, @Res({ passthrough: true }) response: Response) {
     // Mark email as confirmed in the database
     try {
-      const email: string = await this.authService.decodeConfirmationToken(body.token);
+      const email = await this.authService.decodeConfirmationToken(body.token);
       // Get the user and create a new jwt token
       const user = (await this.usersService.find(email))[0];
       if (!user) {
@@ -114,6 +114,31 @@ export class UsersController {
       const user = await this.usersService.findOne(data.id);
       await this.authService.resendConfirmation(user.email);
       return user;
+    } catch (error) {
+      throw new UnauthorizedException();
+    }
+  }
+
+  @Post("/forgot-password")
+  async forgotPassword(@Body() body: UserDto) {
+    try {
+      await this.authService.sendPasswordResetEmail(body.email);
+      return "Succes";
+    } catch (error) {
+      throw new UnauthorizedException();
+    }
+  }
+
+  @Post("/reset-password")
+  async resetPassword(@Body() body: ResetPasswordDto) {
+    if (body.password !== body.confirmPassword) {
+      throw new BadRequestException("Passwords do not match");
+    }
+    try {
+      const email = await this.authService.decodeConfirmationToken(body.token);
+      // Get the user and create a new jwt token
+      const user = (await this.usersService.find(email))[0];
+      this.authService.resetPassword(user.id, body.password);
     } catch (error) {
       throw new UnauthorizedException();
     }

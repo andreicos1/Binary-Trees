@@ -16,6 +16,7 @@ export class EmailConfirmationGuard implements CanActivate {
     const request: Request = context.switchToHttp().getRequest();
     const jwtToken = request.cookies["jwt"];
     const payload = this.jwtService.decode(jwtToken) as User;
+    if (!payload) throw new UnauthorizedException("Not signed in");
     if (!payload["email"]) {
       throw new BadRequestException("Invalid token provided.");
     }

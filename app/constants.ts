@@ -5,8 +5,6 @@ export const highlightParentColor = "burlywood";
 export const highlightChildren = "#99C2C2";
 export const MAX_TREE_LEVELS = 4;
 
-// for animation speed slide
-
 export const TOAST_ERROR = {
   position: "top" as ToastPositionWithLogical | undefined,
   isClosable: true,

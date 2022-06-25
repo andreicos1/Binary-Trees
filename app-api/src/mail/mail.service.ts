@@ -30,4 +30,18 @@ export class MailService {
       text,
     });
   }
+
+  sendPasswordResetEmail(email: string) {
+    const baseUrl = process.env.ROOT_URL;
+    const token = this.jwtService.sign({ email });
+    const url = `${baseUrl}/reset-password/${token}`;
+    const subject = "Reset your Password";
+    const text = `Please follow this link to reset your password: ${url}`;
+
+    return this.nodemailerTransport.sendMail({
+      to: email,
+      subject,
+      text,
+    });
+  }
 }
