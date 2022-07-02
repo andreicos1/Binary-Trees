@@ -2,15 +2,31 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.6rem 10rem;
+  padding: 5rem 10rem;
   flex: 1;
 
   background-color: $dark-gray;
+
+  @include responsive("lg") {
+    padding: 4rem;
+  }
+
+  @include responsive("lg") {
+    padding: 4rem 2rem;
+  }
+
+  @include responsive("md") {
+    gap: 3rem;
+  }
 }
 
 .contact {
   color: $light-gray;
   font-size: 1.6rem;
+
+  @include responsive("md") {
+    text-align: center;
+  }
 }
 
 .link {
@@ -24,4 +40,14 @@
   color: $light-gray;
   font-size: 2.2rem;
   font-weight: 600;
+
+  @include responsive("md") {
+    font-size: 2rem;
+    flex-basis: 20%;
+  }
+
+  @include responsive("sm") {
+    font-size: 1.8rem;
+    flex-basis: 25%;
+  }
 }

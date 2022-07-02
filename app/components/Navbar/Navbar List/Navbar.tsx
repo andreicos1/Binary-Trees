@@ -80,71 +80,77 @@ const Navbar = () => {
   }, []);
 
   return (
-    <Box className={styles.navbar}>
-      <NavbarItem
-        className={styles.generateRandom}
-        text="Generate Random Tree"
-        onClick={() => {
-          if (!treeUpdateState.isPlaying) {
-            dispatch(clearMessage());
-            dispatch(generateRandom());
+    <Box className={styles.root}>
+      <input id="navbar-checkbox" type="checkbox" className={styles.navbarCheckbox} />
+      <label htmlFor="navbar-checkbox" className={styles.label}>
+        <span className={styles.burgerMenu} />
+      </label>
+      <Box className={styles.navbar}>
+        <NavbarItem
+          className={styles.generateRandom}
+          text="Generate Random Tree"
+          onClick={() => {
+            if (!treeUpdateState.isPlaying) {
+              dispatch(clearMessage());
+              dispatch(generateRandom());
+            }
+          }}
+        />
+        <NavbarItem
+          text="Invert Tree"
+          onClick={() =>
+            animateTreeChange(invertTree, [
+              dispatch,
+              nodeBoxesRef,
+              updatePosition,
+              animationSpeed.duration,
+            ])
           }
-        }}
-      />
-      <NavbarItem
-        text="Invert Tree"
-        onClick={() =>
-          animateTreeChange(invertTree, [
-            dispatch,
-            nodeBoxesRef,
-            updatePosition,
-            animationSpeed.duration,
-          ])
-        }
-      />
-      <NavbarItem
-        text="Maximum Path Sum"
-        onClick={() =>
-          animateTreeChange(maximumPathSum, [dispatch, nodeBoxesRef, animationSpeed.duration])
-        }
-      />
-      <NavbarItem
-        text="Construct Tree From Inorder & Postorder Traversals"
-        onClick={() =>
-          animateTreeChange(constructFromInPreorder, [
-            dispatch,
-            nodeBoxesRef,
-            animationSpeed.duration,
-          ])
-        }
-      />
-      <NavbarItem
-        text="Serialize & Deserialize Binary Tree"
-        onClick={() =>
-          animateTreeChange(serializeAndDeserialize, [
-            dispatch,
-            nodeBoxesRef,
-            animationSpeed.duration,
-          ])
-        }
-      />
-      <Box className={styles.login}>
-        {!loading ? (
-          !user.email ? (
-            <Text>
-              <Link href="/signin">
-                <a>Log In</a>
-              </Link>
-            </Text>
-          ) : (
-            <div style={{ display: "flex", marginLeft: "-10rem", gap: "4rem" }}>
-              {!user.isEmailConfirmed && (
-                <a onClick={handleResendConfirmation}>Resend Confirmation Email</a>
-              )}
-              <a onClick={handleLogout}>Log Out</a>
-            </div>
-          )
-        ) : null}
+        />
+        <NavbarItem
+          text="Maximum Path Sum"
+          onClick={() =>
+            animateTreeChange(maximumPathSum, [dispatch, nodeBoxesRef, animationSpeed.duration])
+          }
+        />
+        <NavbarItem
+          text="Construct Tree From Inorder & Postorder Traversals"
+          onClick={() =>
+            animateTreeChange(constructFromInPreorder, [
+              dispatch,
+              nodeBoxesRef,
+              animationSpeed.duration,
+            ])
+          }
+        />
+        <NavbarItem
+          text="Serialize & Deserialize Binary Tree"
+          onClick={() =>
+            animateTreeChange(serializeAndDeserialize, [
+              dispatch,
+              nodeBoxesRef,
+              animationSpeed.duration,
+            ])
+          }
+        />
+        <Box className={styles.login}>
+          {!loading ? (
+            !user.email ? (
+              <Text>
+                <Link href="/signin">
+                  <a>Log In</a>
+                </Link>
+              </Text>
+            ) : (
+              <div style={{ display: "flex", marginLeft: "-10rem", gap: "4rem" }}>
+                {!user.isEmailConfirmed && (
+                  <a onClick={handleResendConfirmation}>Resend Confirmation Email</a>
+                )}
+                <a onClick={handleLogout}>Log Out</a>
+              </div>
+            )
+          ) : null}
+        </Box>
       </Box>
     </Box>
   );

@@ -3,4 +3,17 @@
   align-items: stretch;
   height: 75vh;
   margin-right: 30rem;
+
+  @include responsive("xl") {
+    margin-right: 15rem;
+  }
+
+  @include responsive("lg") {
+    margin-right: 0;
+    flex-direction: column;
+  }
+
+  @include responsive("md") {
+    height: 90vh;
+  }
 }

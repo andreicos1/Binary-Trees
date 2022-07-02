@@ -4,6 +4,14 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  @include responsive("xl") {
+    width: 15%;
+  }
+
+  @include responsive("md") {
+    width: 20%;
+  }
 }
 
 .sliderTitle {

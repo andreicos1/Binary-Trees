@@ -7,4 +7,16 @@
   &:not(:last-child) {
     margin-right: 5rem;
   }
+
+  @include responsive("lg") {
+    font-size: 2rem;
+  }
+
+  @include responsive("md") {
+    font-size: 1.8rem;
+
+    &:not(:last-child) {
+      margin-right: 2rem;
+    }
+  }
 }

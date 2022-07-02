@@ -6,6 +6,24 @@
   background-color: #26292c;
   padding: 2rem 4.5rem;
   height: 100%;
+
+  @include responsive("md") {
+    padding: 2rem 3.5rem;
+    flex-basis: 15%;
+  }
+
+  @include responsive("lg") {
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    justify-content: center;
+    gap: 5rem;
+  }
+
+  @include responsive("md") {
+    padding: 1.5rem 3rem;
+    flex-basis: 10%;
+  }
 }
 
 .toolbarTitle {
@@ -14,4 +32,12 @@
   color: $light-gray;
   margin-bottom: 4rem;
   border-bottom: 1px solid $light-gray;
+
+  @include responsive("lg") {
+    margin-bottom: 0;
+  }
+
+  @include responsive("md") {
+    font-size: 2.5rem;
+  }
 }

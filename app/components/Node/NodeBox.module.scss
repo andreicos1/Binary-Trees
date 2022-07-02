@@ -24,6 +24,21 @@
       stroke-dashoffset: 800;
     }
   }
+
+  @include responsive("xl") {
+    width: 5.5rem;
+    height: 5.5rem;
+  }
+
+  @include responsive("md") {
+    width: 4.5rem;
+    height: 4.5rem;
+  }
+
+  @include responsive("sm") {
+    width: 4rem;
+    height: 4rem;
+  }
 }
 
 .label {
@@ -32,6 +47,10 @@
   left: -50%;
   color: $light-gray;
   font-size: 1.8rem;
+
+  @include responsive("lg") {
+    font-size: 1.6rem;
+  }
 }
 
 .label-down {
@@ -44,6 +63,10 @@
   font-size: 2rem;
 
   transform: translateX(-50%);
+
+  @include responsive("lg") {
+    font-size: 1.8rem;
+  }
 }
 
 @keyframes arrow {

@@ -8,11 +8,34 @@
   height: 6rem;
 
   box-shadow: 8px 5px 10px 3px rgba(0, 0, 0, 0.1);
+
+  @include responsive("xl") {
+    width: 5.5rem;
+    height: 5.5rem;
+  }
+
+  @include responsive("md") {
+    width: 4.5rem;
+    height: 4.5rem;
+  }
+
+  @include responsive("sm") {
+    width: 4rem;
+    height: 4rem;
+  }
 }
 
 .content {
   font-size: 2.7rem;
   color: $light-gray;
+
+  @include responsive("lg") {
+    font-size: 2.4rem;
+  }
+
+  @include responsive("md") {
+    font-size: 2rem;
+  }
 }
 
 .input {

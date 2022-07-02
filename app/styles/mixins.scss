@@ -1,0 +1,28 @@
+$breakpoints: (
+  "xs": (
+    max-width: 500px,
+  ),
+  "sm": (
+    max-width: 740px,
+  ),
+  "md": (
+    max-width: 930px,
+  ),
+  "lg": (
+    max-width: 1230px,
+  ),
+  "xl": (
+    max-width: 1500px,
+  ),
+);
+
+@mixin responsive($breakpoint) {
+  @if map-has-key($breakpoints, $breakpoint) {
+    @media only screen and #{inspect(map-get($breakpoints, $breakpoint))} {
+      @content;
+    }
+  } @else {
+    @error "Invalid breakpoint value '#{$breakpoint}.' " +
+      "Available breakpoints are: #{map-keys($breakpoints)}.";
+  }
+}

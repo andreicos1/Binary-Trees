@@ -5,10 +5,19 @@
   width: 100%;
   padding: 4rem;
   align-items: center;
+  justify-items: center;
   padding-top: 0;
   overflow: scroll;
   &::-webkit-scrollbar {
     display: none;
+  }
+
+  @include responsive("lg") {
+    flex: 1;
+  }
+
+  @include responsive("md") {
+    padding: 1rem 2.5rem;
   }
 }
 
@@ -16,6 +25,10 @@
   font-size: 1.8rem;
   color: white;
   white-space: pre-wrap;
+
+  @include responsive("lg") {
+    font-size: 1.6rem;
+  }
 }
 
 .message {
