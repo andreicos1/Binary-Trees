@@ -24,7 +24,7 @@ async function bootstrap() {
     .addTag("binary trees")
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup("api", app, document);
+  SwaggerModule.setup("api-info", app, document);
   await app.listen(process.env.PORT);
 }
 bootstrap();
