@@ -9,8 +9,16 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   // Config required to be able to retrieve user from cookie
   app.use(cookieParser());
+  // CORS
+  var whitelist = process.env.CORS_WHITELIST.split(',')
   app.enableCors({
-    origin: process.env.ROOT_URL,
+    origin: (origin, callback) => {
+      if (!origin || whitelist.indexOf(origin) !== -1) {
+        callback(null, true)
+      } else {
+        callback(new Error('Not allowed by CORS'))
+      }
+    },
     credentials: true,
   });
   // Add Global Middleware
