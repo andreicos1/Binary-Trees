@@ -29,8 +29,15 @@ const Navbar = () => {
   const [loading, setLoading] = useState(true);
   const toast = useToast(TOAST_ERROR);
 
+  const scrollToCanvas = () => {
+    if (screen.height < 667) {
+      document.getElementById("canvas")!.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   const animateTreeChange = async (func: any, args: any) => {
     if (!treeUpdateState.isPlaying) {
+      scrollToCanvas();
       dispatch(toggleIsPlaying());
       dispatch(clearMessage());
       await func(...args);
@@ -91,6 +98,7 @@ const Navbar = () => {
           text="Generate Random Tree"
           onClick={() => {
             if (!treeUpdateState.isPlaying) {
+              scrollToCanvas();
               dispatch(clearMessage());
               dispatch(generateRandom());
             }

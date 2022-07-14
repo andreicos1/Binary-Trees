@@ -1,12 +1,5 @@
-import { Circle, Text } from "@chakra-ui/react";
-import {
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-} from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { Circle, Input, Text } from "@chakra-ui/react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { changeNodeValue, TreeState } from "../../features/tree/treeSlice";
 import styles from "./Node.module.scss";
 
@@ -30,7 +23,8 @@ const Node = ({
   colIndex,
 }: NodeInterface) => {
   const [newValue, setNewValue] = useState("");
-  const handleValueChange = (value: string) => {
+  const handleValueChange = (event: ChangeEvent<HTMLInputElement>) => {
+    let value = event.target.value;
     if (value[0] === "-") value = "0";
     else if (value.length > 2) value = "99";
     setNewValue(value);
@@ -49,18 +43,15 @@ const Node = ({
   {
     return treeNode?.isEditing ? (
       <Circle className={styles.node}>
-        <NumberInput value={newValue} onChange={handleValueChange} min={0} max={99}>
-          <NumberInputField
-            autoFocus
-            onBlur={handleSubmit}
-            onKeyDown={handleKeyPress}
-            className={styles.input}
-          />
-          <NumberInputStepper>
-            <NumberIncrementStepper />
-            <NumberDecrementStepper />
-          </NumberInputStepper>
-        </NumberInput>
+        <Input
+          autoFocus
+          type="number"
+          value={newValue}
+          onChange={handleValueChange}
+          onBlur={handleSubmit}
+          onKeyDown={handleKeyPress}
+          className={styles.input}
+        />
       </Circle>
     ) : (
       <Circle onClick={() => onClick && onClick()}>
