@@ -1,4 +1,5 @@
-import { Controller, Get, Post, Request } from "@nestjs/common";
+import { Body, Controller, Get, Post, Request } from "@nestjs/common";
+import { CreateLikeDto } from "./dto/create-like.dto";
 import { LikesService } from "./likes.service";
 
 @Controller("likes")
@@ -6,8 +7,8 @@ export class LikesController {
   constructor(private readonly likesService: LikesService) {}
 
   @Post()
-  async create(@Request() request): Promise<boolean> {
-    return await this.likesService.create(request.ip);
+  create(@Request() request, @Body() body: CreateLikeDto) {
+    return this.likesService.create(request.ip, body.liked);
   }
 
   @Get()

@@ -104,7 +104,14 @@ const Reactions = () => {
 
   const postLike = async () => {
     try {
-      const responseAddLike = await fetch(`${BASE_URL}/likes`, { method: "POST" });
+      const responseAddLike = await fetch(`${BASE_URL}/likes`, {
+        method: "POST",
+        body: JSON.stringify({ liked: !isLiked }),
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      });
       if (responseAddLike.status > 299) throw "Something went wrong";
       const addedLike = await responseAddLike.json();
       dispatch({ type: "changeLikes", payload: addedLike });
@@ -116,6 +123,12 @@ const Reactions = () => {
       const responseAddHeart = await fetch(`${BASE_URL}/hearts`, {
         method: "POST",
         credentials: "include",
+        body: JSON.stringify({ favorited: !isFavorited }),
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        
       });
       if (responseAddHeart.status === 401)
         throw toast({ title: "Only signed in users with a confirmed email address can favorite" });

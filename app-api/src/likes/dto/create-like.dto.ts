@@ -1,6 +1,6 @@
-import { IsIP } from "class-validator";
+import { IsBoolean } from "class-validator";
 
 export class CreateLikeDto {
-  @IsIP()
-  ip: string;
+  @IsBoolean()
+  liked: boolean;
 }

@@ -150,11 +150,13 @@ const Navbar = () => {
                 </Link>
               </Text>
             ) : (
-              <div style={{ display: "flex", marginLeft: "-10rem", gap: "4rem" }}>
+              <div className={styles.auth}>
                 {!user.isEmailConfirmed && (
                   <a onClick={handleResendConfirmation}>Resend Confirmation Email</a>
                 )}
-                <a onClick={handleLogout}>Log Out</a>
+                <a className={styles.logOut} onClick={handleLogout}>
+                  Log Out
+                </a>
               </div>
             )
           ) : null}

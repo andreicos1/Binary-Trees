@@ -51,8 +51,8 @@ export class HeartsController {
 
   @Post()
   @UseGuards(EmailConfirmationGuard)
-  async postHeart(@Req() request: Request) {
+  async postHeart(@Req() request: Request, @Body() body) {
     const user = await this.getUser(request);
-    return this.heartsService.create(user);
+    return await this.heartsService.create(user, body.favorited);
   }
 }

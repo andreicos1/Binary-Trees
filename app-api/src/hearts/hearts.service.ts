@@ -22,20 +22,24 @@ export class HeartsService {
     );
   }
 
-  async create(user: User) {
+  async create(user: User, favorited: boolean) {
     const createdAt = new Date(Date.now());
     const oldFavorites = await this.repo.find({
       where: { user: { id: user.id } },
     });
-    if (oldFavorites.length) {
-      this.repo.delete(oldFavorites[0]);
+    if (favorited) {
+      if (oldFavorites.length) return true;
+      const heart = this.repo.create({
+        createdAt,
+        user,
+      });
+      this.repo.save(heart);
+      return true;
+    }
+    if (!oldFavorites.length) {
       return false;
     }
-    const heart = this.repo.create({
-      createdAt,
-      user,
-    });
-    this.repo.save(heart);
-    return true;
+    this.repo.delete(oldFavorites[0]);
+    return false;
   }
 }

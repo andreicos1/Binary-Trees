@@ -11,12 +11,13 @@ export class LikesService {
     return this.repo.count();
   }
 
-  async create(ip: string) {
+  async create(ip: string, liked: boolean) {
     if (!ip) {
       return false;
     }
     const oldLike = await this.repo.findOne({ ip });
-    if (!oldLike) {
+    if (liked) {
+      if (oldLike) return true;
       const likedAt = new Date(Date.now());
       const like = this.repo.create({
         ip,
@@ -25,6 +26,7 @@ export class LikesService {
       this.repo.save(like);
       return true;
     }
+    if (!oldLike) return false;
     this.repo.delete(oldLike);
     return false;
   }

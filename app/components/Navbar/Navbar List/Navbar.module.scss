@@ -133,3 +133,17 @@
     }
   }
 }
+
+.auth {
+  display: flex;
+  margin-left: -10rem;
+  gap: 4rem;
+
+  @include responsive("lg") {
+    margin-left: 0;
+  }
+}
+
+.logOut {
+  color: rgba(white, 0.6);
+}
