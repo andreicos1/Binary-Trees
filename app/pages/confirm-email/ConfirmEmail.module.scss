@@ -1,0 +1,30 @@
+.root {
+  min-height: 100vh;
+  background-color: $davys-grey;
+
+  font-size: 2.4rem;
+  font-weight: 600;
+}
+
+.confirmEmail {
+  margin: 0 auto;
+  width: 100rem;
+
+  @include responsive("lg") {
+    width: 100%;
+    padding: 0 5rem;
+  }
+
+  @include responsive("sm") {
+    width: 100%;
+    padding: 0 1rem;
+  }
+}
+
+.message {
+  width: 100%;
+  padding-top: 4rem;
+  padding-left: 0.5rem;
+
+  color: $light-gray;
+}
