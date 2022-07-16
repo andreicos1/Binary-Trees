@@ -43,11 +43,10 @@
 
   @include responsive("md") {
     font-size: 2rem;
-    flex-basis: 20%;
+    flex-shrink: 0;
   }
 
   @include responsive("sm") {
     font-size: 1.8rem;
-    flex-basis: 25%;
   }
 }

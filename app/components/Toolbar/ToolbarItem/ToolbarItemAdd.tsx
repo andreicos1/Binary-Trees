@@ -38,6 +38,7 @@ const ToolbarItemAdd = ({
 }: ToolbarItemInterface) => {
   const treeUpdateState = useSelector((state: RootState) => state.treeUpdate);
   const treeState = useSelector((state: RootState) => state.tree);
+  const treePositions = useSelector((state: RootState) => state.treePositions);
   const [calculating, setCalculating] = useState(true);
   const [minDistanceIndex, setMinDistanceIndex] = useState(0);
   const [currentParent, setCurrentParent] = useState("");
@@ -56,7 +57,7 @@ const ToolbarItemAdd = ({
 
   const getClosestParent = (event: PointerEvent, info: PanInfo): void => {
     // Behavior to add the node to the tree on drag end, if valid position
-    const validChildren = getEmptyValidChildren(treeState);
+    const validChildren = getEmptyValidChildren(treeState, treePositions.maxTreeLevels);
     if (validChildren && validChildren.length) {
       // Add node if dragEnd is below parent
       const indicesOfValidChildren = validChildren.map((node) => {
@@ -104,8 +105,11 @@ const ToolbarItemAdd = ({
 
   const addDraggedNodeToTree = async (event: PointerEvent, info: PanInfo) => {
     if (minDistanceIndex) {
-      const validChildren = getEmptyValidChildren(treeState);
-      const highestValidParentLevel = getHighestValidParent(validChildren);
+      const validChildren = getEmptyValidChildren(treeState, treePositions.maxTreeLevels);
+      const highestValidParentLevel = getHighestValidParent(
+        validChildren,
+        treePositions.maxTreeLevels
+      );
       const highestValidParentIndex = getIndexFromLevelAndCol(highestValidParentLevel, 0);
       const highestValidParentNode = nodeBoxesRef.current[highestValidParentIndex];
       const highestValidPosition = highestValidParentNode.getBoundingClientRect().y + NODE_SIZE / 2;

@@ -16,4 +16,8 @@
   @include responsive("md") {
     height: 100vh;
   }
+
+  @include responsive("md") {
+    height: 75vh;
+  }
 }

@@ -19,6 +19,12 @@
   @include responsive("md") {
     padding: 1rem 2.5rem;
   }
+
+  @include responsive("xs") {
+    padding: 1rem 1.5rem;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+  }
 }
 
 .text {

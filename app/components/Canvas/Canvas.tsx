@@ -1,29 +1,32 @@
 import { Grid } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
-import Node from "../Node/Node";
+import { Alert, AlertIcon, GridItem, Spinner, Text } from "@chakra-ui/react";
+import Xarrow from "react-xarrows";
 import { RootState, useAppDispatch } from "../../store";
-import dynamic from "next/dynamic";
+import { Fragment, useEffect, useState } from "react";
+
 import {
   getIndexFromLevelAndCol,
   getNodesByLevel,
   getTreeFromRowAndCol,
   processNode,
 } from "../../features/tree/treeFunctions";
-import { forwardRef, Fragment } from "react";
+import Node from "../Node/Node";
 import SpeedSlider from "../Slider/Slider";
 import { turnAllOff } from "../../features/tree/treeUpdateSlice";
-import { Alert, AlertIcon, GridItem, Spinner, Text } from "@chakra-ui/react";
 import { NodeBox } from "../Node/NodeBox";
 import { useAnimation } from "framer-motion";
-import { MAX_TREE_LEVELS } from "../../constants";
+import { switchMaxTreeLevels } from "../../features/tree/treePositionsSlice";
 
 import styles from "./Canvas.module.scss";
+import { resetTree } from "../../features/tree/treeSlice";
 
-const Xarrow = dynamic(() => import("react-xarrows"), {
-  ssr: false,
-});
+const breakpointXs = 667;
+const treeLevelsXs = 3;
+const treeLevelsSm = 4;
 
-const Canvas = forwardRef((props: any, nodeBoxesRef: any) => {
+const Canvas = ({ nodeBoxesRef }: any) => {
+  const [mounted, setMounted] = useState(false);
   const dispatch = useAppDispatch();
   const tree = useSelector((state: RootState) => state.tree);
   const treeUpdate = useSelector((state: RootState) => state.treeUpdate);
@@ -38,13 +41,30 @@ const Canvas = forwardRef((props: any, nodeBoxesRef: any) => {
     });
   };
 
+  const handleScreenResize = () => {
+    if (screen.width < breakpointXs) {
+      dispatch(switchMaxTreeLevels(treeLevelsXs));
+      nodeBoxesRef.current = nodeBoxesRef.current.slice(0, Math.pow(2, treeLevelsXs) - 1);
+    } else {
+      dispatch(switchMaxTreeLevels(treeLevelsSm));
+    }
+    dispatch(resetTree());
+  };
+
   const spring = {
     type: "spring",
     duration: animationSpeed.duration / 1000,
   };
-
-  const treeByLevels = getNodesByLevel(tree);
+  const treeByLevels = getNodesByLevel(tree, treePositions.maxTreeLevels);
   const isHighlighting = treeUpdate.deleting || treeUpdate.editing;
+
+  useEffect(() => {
+    setMounted(true);
+    handleScreenResize();
+    screen.orientation.addEventListener("change", handleScreenResize);
+  }, []);
+
+  if (!mounted) return <p>loading...</p>;
 
   return (
     <Grid
@@ -85,7 +105,7 @@ const Canvas = forwardRef((props: any, nodeBoxesRef: any) => {
           gridColumn={`${Math.floor(nodeBoxesRef.current.length / 2) + 1} / ${
             Math.floor(nodeBoxesRef.current.length / 2) + 2
           }`}
-          gridRow={`${MAX_TREE_LEVELS - 2} / ${MAX_TREE_LEVELS - 1}`}
+          gridRow={`${treePositions.maxTreeLevels - 2} / ${treePositions.maxTreeLevels - 1}`}
           justifySelf="center"
           alignSelf="center"
         />
@@ -101,7 +121,6 @@ const Canvas = forwardRef((props: any, nodeBoxesRef: any) => {
               const parentNodeColumn = columnIdx >> 1;
               const parentNodeId = `node-${levelIdx - 1},${parentNodeColumn}`;
               const nodeIndex = getIndexFromLevelAndCol(levelIdx, columnIdx);
-
               const connection =
                 levelIdx !== 0 ? (
                   <Xarrow
@@ -137,14 +156,13 @@ const Canvas = forwardRef((props: any, nodeBoxesRef: any) => {
                   {connection}
                 </>
               ) : null;
-
               return (
                 <NodeBox
                   display={treeUpdate.isLoading ? "none" : "block"}
                   key={currNodeId}
                   currNodeId={currNodeId}
-                  gridRowStart={treePositions[nodeIndex].rowStart}
-                  gridColumnStart={treePositions[nodeIndex].colStart}
+                  gridRowStart={treePositions.position[nodeIndex].rowStart}
+                  gridColumnStart={treePositions.position[nodeIndex].colStart}
                   transition={animationSpeed.duration ? spring : null}
                   setRef={(el: HTMLDivElement) => {
                     nodeBoxesRef.current[nodeIndex] = el;
@@ -172,6 +190,6 @@ const Canvas = forwardRef((props: any, nodeBoxesRef: any) => {
       </GridItem>
     </Grid>
   );
-});
+};
 
 export default Canvas;

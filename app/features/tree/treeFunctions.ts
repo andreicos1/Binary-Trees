@@ -1,7 +1,6 @@
 import { WritableDraft } from "immer/dist/internal";
 import { MutableRefObject } from "react";
 import deleteNode from "../../algorithms/deleteNode";
-import { MAX_TREE_LEVELS } from "../../constants";
 import { AppDispatch } from "../../store";
 import { editNodeValue, TreeState } from "./treeSlice";
 import { toggleEdit, treeUpdate } from "./treeUpdateSlice";
@@ -27,11 +26,11 @@ const dfsAddToLevel = (
   dfsAddToLevel(node.right, currentLevel + 1, levels, false, maxLevel, column);
 };
 
-export const getNodesByLevel = (node: TreeState): string[][] => {
+export const getNodesByLevel = (node: TreeState, maxTreeLevels: number): string[][] => {
   // Add the nodes to an array for easy rendering
   // Initialize as empty strings for all rows & cols
   const levels = new Array<Array<string>>();
-  for (let i = 0; i < MAX_TREE_LEVELS; i++) {
+  for (let i = 0; i < maxTreeLevels; i++) {
     const thisLevel = new Array(Math.pow(2, i));
     thisLevel.fill("");
     levels.push(thisLevel);
@@ -44,7 +43,7 @@ export interface coordinates {
   rowIndex: number;
   columnIndex: number;
 }
-export const getEmptyValidChildren = (root: TreeState): coordinates[] => {
+export const getEmptyValidChildren = (root: TreeState, maxTreeLevels: number): coordinates[] => {
   const positions = new Array<coordinates>();
   function dfsFindValidPositions(
     node: TreeState | undefined,
@@ -52,7 +51,7 @@ export const getEmptyValidChildren = (root: TreeState): coordinates[] => {
     parentColumn: number,
     directionLeft: boolean
   ): void {
-    if (level === MAX_TREE_LEVELS) {
+    if (level === maxTreeLevels) {
       return;
     }
     let column = parentColumn * 2;
@@ -73,8 +72,11 @@ export const getEmptyValidChildren = (root: TreeState): coordinates[] => {
   return positions;
 };
 
-export const getHighestValidParent = (possibleNewChildrenPositions: coordinates[]): number => {
-  let highestValidParent = MAX_TREE_LEVELS;
+export const getHighestValidParent = (
+  possibleNewChildrenPositions: coordinates[],
+  maxTreeLevels: number
+): number => {
+  let highestValidParent = maxTreeLevels;
   possibleNewChildrenPositions.forEach((position) => {
     highestValidParent = Math.min(highestValidParent, position.rowIndex - 1);
   });
@@ -180,8 +182,8 @@ export const processNode = (
   }
 };
 
-export const colIndexToGridColMultiplier = (colIndex: number, rowIndex: number) => {
-  return Math.pow(2, MAX_TREE_LEVELS - rowIndex - 1) * (2 * colIndex + 1);
+export const colIndexToGridColMultiplier = (colIndex: number, rowIndex: number, maxTreeLevels: number) => {
+  return Math.pow(2, maxTreeLevels - rowIndex - 1) * (2 * colIndex + 1);
 };
 
 export const invert = (state: WritableDraft<TreeState> | undefined) => {

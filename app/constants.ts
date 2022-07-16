@@ -3,7 +3,6 @@ import { ToastPositionWithLogical } from "@chakra-ui/react";
 export const BASE_URL = process.env.NEXT_PUBLIC_WEBSITE_URL;
 export const highlightParentColor = "burlywood";
 export const highlightChildren = "#99C2C2";
-export const MAX_TREE_LEVELS = 4;
 
 export const TOAST_ERROR = {
   position: "top" as ToastPositionWithLogical | undefined,

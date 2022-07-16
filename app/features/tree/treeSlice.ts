@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { MAX_TREE_LEVELS } from "../../constants";
 import { uiRepresentation } from "../../types";
 import {
   generateRandomNode,
@@ -49,7 +48,7 @@ export const treeSlice = createSlice({
         stateReference.right = newNode;
       }
     },
-    generateRandom: (state) => {
+    generateRandom: (state, action: PayloadAction<number>) => {
       const bothNodesLevel1Odds = 0.85;
       const nodeExistsOdds = 0.4; // odds for levels 2 +
       const tree = generateRandomNode();
@@ -71,7 +70,7 @@ export const treeSlice = createSlice({
       // Populate rest of leveles
       let level = 1;
       let parent = tree;
-      while (level < MAX_TREE_LEVELS - 1) {
+      while (level < action.payload - 1) {
         if (!queue.length) {
           // if no nodes before last level
           if (Math.random() < 0.5) {
@@ -85,7 +84,7 @@ export const treeSlice = createSlice({
           }
         } else {
           [parent, level] = queue.shift() as [TreeState, number];
-          if (level >= MAX_TREE_LEVELS - 1) {
+          if (level >= action.payload - 1) {
             break;
           }
           let randomNumber = Math.random();

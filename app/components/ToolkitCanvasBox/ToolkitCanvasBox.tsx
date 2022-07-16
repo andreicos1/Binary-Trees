@@ -1,11 +1,17 @@
 import { Box } from "@chakra-ui/react";
-import React, { useContext, useRef } from "react";
+import dynamic from "next/dynamic";
+import { forwardRef, useContext, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { BoxesRefContext } from "../../pages/_app";
 import { RootState } from "../../store";
-import Canvas from "../Canvas/Canvas";
 import Toolbar from "../Toolbar/ToolbarBox/Toolbar";
 import styles from "./ToolkitCanvasBox.module.scss";
+
+const Canvas = dynamic(() => import("../Canvas/Canvas"), {
+  ssr: false,
+});
+
+const ForwardedRefComponent = forwardRef((props, ref) => <Canvas {...props} nodeBoxesRef={ref} />);
 
 const ToolkitCanvasBox = () => {
   const constraintRef = useRef(null); // ref for xarrow
@@ -16,10 +22,11 @@ const ToolkitCanvasBox = () => {
     : treeUpdateState.editing
     ? "url('/pencil.svg'), auto"
     : "auto";
+
   return (
     <Box ref={constraintRef} className={styles.toolkitCanvasBox} cursor={cursor}>
       <Toolbar addNodeDragConstraints={constraintRef} nodeBoxesRef={nodeBoxesRef} />
-      <Canvas ref={nodeBoxesRef} />
+      <ForwardedRefComponent ref={nodeBoxesRef} />
     </Box>
   );
 };

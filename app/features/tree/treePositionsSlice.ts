@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { MAX_TREE_LEVELS } from "../../constants";
 import { colIndexToGridColMultiplier, getRowAndColFromIndex } from "./treeFunctions";
 
 export interface Position {
@@ -11,25 +10,33 @@ export interface UpdatePosition extends Position {
   index: number;
 }
 
-const initialState: Position[] = [];
-for (let i = 0; i < Math.pow(2, MAX_TREE_LEVELS) - 1; i++) {
+interface TreePositionInterface {
+  maxTreeLevels: 4 | 3;
+  position: Position[];
+}
+
+const initialState = { maxTreeLevels: 4, position: [] } as TreePositionInterface;
+for (let i = 0; i < Math.pow(2, initialState.maxTreeLevels) - 1; i++) {
   const [rowIdx, colIdx] = getRowAndColFromIndex(i);
   let rowStart = rowIdx + 1;
-  let colStart = colIndexToGridColMultiplier(colIdx, rowIdx);
-  initialState.push({ rowStart, colStart });
+  let colStart = colIndexToGridColMultiplier(colIdx, rowIdx, initialState.maxTreeLevels);
+  initialState.position.push({ rowStart, colStart });
 }
 
 export const treePositionsSlice = createSlice({
   name: "treePositions",
   initialState,
   reducers: {
+    switchMaxTreeLevels: (state, action: PayloadAction<3 | 4>) => {
+      state.maxTreeLevels = action.payload;
+    },
     updatePosition: (state, action: PayloadAction<UpdatePosition>) => {
       const { index, rowStart, colStart } = action.payload;
-      state[index] = { rowStart, colStart };
+      state.position[index] = { rowStart, colStart };
     },
   },
 });
 
-export const { updatePosition } = treePositionsSlice.actions;
+export const { switchMaxTreeLevels, updatePosition } = treePositionsSlice.actions;
 
 export default treePositionsSlice.reducer;

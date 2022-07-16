@@ -26,6 +26,7 @@ const Navbar = () => {
   const user = useSelector((state: RootState) => state.user);
   const treeUpdateState = useSelector((state: RootState) => state.treeUpdate);
   const animationSpeed = useSelector((state: RootState) => state.speed);
+  const treePositions = useSelector((state: RootState) => state.treePositions);
   const [loading, setLoading] = useState(true);
   const toast = useToast(TOAST_ERROR);
 
@@ -100,7 +101,7 @@ const Navbar = () => {
             if (!treeUpdateState.isPlaying) {
               scrollToCanvas();
               dispatch(clearMessage());
-              dispatch(generateRandom());
+              dispatch(generateRandom(treePositions.maxTreeLevels));
             }
           }}
         />
@@ -108,6 +109,7 @@ const Navbar = () => {
           text="Invert Tree"
           onClick={() =>
             animateTreeChange(invertTree, [
+              treePositions.maxTreeLevels,
               dispatch,
               nodeBoxesRef,
               updatePosition,
@@ -118,7 +120,12 @@ const Navbar = () => {
         <NavbarItem
           text="Maximum Path Sum"
           onClick={() =>
-            animateTreeChange(maximumPathSum, [dispatch, nodeBoxesRef, animationSpeed.duration])
+            animateTreeChange(maximumPathSum, [
+              treePositions.maxTreeLevels,
+              dispatch,
+              nodeBoxesRef,
+              animationSpeed.duration,
+            ])
           }
         />
         <NavbarItem

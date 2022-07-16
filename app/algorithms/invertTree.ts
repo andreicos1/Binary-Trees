@@ -1,7 +1,7 @@
 import { ActionCreatorWithPayload } from "@reduxjs/toolkit";
 import { MutableRefObject } from "react";
-import { highlightChildren, highlightParentColor, MAX_TREE_LEVELS } from "../constants";
-import { getIndexFromLevelAndCol, getRowAndColFromIndex } from "../features/tree/treeFunctions";
+import { highlightChildren, highlightParentColor } from "../constants";
+import { getIndexFromLevelAndCol } from "../features/tree/treeFunctions";
 import { UpdatePosition } from "../features/tree/treePositionsSlice";
 import { invertTreeSlice } from "../features/tree/treeSlice";
 import { toggleIsLoading } from "../features/tree/treeUpdateSlice";
@@ -27,6 +27,7 @@ const animationOptions = (duration: number) => {
 };
 
 const animate = async (
+  maxTreeLevels: number,
   parent: Element | null,
   leftBoxes: nodeData[],
   rightBoxes: nodeData[],
@@ -128,6 +129,7 @@ const animate = async (
 };
 
 const invertTree = async (
+  maxTreeLevels: number,
   dispatch: AppDispatch,
   nodeBoxesRef: MutableRefObject<HTMLDivElement[]>,
   updatePosition: ActionCreatorWithPayload<UpdatePosition>,
@@ -145,14 +147,22 @@ const invertTree = async (
     }
     const nodeElement = nodeBox.children[0]?.children[0];
     const [leftBoxes, rightBoxes] = getChildrenBoxes(rowIndex, colIndex, nodeBoxesRef);
-    await animate(nodeElement, leftBoxes, rightBoxes, duration, dispatch, updatePosition);
+    await animate(
+      maxTreeLevels,
+      nodeElement,
+      leftBoxes,
+      rightBoxes,
+      duration,
+      dispatch,
+      updatePosition
+    );
     // Push children to stack
     stack.push([rowIndex + 1, colIndex * 2]);
     stack.push([rowIndex + 1, colIndex * 2 + 1]);
   }
   dispatch(toggleIsLoading());
   // Reset orders
-  for (let level = 0; level < MAX_TREE_LEVELS; level++) {
+  for (let level = 0; level < maxTreeLevels; level++) {
     const startIndex = Math.pow(2, level) - 1;
     const endIndex = startIndex + Math.pow(2, level);
     for (let index = startIndex; index < Math.floor((endIndex + startIndex) / 2); index++) {

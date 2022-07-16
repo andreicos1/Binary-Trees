@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface treeUpdate {
+  maxTreeLevels: number;
   deleting: boolean;
   adding: boolean;
   editing: boolean;
@@ -11,6 +12,7 @@ export interface treeUpdate {
 }
 
 const initialState = {
+  maxTreeLevels: 4,
   deleting: false,
   adding: false,
   editing: false,

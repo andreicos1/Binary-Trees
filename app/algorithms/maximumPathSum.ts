@@ -1,5 +1,5 @@
 import { MutableRefObject } from "react";
-import { highlightChildren, MAX_TREE_LEVELS } from "../constants";
+import { highlightChildren } from "../constants";
 import { updateMessage } from "../features/messages/messagesSlice";
 import { getIndexFromLevelAndCol, getRowAndColFromIndex } from "../features/tree/treeFunctions";
 import { updateLabel } from "../features/tree/treeSlice";
@@ -18,6 +18,7 @@ const animate = async (nodeElement: Element, duration: number) => {
 };
 
 export default async function maximumPathSum(
+  maxTreeLevels: number,
   dispatch: AppDispatch,
   nodeBoxesRef: MutableRefObject<HTMLDivElement[]>,
   duration: number
@@ -44,7 +45,7 @@ export default async function maximumPathSum(
   }
   const result = await dfs(0, 0);
   // Reset all labels
-  for (let index = 0; index < Math.pow(2, MAX_TREE_LEVELS) - 1; index++) {
+  for (let index = 0; index < Math.pow(2, maxTreeLevels) - 1; index++) {
     const [rowIndex, colIndex] = getRowAndColFromIndex(index);
     dispatch(updateLabel({ rowIndex, colIndex, label: null }));
   }

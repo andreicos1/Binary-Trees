@@ -10,16 +10,13 @@ import {
   TreeState,
   updateLabel,
 } from "../features/tree/treeSlice";
-import { highlightChildren, highlightParentColor, MAX_TREE_LEVELS } from "../constants";
+import { highlightChildren, highlightParentColor } from "../constants";
 import { waitAnimationEnd } from "./invertTree";
-import { toggleLabelPositon } from "../features/tree/treeUpdateSlice";
-import { uiRepresentation } from "../types";
 
 type indexMap = {
   [key: string]: number;
 };
 
-const MAX_COUNT = Math.pow(2, MAX_TREE_LEVELS) - 1;
 
 const animationOptions = (duration: number) => {
   return { duration, delay: duration / 2 };
@@ -49,10 +46,12 @@ const animateHighlight = async (
 };
 
 export default async function serializeAndDeserialize(
+  maxTreeLevels: number,
   dispatch: AppDispatch,
   nodeBoxesRef: MutableRefObject<HTMLDivElement[]>,
   duration: number
 ) {
+  const MAX_COUNT = Math.pow(2, maxTreeLevels) - 1;
   // Construct inorder and postorder traversals of current tree
   let label = "Serialized Tree: ";
   const values = [] as string[];
