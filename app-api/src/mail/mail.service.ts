@@ -9,7 +9,7 @@ export class MailService {
 
   constructor(private jwtService: JwtService) {
     this.nodemailerTransport = createTransport({
-      service: "gmail",
+      host: process.env.EMAIL_HOST,
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASSWORD,
