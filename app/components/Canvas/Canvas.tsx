@@ -177,7 +177,7 @@ const Canvas = ({ nodeBoxesRef }: any) => {
           </Fragment>
         );
       })}
-      <GridItem gridColumn={"-7 / -1"} gridRow={"1 / 2"}>
+      <GridItem className={styles.textGridItem}>
         <div className={styles.text}>
           {message.main.map((msg, index) => {
             return (

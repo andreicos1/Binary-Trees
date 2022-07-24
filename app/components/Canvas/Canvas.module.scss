@@ -29,11 +29,30 @@
 
 .text {
   font-size: 1.8rem;
+  line-height: 2.8rem;
   color: white;
   white-space: pre-wrap;
+  height: 100%;
 
   @include responsive("lg") {
     font-size: 1.6rem;
+  }
+
+  @include responsive("xs") {
+    font-size: 1.4rem;
+  }
+}
+
+.textGridItem {
+  align-self: flex-start;
+  margin-top: 8px;
+  z-index: 10;
+  grid-column: -7 / -1;
+  grid-row: 1 / 2;
+
+  @include responsive("xs") {
+    grid-column: 13 / 15;
+    grid-row: 1 / 2;
   }
 }
 
