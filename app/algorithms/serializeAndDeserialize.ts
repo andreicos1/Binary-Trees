@@ -2,20 +2,13 @@ import { MutableRefObject } from "react";
 
 import { AppDispatch } from "../store";
 import { addMessage, updateMessage } from "../features/messages/messagesSlice";
-import { getIndexFromLevelAndCol, getRowAndColFromIndex } from "../features/tree/treeFunctions";
+import { getRowAndColFromIndex } from "../features/tree/treeFunctions";
 import {
   addNode,
-  changeNodeValue,
   resetTree,
-  TreeState,
-  updateLabel,
 } from "../features/tree/treeSlice";
 import { highlightChildren, highlightParentColor } from "../constants";
 import { waitAnimationEnd } from "./invertTree";
-
-type indexMap = {
-  [key: string]: number;
-};
 
 
 const animationOptions = (duration: number) => {

@@ -142,6 +142,7 @@ const Navbar = () => {
           text="Serialize & Deserialize Binary Tree"
           onClick={() =>
             animateTreeChange(serializeAndDeserialize, [
+              treePositions.maxTreeLevels,
               dispatch,
               nodeBoxesRef,
               animationSpeed.duration,
